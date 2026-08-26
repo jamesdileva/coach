@@ -1,0 +1,143 @@
+{
+  "schemaVersion": "1.0",
+  "metadata": {
+    "packId": "cox",
+    "name": "Chambers of Xeric",
+    "description": "CoX v1: guidance-focused pack for key rooms (Vanguards, Tekton, Vasa Nistirio, Great Olm). NPC ids are best-known community values awaiting live verification — see README checklist. Deeper mechanic coverage (Olm attack styles, Vasa portals, Tekton anvil timing) needs verified animation data.",
+    "author": "Project Coach",
+    "version": "1.0.0",
+    "gameVersion": "230"
+  },
+  "bosses": [
+    {
+      "bossId": "vanguards",
+      "name": "Vanguards",
+      "npcId": 7526,
+      "phases": [
+        {
+          "phaseId": "vanguard_room",
+          "name": "Vanguards",
+          "entryTrigger": { "type": "npc_spawn", "npcIds": [7526, 7527, 7528, 7529, 7530] },
+          "exitTriggers": [],
+          "mechanics": [
+            {
+              "mechanicId": "vanguard_start",
+              "name": "Room start",
+              "triggers": [{ "triggerId": "spawn", "type": "npc_spawn", "npcIds": [7526, 7527, 7528, 7529, 7530] }],
+              "callouts": [{
+                "calloutId": "vanguard_start_callout",
+                "text": "Vanguards! Kill order melee ranged magic — don't let them stack",
+                "audioFile": "vanguard_start.ogg",
+                "category": "critical", "priority": 80,
+                "audioOffset": -1, "visualOffset": 0,
+                "visual": { "type": "text", "color": "#00695C", "durationTicks": 6 }
+              }],
+              "cooldown": 100
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "bossId": "tekton",
+      "name": "Tekton",
+      "npcId": 7540,
+      "phases": [
+        {
+          "phaseId": "tekton_main",
+          "name": "Tekton",
+          "entryTrigger": { "type": "npc_spawn", "npcIds": [7540, 7541, 7542] },
+          "exitTriggers": [],
+          "mechanics": [
+            {
+              "mechanicId": "tekton_start",
+              "name": "Encounter start",
+              "triggers": [{ "triggerId": "spawn", "type": "npc_spawn", "npcIds": [7540, 7541, 7542] }],
+              "callouts": [{
+                "calloutId": "tekton_start_callout",
+                "text": "Tekton! Hard hitter — keep prayers flicking",
+                "audioFile": "tekton_start.ogg",
+                "category": "critical", "priority": 80,
+                "audioOffset": -1, "visualOffset": 0,
+                "visual": { "type": "text", "color": "#BF360C", "durationTicks": 6 }
+              }],
+              "cooldown": 100
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "bossId": "vasa",
+      "name": "Vasa Nistirio",
+      "npcId": 8132,
+      "phases": [
+        {
+          "phaseId": "vasa_main",
+          "name": "Vasa Nistirio",
+          "entryTrigger": { "type": "npc_spawn", "npcIds": [8132] },
+          "exitTriggers": [],
+          "mechanics": [
+            {
+              "mechanicId": "vasa_start",
+              "name": "Encounter start",
+              "triggers": [{ "triggerId": "spawn", "type": "npc_spawn", "npcIds": [8132] }],
+              "callouts": [{
+                "calloutId": "vasa_start_callout",
+                "text": "Vasa! Watch for boulders and the heal portals",
+                "audioFile": "vasa_start.ogg",
+                "category": "critical", "priority": 80,
+                "audioOffset": -1, "visualOffset": 0,
+                "visual": { "type": "text", "color": "#5D4037", "durationTicks": 6 }
+              }],
+              "cooldown": 100
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "bossId": "olm",
+      "name": "Great Olm",
+      "npcId": 7551,
+      "phases": [
+        {
+          "phaseId": "olm_main",
+          "name": "Great Olm",
+          "entryTrigger": { "type": "npc_spawn", "npcIds": [7551] },
+          "exitTriggers": [],
+          "mechanics": [
+            {
+              "mechanicId": "olm_start",
+              "name": "Encounter start",
+              "triggers": [{ "triggerId": "spawn", "type": "npc_spawn", "npcIds": [7551] }],
+              "callouts": [{
+                "calloutId": "olm_start_callout",
+                "text": "Great Olm! Disable both hands, watch for specials",
+                "audioFile": "olm_start.ogg",
+                "category": "critical", "priority": 80,
+                "audioOffset": -1, "visualOffset": 0,
+                "visual": { "type": "text", "color": "#283593", "durationTicks": 6 }
+              }],
+              "cooldown": 100
+            },
+            {
+              "mechanicId": "olm_final_phase",
+              "name": "Final phase (glowing head)",
+              "triggers": [{ "triggerId": "hp25", "type": "hp", "npcIds": [7551], "hpThreshold": 25, "hpDirection": "below" }],
+              "callouts": [{
+                "calloutId": "olm_final_callout",
+                "text": "Final phase! All powers live — disable hands fast!",
+                "audioFile": "olm_final.ogg",
+                "category": "critical", "priority": 90,
+                "audioOffset": -1, "visualOffset": 0,
+                "visual": { "type": "text", "color": "#FF0000", "durationTicks": 5 }
+              }],
+              "cooldown": 100
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

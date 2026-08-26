@@ -4,6 +4,49 @@ Running log of sprints: what was done, key decisions, deviations from the docs.
 
 ---
 
+## Sprint 16 — CoX + Community Pack Template (2026-08-26)
+
+**Objective:** CoX guidance pack, the community authoring template
+demonstrating every trigger type, and the pack author guide. Phase 3 done.
+
+### Done
+
+- `encounter-packs/cox.pack/` + `cox_1.0.0.zip` (154 KB): guidance-focused v1
+  for Vanguards, Tekton, Vasa Nistirio, Great Olm (start callouts + Olm final-
+  phase HP warning at 25%). NPC ids flagged for verification (README).
+- **`encounter-packs/template.pack/`** — community starting point: a single
+  loadable pack demonstrating ALL 12 usable trigger types (animation,
+  projectile, graphic, npc_spawn, npc_despawn, hp, tick_timer, player_state,
+  location, shout, wave_cleared, composite) plus conditions gating and a
+  wave-style phase exit. TODO markers where authors substitute real ids.
+- **`docs/examples/ENCODING.md`** — pack author guide: workflow (copy → edit →
+  TTS audio → zip → drop in folder → verify), validation rules they'll hit,
+  audio pipeline pattern, publishing checklist (rule 8 enforcement).
+- CoxPackTest: guards the real zip AND asserts the template demonstrates every
+  trigger type and still loads/validates.
+
+### Verified
+
+- Tests: **139/139 pass** (+3 CoxPackTest).
+
+### Decisions
+
+- Template callouts omit `audioFile` deliberately: packs without referenced
+  audio are valid, so the template stays self-contained; the guide shows how
+  to add audio when authors want it.
+- Roadmap's room list ("Tekton, Olm, Vanguard, Vet'ion") was wrong again —
+  Vet'ion is a wilderness boss. Shipped Vanguards/Tekton/Vasa/Olm instead.
+  Deep CoX mechanics (Olm attack-style prayers, Tekton anvil timing, Vasa
+  portals) need verified animation ids → same live-capture path as ToB.
+
+### Deviations from docs
+
+- Roadmap's `docs/examples/ENCODING.md` location kept; content covers the
+  workflow + validation rules rather than re-listing schema fields (the schema
+  json is the field reference).
+
+---
+
 ## Sprint 15 — Tombs of Amascut (2026-08-26)
 
 **Objective:** ToA pack covering all four path bosses + the Wardens, using

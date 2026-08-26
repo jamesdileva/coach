@@ -1,0 +1,189 @@
+{
+  "schemaVersion": "1.0",
+  "metadata": {
+    "packId": "template",
+    "name": "Community Pack Template",
+    "description": "Starting point for pack authors. Every trigger type demonstrated once with placeholder values marked TODO. Delete what you don't use, replace TODO values with real ids, then package as a .zip containing this file plus an audio/ folder. See docs/examples/ENCODING.md for the full guide.",
+    "author": "YourNameHere",
+    "version": "1.0.0",
+    "gameVersion": "230",
+    "dependencies": []
+  },
+  "bosses": [
+    {
+      "bossId": "myboss",
+      "name": "My Boss (TODO rename)",
+      "npcId": 1000,
+      "description": "TODO: one-line boss description.",
+      "phases": [
+        {
+          "phaseId": "phase_1",
+          "name": "Phase 1 (TODO rename)",
+          "entryTrigger": { "triggerId": "p1_entry", "type": "npc_spawn", "npcId": 1000 },
+          "exitTriggers": [
+            { "triggerId": "p1_exit", "type": "hp", "npcId": 1000, "hpThreshold": 50, "hpDirection": "below" }
+          ],
+          "mechanics": [
+            {
+              "mechanicId": "example_animation_trigger",
+              "name": "Animation trigger example",
+              "triggers": [{ "triggerId": "anim", "type": "animation", "npcId": 1000, "animationId": 1000 }],
+              "callouts": [{
+                "calloutId": "anim_callout",
+                "text": "TODO: overlay text (also the TTS source)",
+                "audioFile": "todo_replace.ogg",
+                "category": "critical", "priority": 90,
+                "audioOffset": -2, "visualOffset": 0,
+                "visual": { "type": "prayer_icon", "color": "#FF0000", "durationTicks": 4 }
+              }],
+              "cooldown": 8
+            },
+            {
+              "mechanicId": "example_projectile_trigger",
+              "name": "Projectile trigger example",
+              "triggers": [{ "triggerId": "proj", "type": "projectile", "projectId": 1000, "srcNpcId": 1000 }],
+              "callouts": [{
+                "calloutId": "proj_callout",
+                "text": "Projectile special incoming!",
+                "category": "warning", "priority": 70,
+                "audioOffset": 0, "visualOffset": 0,
+                "visual": { "type": "text", "color": "#FF9800", "durationTicks": 3 }
+              }],
+              "cooldown": 8
+            },
+            {
+              "mechanicId": "example_graphic_trigger",
+              "name": "Graphic (spotanim / AoE) trigger example",
+              "triggers": [{ "triggerId": "gfx", "type": "graphic", "graphicId": 1000 }],
+              "callouts": [{
+                "calloutId": "gfx_callout",
+                "text": "AoE graphic detected — move!",
+                "category": "critical", "priority": 85,
+                "audioOffset": -1, "visualOffset": 0,
+                "visual": { "type": "safe_tile", "color": "#4FC3F7", "durationTicks": 3 }
+              }],
+              "cooldown": 8
+            },
+            {
+              "mechanicId": "example_shout_trigger",
+              "name": "Shout trigger example (boss telegraphs via chat)",
+              "triggers": [{ "triggerId": "shout", "type": "shout", "containsText": "TODO shout text", "senderName": "My Boss" }],
+              "callouts": [{
+                "calloutId": "shout_callout",
+                "text": "Special attack incoming!",
+                "category": "critical", "priority": 95,
+                "audioOffset": 0, "visualOffset": 0,
+                "visual": { "type": "text", "color": "#FF0000", "durationTicks": 4 }
+              }],
+              "cooldown": 8
+            },
+            {
+              "mechanicId": "example_tick_timer_trigger",
+              "name": "Tick timer example (every 16 ticks of the phase)",
+              "triggers": [{ "triggerId": "timer", "type": "tick_timer", "tickMod": 16 }],
+              "callouts": [{
+                "calloutId": "timer_callout",
+                "text": "Periodic reminder callout",
+                "category": "info", "priority": 40,
+                "audioOffset": 0, "visualOffset": 0,
+                "visual": { "type": "text", "color": "#FFFFFF", "durationTicks": 3 }
+              }],
+              "cooldown": 8
+            },
+            {
+              "mechanicId": "example_player_state_trigger",
+              "name": "Player HP low example",
+              "triggers": [{ "triggerId": "lowhp", "type": "player_state", "hpThreshold": 25, "hpDirection": "below" }],
+              "callouts": [{
+                "calloutId": "lowhp_callout",
+                "text": "You're low! Eat up!",
+                "category": "critical", "priority": 93,
+                "audioOffset": 0, "visualOffset": 0,
+                "visual": { "type": "text", "color": "#FF0000", "durationTicks": 4 }
+              }],
+              "cooldown": 20
+            },
+            {
+              "mechanicId": "example_conditions",
+              "name": "Conditions gate activation (all must hold)",
+              "triggers": [{ "triggerId": "cond_anim", "type": "animation", "npcId": 1000, "animationId": 1001 }],
+              "conditions": [
+                { "type": "tick_mod", "mod": 4 },
+                { "type": "player_hp_below", "threshold": 50 }
+              ],
+              "callouts": [{
+                "calloutId": "cond_callout",
+                "text": "Only fires when conditions hold!",
+                "category": "warning", "priority": 65,
+                "audioOffset": 0, "visualOffset": 0,
+                "visual": { "type": "text", "color": "#FF9800", "durationTicks": 3 }
+              }],
+              "cooldown": 10
+            },
+            {
+              "mechanicId": "example_composite_trigger",
+              "name": "Composite OR example",
+              "triggers": [{
+                "triggerId": "composite_or",
+                "type": "composite",
+                "logic": "OR",
+                "children": [
+                  { "type": "animation", "npcId": 1000, "animationId": 1002 },
+                  { "type": "graphic", "graphicId": 1002 }
+                ]
+              }],
+              "callouts": [{
+                "calloutId": "composite_callout",
+                "text": "Either of the two signals fired!",
+                "category": "warning", "priority": 70,
+                "audioOffset": 0, "visualOffset": 0,
+                "visual": { "type": "text", "color": "#FF9800", "durationTicks": 3 }
+              }],
+              "cooldown": 8
+            }
+          ]
+        },
+        {
+          "phaseId": "phase_2",
+          "name": "Phase 2 — wave-style exit example",
+          "entryTrigger": { "triggerId": "p2_entry", "type": "npc_spawn", "npcIds": [1001, 1002] },
+          "exitTriggers": [
+            { "triggerId": "p2_clear", "type": "wave_cleared", "npcIds": [1001, 1002] }
+          ],
+          "mechanics": [
+            {
+              "mechanicId": "example_location_trigger",
+              "name": "Location trigger example (enter a region)",
+              "triggers": [{ "triggerId": "loc", "type": "location", "minX": 3200, "maxX": 3210, "minY": 3200, "maxY": 3210 }],
+              "callouts": [{
+                "calloutId": "loc_callout",
+                "text": "Entered the marked area!",
+                "category": "info", "priority": 45,
+                "audioOffset": 0, "visualOffset": 0,
+                "visual": { "type": "text", "color": "#FFFFFF", "durationTicks": 3 }
+              }],
+              "cooldown": 10
+            },
+            {
+              "mechanicId": "example_npc_despawn_trigger",
+              "name": "NPC despawn example (e.g. death wrath mechanics)",
+              "triggers": [{ "triggerId": "despawn", "type": "npc_despawn", "npcId": 1001 }],
+              "callouts": [{
+                "calloutId": "despawn_callout",
+                "text": "Minion down!",
+                "category": "transition", "priority": 40,
+                "audioOffset": 0, "visualOffset": 0,
+                "visual": { "type": "text", "color": "#00E5FF", "durationTicks": 3 }
+              }],
+              "cooldown": 4
+            }
+          ]
+        }
+      ],
+      "recovery": {
+        "onPlayerDeath": "reset",
+        "onBossDespawn": "reset"
+      }
+    }
+  ]
+}
