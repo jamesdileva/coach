@@ -1,0 +1,642 @@
+{
+ "schemaVersion": "1.0",
+ "metadata": {
+  "packId": "nex",
+  "name": "Nex",
+  "description": "AI-generated draft from OSRS Wiki extraction. Human review required (rule 8). PENDING_REVIEW triggers need verified ids.",
+  "author": "Project Coach Knowledge Pipeline",
+  "version": "0.1.0",
+  "gameVersion": "230"
+ },
+ "bosses": [
+  {
+   "bossId": "nex",
+   "name": "Nex",
+   "npcId": 11278,
+   "phases": [
+    {
+     "phaseId": "smoke_phase",
+     "name": "Smoke phase",
+     "entryTrigger": {
+      "triggerId": "smoke_phase_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       11278,
+       11279,
+       11280,
+       11281,
+       11282
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "smoke_phase_exit",
+       "type": "hp",
+       "npcId": 11278,
+       "hpThreshold": 80,
+       "hpDirection": "below"
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "smoke_phase_start",
+       "name": "Smoke phase guidance",
+       "triggers": [
+        {
+         "triggerId": "smoke_phase_start_shout",
+         "type": "shout",
+         "containsText": "Fill my soul with smoke!",
+         "senderName": null
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "call_smoke_phase_start",
+         "text": "Smoke phase starting!",
+         "category": "transition",
+         "priority": 55,
+         "audioOffset": -2,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#00E5FF",
+          "durationTicks": 4
+         }
+        }
+       ],
+       "cooldown": 100
+      },
+      {
+       "mechanicId": "choke",
+       "name": "Choke",
+       "triggers": [
+        {
+         "triggerId": "shout_choke",
+         "type": "shout",
+         "containsText": "Let the virus flow through you!",
+         "senderName": "Nex"
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "call_choke",
+         "text": "Choke! Nex will shout Let the virus flow through you!",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -2,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 4
+         }
+        }
+       ],
+       "cooldown": 12
+      },
+      {
+       "mechanicId": "drag",
+       "name": "Drag",
+       "triggers": [
+        {
+         "triggerId": "PENDING_REVIEW_anim_drag",
+         "type": "animation",
+         "animationId": -1
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "call_drag",
+         "text": "Drag!",
+         "category": "warning",
+         "priority": 65,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 4
+         }
+        }
+       ],
+       "cooldown": 12
+      },
+      {
+       "mechanicId": "smoke_dash",
+       "name": "Smoke Dash",
+       "triggers": [
+        {
+         "triggerId": "shout_smoke_dash",
+         "type": "shout",
+         "containsText": "There is... NO ESCAPE!",
+         "senderName": "Nex"
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "call_smoke_dash",
+         "text": "Smoke Dash! Nex will shout There is...",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -2,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 4
+         }
+        }
+       ],
+       "cooldown": 12
+      }
+     ]
+    },
+    {
+     "phaseId": "shadow_phase",
+     "name": "Shadow phase",
+     "entryTrigger": {
+      "triggerId": "shadow_phase_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       11278,
+       11279,
+       11280,
+       11281,
+       11282
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "shadow_phase_exit",
+       "type": "hp",
+       "npcId": 11278,
+       "hpThreshold": 60,
+       "hpDirection": "below"
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "shadow_phase_start",
+       "name": "Shadow phase guidance",
+       "triggers": [
+        {
+         "triggerId": "shadow_phase_start_shout",
+         "type": "shout",
+         "containsText": "Darken my shadow!",
+         "senderName": null
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "call_shadow_phase_start",
+         "text": "Shadow phase starting!",
+         "category": "transition",
+         "priority": 55,
+         "audioOffset": -2,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#00E5FF",
+          "durationTicks": 4
+         }
+        }
+       ],
+       "cooldown": 100
+      },
+      {
+       "mechanicId": "shadow_smash",
+       "name": "Shadow Smash",
+       "triggers": [
+        {
+         "triggerId": "shout_shadow_smash",
+         "type": "shout",
+         "containsText": "Fear the shadow!",
+         "senderName": "Nex"
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "call_shadow_smash",
+         "text": "Shadow Smash! Nex will shout Fear the shadow!",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -2,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 4
+         }
+        }
+       ],
+       "cooldown": 12
+      },
+      {
+       "mechanicId": "embrace_darkness",
+       "name": "Embrace Darkness",
+       "triggers": [
+        {
+         "triggerId": "shout_embrace_darkness",
+         "type": "shout",
+         "containsText": "Embrace darkness!",
+         "senderName": "Nex"
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "call_embrace_darkness",
+         "text": "Embrace Darkness! Nex will shout Embrace darkness!",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -2,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 4
+         }
+        }
+       ],
+       "cooldown": 12
+      }
+     ]
+    },
+    {
+     "phaseId": "blood_phase",
+     "name": "Blood phase",
+     "entryTrigger": {
+      "triggerId": "blood_phase_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       11278,
+       11279,
+       11280,
+       11281,
+       11282
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "blood_phase_exit",
+       "type": "hp",
+       "npcId": 11278,
+       "hpThreshold": 40,
+       "hpDirection": "below"
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "blood_phase_start",
+       "name": "Blood phase guidance",
+       "triggers": [
+        {
+         "triggerId": "blood_phase_start_shout",
+         "type": "shout",
+         "containsText": "Flood my lungs with blood!",
+         "senderName": null
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "call_blood_phase_start",
+         "text": "Blood phase starting!",
+         "category": "transition",
+         "priority": 55,
+         "audioOffset": -2,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#00E5FF",
+          "durationTicks": 4
+         }
+        }
+       ],
+       "cooldown": 100
+      },
+      {
+       "mechanicId": "blood_siphon",
+       "name": "Blood Siphon",
+       "triggers": [
+        {
+         "triggerId": "shout_blood_siphon",
+         "type": "shout",
+         "containsText": "A siphon will solve this!",
+         "senderName": "Nex"
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "call_blood_siphon",
+         "text": "Blood Siphon! Nex will shout A siphon will solve this!",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -2,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 4
+         }
+        }
+       ],
+       "cooldown": 12
+      },
+      {
+       "mechanicId": "blood_sacrifice",
+       "name": "Blood Sacrifice",
+       "triggers": [
+        {
+         "triggerId": "shout_blood_sacrifice",
+         "type": "shout",
+         "containsText": "I demand a blood sacrifice!",
+         "senderName": "Nex"
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "call_blood_sacrifice",
+         "text": "Blood Sacrifice! Nex will shout I demand a blood sacrifice!",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -2,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 4
+         }
+        }
+       ],
+       "cooldown": 12
+      }
+     ]
+    },
+    {
+     "phaseId": "ice_phase",
+     "name": "Ice phase",
+     "entryTrigger": {
+      "triggerId": "ice_phase_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       11278,
+       11279,
+       11280,
+       11281,
+       11282
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "ice_phase_exit",
+       "type": "hp",
+       "npcId": 11278,
+       "hpThreshold": 20,
+       "hpDirection": "below"
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "ice_phase_start",
+       "name": "Ice phase guidance",
+       "triggers": [
+        {
+         "triggerId": "ice_phase_start_shout",
+         "type": "shout",
+         "containsText": "Infuse me with the power of ice!",
+         "senderName": null
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "call_ice_phase_start",
+         "text": "Ice phase starting!",
+         "category": "transition",
+         "priority": 55,
+         "audioOffset": -2,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#00E5FF",
+          "durationTicks": 4
+         }
+        }
+       ],
+       "cooldown": 100
+      },
+      {
+       "mechanicId": "containment",
+       "name": "Containment",
+       "triggers": [
+        {
+         "triggerId": "shout_containment",
+         "type": "shout",
+         "containsText": "Contain this!",
+         "senderName": "Nex"
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "call_containment",
+         "text": "Containment! Nex will shout Contain this!",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -2,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 4
+         }
+        }
+       ],
+       "cooldown": 12
+      },
+      {
+       "mechanicId": "ice_prison",
+       "name": "Ice Prison",
+       "triggers": [
+        {
+         "triggerId": "shout_ice_prison",
+         "type": "shout",
+         "containsText": "Die now, in a prison of ice!",
+         "senderName": "Nex"
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "call_ice_prison",
+         "text": "Ice Prison! Nex will shout Die now, in a prison of ice!",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -2,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 4
+         }
+        }
+       ],
+       "cooldown": 12
+      }
+     ]
+    },
+    {
+     "phaseId": "zaros_phase",
+     "name": "Zaros phase",
+     "entryTrigger": {
+      "triggerId": "zaros_phase_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       11278,
+       11279,
+       11280,
+       11281,
+       11282
+      ]
+     },
+     "exitTriggers": [],
+     "mechanics": [
+      {
+       "mechanicId": "zaros_phase_start",
+       "name": "Zaros phase guidance",
+       "triggers": [
+        {
+         "triggerId": "zaros_phase_start_shout",
+         "type": "shout",
+         "containsText": "NOW, THE POWER OF ZAROS!",
+         "senderName": null
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "call_zaros_phase_start",
+         "text": "Zaros phase starting!",
+         "category": "transition",
+         "priority": 55,
+         "audioOffset": -2,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#00E5FF",
+          "durationTicks": 4
+         }
+        }
+       ],
+       "cooldown": 100
+      },
+      {
+       "mechanicId": "turmoil",
+       "name": "Turmoil",
+       "triggers": [
+        {
+         "triggerId": "PENDING_REVIEW_anim_turmoil",
+         "type": "animation",
+         "animationId": -1
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "call_turmoil",
+         "text": "Turmoil!",
+         "category": "warning",
+         "priority": 65,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 4
+         }
+        }
+       ],
+       "cooldown": 12
+      },
+      {
+       "mechanicId": "soul_split",
+       "name": "Soul Split",
+       "triggers": [
+        {
+         "triggerId": "PENDING_REVIEW_anim_soul_split",
+         "type": "animation",
+         "animationId": -1
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "call_soul_split",
+         "text": "Soul Split!",
+         "category": "warning",
+         "priority": 65,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 4
+         }
+        }
+       ],
+       "cooldown": 12
+      },
+      {
+       "mechanicId": "deflect_melee",
+       "name": "Deflect Melee",
+       "triggers": [
+        {
+         "triggerId": "PENDING_REVIEW_anim_deflect_melee",
+         "type": "animation",
+         "animationId": -1
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "call_deflect_melee",
+         "text": "Deflect Melee!",
+         "category": "warning",
+         "priority": 65,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 4
+         }
+        }
+       ],
+       "cooldown": 12
+      },
+      {
+       "mechanicId": "wrath",
+       "name": "Wrath",
+       "triggers": [
+        {
+         "triggerId": "shout_wrath",
+         "type": "shout",
+         "containsText": "Taste my wrath!",
+         "senderName": "Nex"
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "call_wrath",
+         "text": "Wrath! An overhead prayer in which Nex shouts Taste my wrath!",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -2,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 4
+         }
+        }
+       ],
+       "cooldown": 12
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

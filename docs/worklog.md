@@ -4,6 +4,50 @@ Running log of sprints: what was done, key decisions, deviations from the docs.
 
 ---
 
+## Sprint 24 — Draft Schema Generation (2026-08-26)
+
+**Objective:** Turn extracted wiki data into schema v1.0 draft encounter JSON.
+
+### Done
+
+- **Prompt artifacts** (`src/prompts/`): `system_prompt.txt` (generation rules:
+  shout-first triggers, PENDING_REVIEW convention, -2 tick criticals, tick
+  timing) and `mechanic_extraction_prompt.txt` — version-controlled so drafts
+  are reproducible.
+- **`llm_prompter.py`** — prompt payload builders plus `generate_draft()` with
+  an injectable `complete_fn`: the default is the local deterministic
+  generator; a hosted LLM could be slotted in later without touching callers.
+  No API keys anywhere (plugin rule 10 respected; and per project decision,
+  the coding assistant itself acts as the LLM during development).
+- **`json_generator.py`**:
+  - deterministic draft builder: phases from wiki sections chained by HP
+    exits at 80/60/40/20%; shouted mechanics → shout triggers with -2 tick
+    critical callouts; untelegraphed mechanics → `PENDING_REVIEW_*`
+    animation placeholders (never guessed ids)
+  - `validate_draft()`: mirrors the plugin's load-time rules (schema version,
+    required fields, unique ids, trigger type whitelist, offset ranges)
+  - `pending_review_count()` for review workflows
+- Generated fixture committed: `fixtures/drafts/nex_draft.json` — zero
+  validation issues, 5 phases, 4 PENDING_REVIEW markers (Drag, Turmoil,
+  Soul Split, Deflect Melee: genuinely untelegraphed).
+
+### Verified
+
+- **pytest 16/16 pass** (+9): validation clean-run, structure vs extraction,
+  shout-trigger mapping with -2 offsets, PENDING_REVIEW flagging, HP exit
+  chain, validator rejection of unknown types, determinism, and a staleness
+  guard asserting the committed fixture matches generator output exactly.
+
+### Decisions
+
+- No LLM API dependency: drafts are authored by the coding agent using the
+  version-controlled prompts + deterministic scaffolding. A remote LLM can be
+  injected via `complete_fn` later if ever wanted.
+- Staleness test (`test_committed_fixture_matches_generator_output`) means the
+  committed draft can never drift from what the pipeline would produce.
+
+---
+
 ## Sprint 23 — Wiki Parser + Raw Extraction (2026-08-26)
 
 **Objective:** Python tooling that fetches OSRS Wiki pages and extracts

@@ -1,0 +1,14 @@
+Given this extracted wiki data for one phase:
+
+<title>    : e.g. "Smoke phase"
+<body>     : phase description paragraph
+<mechanics>: bullet items with name, description, shouts[]
+
+Produce mechanics[] entries where:
+- Each bold-lead bullet becomes one mechanic.
+- shouts[] non-empty -> trigger {type: "shout", containsText: <shout>,
+  senderName: <boss>} with cooldown ~12 ticks.
+- shouts[] empty      -> PENDING_REVIEW placeholder per system rules.
+- callout.text = short imperative derived from the mechanic name
+  ("Smoke Dash" -> "Smoke dash! Move off the path!").
+- Attach any additional conditions only if the wiki states them explicitly.
