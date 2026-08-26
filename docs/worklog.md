@@ -4,6 +4,48 @@ Running log of sprints: what was done, key decisions, deviations from the docs.
 
 ---
 
+## Sprint 22 — Profile Management (2026-08-26)
+
+**Objective:** Profile export/import as JSON files, validation before load,
+and the three default presets. Phase 4 complete.
+
+### Done
+
+- **`ProfileStorage`** — file I/O for profile JSONs: pretty-printed writes
+  with parent-dir creation; reads validate structure (missing `name` rejected,
+  corrupt JSON carries the parse error, out-of-range masterVolume clamped).
+- **`ProfileExporter`** — writes named profiles to
+  `coach/profiles/<name>.json` (filename sanitised); unknown names logged.
+- **`ProfileImporter`** — validates then imports via ProfileManager;
+  invalid files never touch stored config (tested).
+- **Default presets seeded once per installation**: Learning (all callouts),
+  Practice (criticals only), Performance (silent). Guarded by the hidden
+  `defaultsSeeded` flag so user deletions are respected — deleting all three
+  does not resurrect them.
+- Plugin seeds defaults at startUp.
+- Tests: storage roundtrip/corruption/missing-name, export→import through real
+  files into a fresh manager, unknown-export null, invalid-import rejection,
+  volume clamping, default seeding semantics (×2).
+
+### Verified
+
+- Tests: **186/186 pass** (+9 ProfileFileLifecycleTest).
+
+### Decisions
+
+- Import validates **before** touching stored config — a bad file can never
+  clobber existing profiles.
+- Defaults tracked with an explicit seeded flag rather than "profiles empty"
+  heuristics, so wiping profiles is a supported user action.
+- Export filenames sanitise non-[A-Za-z0-9_-] characters to underscores.
+
+### Deviations from docs
+
+- Roadmap's UI buttons deferred again (no Swing panel yet) — but the full
+  logic layer is complete and tested; wiring buttons later is trivial.
+
+---
+
 ## Sprint 21 — Debug Tools v2 (2026-08-26)
 
 **Objective:** Tabbed debug overlay with live state inspection, trigger

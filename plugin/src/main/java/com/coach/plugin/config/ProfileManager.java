@@ -51,6 +51,64 @@ public class ProfileManager
 		}
 	}
 
+	/**
+	 * Add/replace a profile in storage (used by the importer).
+	 */
+	public void importProfile(ConfigProfile profile)
+	{
+		Map<String, ConfigProfile> profiles = listProfiles();
+		profiles.put(profile.name, profile);
+		persist(profiles);
+	}
+
+	/**
+	 * Seed the three default presets exactly once per installation
+	 * (Learning / Practice / Performance), tracked by the hidden
+	 * `defaultsSeeded` flag so user deletions are respected.
+	 */
+	public synchronized void ensureDefaultProfiles()
+	{
+		if (Boolean.parseBoolean(
+			configManager.getConfiguration(GROUP, "defaultsSeeded")))
+		{
+			return;
+		}
+		Map<String, ConfigProfile> profiles = listProfiles();
+		if (profiles.isEmpty())
+		{
+			ConfigProfile learning = new ConfigProfile();
+			learning.name = "Learning";
+			learning.enabled = true; learning.debugMode = false; learning.muted = false;
+			learning.masterVolume = 80;
+			learning.criticalCallouts = true; learning.warningCallouts = true;
+			learning.infoCallouts = true; learning.transitionCallouts = true;
+			learning.disabledBosses = "";
+			profiles.put("Learning", learning);
+
+			ConfigProfile practice = new ConfigProfile();
+			practice.name = "Practice";
+			practice.enabled = true; practice.debugMode = false; practice.muted = false;
+			practice.masterVolume = 70;
+			practice.criticalCallouts = true; practice.warningCallouts = false;
+			practice.infoCallouts = false; practice.transitionCallouts = false;
+			practice.disabledBosses = "";
+			profiles.put("Practice", practice);
+
+			ConfigProfile performance = new ConfigProfile();
+			performance.name = "Performance";
+			performance.enabled = true; performance.debugMode = false; performance.muted = true;
+			performance.masterVolume = 50;
+			performance.criticalCallouts = false; performance.warningCallouts = false;
+			performance.infoCallouts = false; performance.transitionCallouts = false;
+			performance.disabledBosses = "";
+			profiles.put("Performance", performance);
+
+			persist(profiles);
+			log.info("[coach] seeded default profiles: Learning, Practice, Performance");
+		}
+		set("defaultsSeeded", "true");
+	}
+
 	public void saveProfile(String name)
 	{
 		Map<String, ConfigProfile> profiles = listProfiles();

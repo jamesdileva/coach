@@ -174,6 +174,17 @@ public interface CoachConfig extends Config
 	}
 
 	@ConfigItem(
+		keyName = "defaultsSeeded",
+		name = "Defaults Seeded",
+		description = "Internal: whether default profiles have been created",
+		hidden = true
+	)
+	default boolean defaultsSeeded()
+	{
+		return false;
+	}
+
+	@ConfigItem(
 		keyName = "showPrayerIndicator",
 		name = "Prayer Indicator",
 		description = "Large flashing prayer guidance overlay",

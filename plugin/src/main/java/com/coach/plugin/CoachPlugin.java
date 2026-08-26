@@ -2,6 +2,7 @@ package com.coach.plugin;
 
 import com.coach.plugin.audio.AudioEngine;
 import com.coach.plugin.config.CalloutGate;
+import com.coach.plugin.config.ProfileManager;
 import com.coach.plugin.coaching.CoachStateManager;
 import com.coach.plugin.coaching.CoachingEngine;
 import com.coach.plugin.config.CoachConfig;
@@ -72,6 +73,10 @@ public class CoachPlugin extends Plugin
 	@Inject
 	private LogBuffer logBuffer;
 
+	@Inject
+	private ProfileManager profileManager;
+
+
 	/**
 	 * RuneLite's event bus — fully qualified because our internal bus shares the name.
 	 */
@@ -114,6 +119,7 @@ public class CoachPlugin extends Plugin
 		runeLiteEventBus.register(this);
 		coachEventBus = new EventBus();
 		accessibilityManager = new com.coach.plugin.accessibility.AccessibilityManager(config);
+		profileManager.ensureDefaultProfiles();
 		encounterEngine = new EncounterEngine(client);
 		coachingEngine = new CoachingEngine();
 		triggerEngine = new TriggerEngine(new TriggerRegistry(client));
