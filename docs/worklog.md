@@ -4,6 +4,48 @@ Running log of sprints: what was done, key decisions, deviations from the docs.
 
 ---
 
+## Sprint 8 — Coaching Engine (Priority + Queue) (2026-08-26)
+
+**Objective:** The decision core: consume mechanic activations, schedule
+callouts at tick offsets, suppress duplicates, deliver in priority order.
+
+### Done
+
+- `CalloutScheduler` — schedules at `activationTick + offset` (visual/audio);
+  delivery moment = min(visualTick, audioTick) so negative audio offsets fire
+  early ("2 ticks before impact" works).
+- `CalloutQueue` — sorted pending list: dueTick asc, priority desc at equal
+  ticks; `drainDue(tick)` extracts everything due.
+- `CooldownManager` — per-calloutId suppression window (default 4 ticks).
+- `PriorityResolver` — explicit definition priority (clamped 1–100), else
+  category defaults critical(90) > warning(70) > info(50) > transition(40).
+- `CoachStateManager` — latest PlayerState snapshot per tick.
+- `CoachingEngine` — consumes `MechanicActivation`s from EncounterEngine,
+  applies enable-filter + cooldown + schedule; delivers due callouts to
+  listeners each tick. Plugin wires state updates and debug logging;
+  overlay/audio listeners arrive Sprint 9.
+- CoachPlugin lifecycle hardened: internal EventBus is now rebuilt on startUp
+  instead of hand-unsubscribing each listener (no stale-listener leaks across
+  plugin restarts); tick handlers guard against pre-startup events.
+
+### Verified
+
+- Tests: **81/81 pass** (+9: PriorityResolverTest ×3, CalloutQueueTest ×2,
+  CoachingEngineTest ×4 incl. offsets, cooldown dupes, disabled filter,
+  concurrent ordering).
+
+### Decisions
+
+- Delivery moment = min(visual, audio) tick: one queue entry per callout;
+  AudioEngine (Sprint 9) refines its own sub-tick timing from audioOffset.
+- Callout-level cooldown (default 4 ticks) is separate from mechanic-level
+  cooldown (pack-defined) — shared callouts referenced by multiple mechanics
+  still can't spam.
+- Enable/disable is a predicate (`setEnabledFilter`) now; full RuneLite config
+  toggles land in Sprint 17 as planned.
+
+---
+
 ## Sprint 7 — Phase Machine + Conditions (2026-08-26)
 
 **Objective:** Runtime encounter state: phase transitions, mechanic tracking

@@ -19,8 +19,8 @@ public class CalloutLogger
 		sink.log("t" + tick + " CALLOUT_SCHEDULED id=" + calloutId + " visual=t" + visualTick + " audio=t" + audioTick);
 	}
 
-	public void calloutDelivered(int tick, String calloutId)
+	public void calloutDelivered(int tick, String calloutId, String detail)
 	{
-		sink.log("t" + tick + " CALLOUT_DELIVERED id=" + calloutId);
+		sink.log("t" + tick + " CALLOUT_DELIVERED id=" + calloutId + " " + detail);
 	}
 }

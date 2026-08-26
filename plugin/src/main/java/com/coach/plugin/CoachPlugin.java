@@ -1,5 +1,7 @@
 package com.coach.plugin;
 
+import com.coach.plugin.coaching.CoachStateManager;
+import com.coach.plugin.coaching.CoachingEngine;
 import com.coach.plugin.config.CoachConfig;
 import com.coach.plugin.encounter.EncounterEngine;
 import com.coach.plugin.events.EventBus;
@@ -68,13 +70,15 @@ public class CoachPlugin extends Plugin
 	@Inject
 	private net.runelite.client.eventbus.EventBus runeLiteEventBus;
 
-	private final EventBus coachEventBus = new EventBus();
+	private EventBus coachEventBus;
 	private final GameStateBridge gameStateBridge = new GameStateBridge();
 	private final EventLogger eventLogger = new EventLogger(logBuffer);
 	private final TriggerLogger triggerLogger = new TriggerLogger(logBuffer);
 	private final CalloutLogger calloutLogger = new CalloutLogger(logBuffer);
 	private EncounterEngine encounterEngine;
 	private TriggerEngine triggerEngine;
+	private final CoachStateManager coachStateManager = new CoachStateManager();
+	private CoachingEngine coachingEngine;
 
 	private DebugOverlay debugOverlay;
 	private boolean debugOverlayAdded;
@@ -84,11 +88,16 @@ public class CoachPlugin extends Plugin
 	protected void startUp() throws Exception
 	{
 		runeLiteEventBus.register(this);
+		coachEventBus = new EventBus();
 		encounterEngine = new EncounterEngine(client);
+		coachingEngine = new CoachingEngine();
 		triggerEngine = new TriggerEngine(new TriggerRegistry(client));
 		triggerEngine.addFireListener(this::onTriggersFired);
 		coachEventBus.subscribe(triggerEngine);
 		coachEventBus.subscribe(encounterEngine);
+		coachEventBus.subscribe(this::onCoachingTick);
+		encounterEngine.addActivationListener(coachingEngine::onActivation);
+		coachingEngine.addListener(this::onCalloutDelivered);
 		reloadPacks("startup");
 		log.info("Project Coach started (debug={})", config.debugMode());
 
@@ -102,9 +111,10 @@ public class CoachPlugin extends Plugin
 	protected void shutDown() throws Exception
 	{
 		disableDebugging();
-		coachEventBus.unsubscribe(triggerEngine);
 		runeLiteEventBus.unregister(this);
+		// internal bus is rebuilt on next startUp — no stale listener leaks
 		triggerEngine = null;
+		coachingEngine = null;
 		encounterEngine = null;
 		log.info("Project Coach shut down");
 	}
@@ -114,7 +124,10 @@ public class CoachPlugin extends Plugin
 	@Subscribe
 	public void onGameTick(GameTick tick)
 	{
-		coachEventBus.post(new GameEvent(EventType.TICK, client.getTickCount(), null));
+		if (coachEventBus != null)
+		{
+			coachEventBus.post(new GameEvent(EventType.TICK, client.getTickCount(), null));
+		}
 	}
 
 	@Subscribe
@@ -205,6 +218,22 @@ public class CoachPlugin extends Plugin
 		return encounterEngine;
 	}
 
+	private void onCoachingTick(int tick, List<GameEvent> events)
+	{
+		// runs after trigger + encounter engines (subscription order)
+		coachStateManager.update(gameStateBridge, client, tick);
+		coachingEngine.onTick(tick);
+	}
+
+	private void onCalloutDelivered(com.coach.plugin.coaching.CoachingEngine.DeliveredCallout delivery)
+	{
+		if (config.debugMode())
+		{
+			calloutLogger.calloutDelivered(delivery.getTick(),
+				delivery.getCallout().calloutId, delivery.toString());
+		}
+	}
+
 	private void reloadPacks(String reason)
 	{
 		if (encounterEngine == null)
@@ -256,7 +285,10 @@ public class CoachPlugin extends Plugin
 
 	private void post(EventType type, Object payload)
 	{
-		coachEventBus.post(new GameEvent(type, client.getTickCount(), payload));
+		if (coachEventBus != null)
+		{
+			coachEventBus.post(new GameEvent(type, client.getTickCount(), payload));
+		}
 	}
 
 	private synchronized void enableDebugging()
