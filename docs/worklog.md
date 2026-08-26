@@ -4,6 +4,65 @@ Running log of sprints: what was done, key decisions, deviations from the docs.
 
 ---
 
+## Sprint 12 — Nex Implementation (2026-08-26)
+
+**Objective:** First real encounter pack: full five-phase Nex with special
+attack detection, prayer guidance, and real TTS audio. The fun one.
+
+### Done
+
+- **Engine extension — `shout` trigger type**: every Nex special is announced
+  by a chat shout, so the plugin now subscribes to `ChatMessage` and gained
+  `ShoutTriggerEvaluator` (case-insensitive substring match, optional sender
+  filter). Registered in the registry + schema v1.0 updated.
+- **`encounter-packs/nex.pack/`**: complete encounter definition:
+  - 5 phases: smoke → shadow → blood → ice → zaros, chained by HP-threshold
+    exits (80/60/40/20%); Zaros terminal
+  - 13 mechanics: phase-entry prayer guidance (critical, -2 tick audio offset)
+    for all five phases; specials via shouts (Choke, Smoke Dash, Shadow Smash,
+    Embrace Darkness, Siphon, Sacrifice, Containment, Ice Prison); Wrath on
+    death via `npc_despawn`
+- **Real TTS audio** (`generate_nex_audio.py`, reusable pattern): edge-tts
+  `en-US-GuyNeural` +15% rate → ffmpeg → mono 44.1kHz Vorbis `.ogg`; all
+  14 callouts generated; packaged as `encounter-packs/nex_1.0.0.zip` (333 KB,
+  15 entries).
+- Pack README with the rule-8 human verification checklist (shout strings,
+  chat-type delivery, HP thresholds, wrath timing) — required before any
+  community release.
+- `NexPackTest`: regression guard that loads the REAL zip from the repo and
+  asserts structure (5 phases ordered, HP exit chain, terminal Zaros), shout
+  coverage for all 12 announced mechanics, and audio on every callout.
+
+### Verified
+
+- Tests: **122/122 pass** (+4: NexPackTest ×3, ShoutTriggerEvaluatorTest ×4,
+  minus assumption overlap).
+
+### Decisions
+
+- **Shout-based special detection over animation/projectile IDs**: wiki
+  research confirmed all Nex specials are telegraphed by fixed shout strings;
+  animation IDs were NOT reliably sourced from public data, so guessing them
+  would violate rule 8's spirit. Shouts also survive game updates less often.
+- Roadmap said phases "Smoke, Ranged, Mage, Melee, Zaros" — wrong; actual
+  phases per wiki are Smoke/Shadow/Blood/Ice/Zaros. Pack follows reality.
+- Prayer callouts use -2 tick offsets ("2 ticks before impact" per MVP spec);
+  reaction specials (dash/smash/darkness) use 0/-1 since they're already
+  telegraphed at trigger time.
+- `.ogg` shipped per rule 11 even though playback needs Sprint 27's decoder;
+  visuals fire regardless until then.
+- Drag (Smoke) not implemented: no telegraph exists to detect.
+
+### Manual testing (pending, user — the big one)
+
+1. Copy `encounter-packs/nex_1.0.0.zip` into `.runelite/coach/encounters/`.
+2. Debug overlay should show it `[LOADED]`; enter a Nex fight (or watch a
+   stream of one) and verify shout callouts fire on specials + phase prayers
+   appear at each transition.
+3. Report exact shout strings if matching fails — one-line pack fix.
+
+---
+
 ## Sprint 11 — Boss Loader + Pack Management (2026-08-26)
 
 **Objective:** Pack lifecycle management: statuses, boss-conflict detection,

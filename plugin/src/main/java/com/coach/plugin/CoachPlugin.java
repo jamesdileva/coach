@@ -26,6 +26,7 @@ import java.nio.file.Path;
 import javax.inject.Inject;
 import net.runelite.api.Client;
 import net.runelite.api.events.AnimationChanged;
+import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.GraphicChanged;
 import net.runelite.api.events.GraphicsObjectCreated;
@@ -195,6 +196,12 @@ public class CoachPlugin extends Plugin
 	public void onItemContainerChanged(ItemContainerChanged event)
 	{
 		post(EventType.ITEM_CONTAINER_CHANGED, event);
+	}
+
+	@Subscribe
+	public void onChatMessage(ChatMessage event)
+	{
+		post(EventType.CHAT_MESSAGE, event);
 	}
 
 	// ---- Config changes ----

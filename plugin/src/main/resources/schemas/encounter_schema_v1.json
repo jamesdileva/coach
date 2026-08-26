@@ -97,8 +97,8 @@
         "triggerId": { "type": "string", "description": "Optional unique id within the mechanic for diagnostics." },
         "type": {
           "enum": ["animation", "projectile", "graphic", "npc_spawn", "npc_despawn",
-                   "hp", "tick_timer", "player_state", "location", "custom", "composite"],
-          "description": "Detection kind. 'custom' requires ConditionEvaluator support (Sprint 7+)."
+                   "hp", "tick_timer", "player_state", "location", "shout", "custom", "composite"],
+          "description": "Detection kind. 'shout' matches boss telegraph chat messages; 'custom' requires ConditionEvaluator support (Sprint 7+)."
         },
         "npcId": { "type": "integer", "description": "animation/graphic: filter to this NPC. npc_spawn/npc_despawn/hp: which NPC." },
         "animationId": { "type": "integer", "description": "animation/player_state: animation id to match." },
@@ -109,6 +109,8 @@
         "hpDirection": { "enum": ["below", "above"], "description": "Which way counts as satisfied (edge-detected: fires once at crossing)." },
         "tickMod": { "type": "integer", "minimum": 1, "description": "tick_timer: fire every N ticks." },
         "tickOffset": { "type": "integer", "description": "tick_timer: optional phase offset." },
+        "containsText": { "type": "string", "description": "shout: case-insensitive substring to match in chat messages." },
+        "senderName": { "type": "string", "description": "shout: optional sender name filter (e.g. 'Nex')." },
         "logic": { "enum": ["AND", "OR"], "description": "composite: how children combine against the same event." },
         "children": { "type": "array", "items": { "$ref": "#/definitions/trigger" }, "description": "composite: child triggers." },
         "minX": { "type": "integer" }, "maxX": { "type": "integer" },

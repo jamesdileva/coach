@@ -32,6 +32,7 @@ public class TriggerRegistry
 		builders.put("graphic", def -> new GraphicTriggerEvaluator(def.npcId, requireInt(def.graphicId, "graphicId")));
 		builders.put("npc_spawn", def -> new NpcSpawnTriggerEvaluator(def.npcId, true));
 		builders.put("npc_despawn", def -> new NpcSpawnTriggerEvaluator(def.npcId, false));
+		builders.put("shout", this::buildShout);
 		builders.put("hp", this::buildHp);
 		builders.put("tick_timer", this::buildTickTimer);
 		builders.put("player_state", this::buildPlayerState);
@@ -66,6 +67,11 @@ public class TriggerRegistry
 			log.warn("[coach] trigger type '{}' missing field {}: {}", definition.type, e.field, e.getMessage());
 			return Optional.empty();
 		}
+	}
+
+	private TriggerEvaluator buildShout(TriggerDefinition def)
+	{
+		return new ShoutTriggerEvaluator(requireText(def.containsText, "containsText"), def.senderName);
 	}
 
 	private TriggerEvaluator buildHp(TriggerDefinition def)
@@ -126,6 +132,15 @@ public class TriggerRegistry
 	private static int requireInt(Integer value, String field)
 	{
 		if (value == null)
+		{
+			throw new MissingFieldException(field);
+		}
+		return value;
+	}
+
+	private static String requireText(String value, String field)
+	{
+		if (value == null || value.trim().isEmpty())
 		{
 			throw new MissingFieldException(field);
 		}

@@ -21,6 +21,8 @@ public class TriggerDefinition
 	public String hpDirection;   // "below" | "above"
 	public Integer tickMod;
 	public Integer tickOffset;
+	public String containsText;  // shout: chat message substring (case-insensitive)
+	public String senderName;    // shout: optional sender filter
 	public List<TriggerDefinition> children; // composite only
 	public String logic;                        // composite: "AND" | "OR"
 

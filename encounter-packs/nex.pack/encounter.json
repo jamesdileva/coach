@@ -1,0 +1,265 @@
+{
+  "schemaVersion": "1.0",
+  "metadata": {
+    "packId": "nex",
+    "name": "Nex — Ancient Prison",
+    "description": "Full five-phase Nex encounter: Smoke, Shadow, Blood, Ice, Zaros. Special attacks are detected via boss shouts; phase transitions via Nex HP thresholds. Prayer callouts fire 2 ticks before impact where applicable. Human verification of shout strings against live client pending (see README).",
+    "author": "Project Coach",
+    "version": "1.0.0",
+    "gameVersion": "230"
+  },
+  "bosses": [
+    {
+      "bossId": "nex",
+      "name": "Nex",
+      "npcId": 11278,
+      "description": "Zarosian general in the Ancient Prison. Five phases keyed to the Ancient Magicks.",
+      "phases": [
+        {
+          "phaseId": "smoke",
+          "name": "Smoke",
+          "entryTrigger": { "type": "npc_spawn", "npcId": 11278 },
+          "exitTriggers": [
+            { "type": "hp", "npcId": 11278, "hpThreshold": 80, "hpDirection": "below" }
+          ],
+          "mechanics": [
+            {
+              "mechanicId": "smoke_phase_start",
+              "name": "Smoke phase prayer guidance",
+              "triggers": [{ "triggerId": "spawn", "type": "npc_spawn", "npcId": 11278 }],
+              "callouts": [{
+                "calloutId": "smoke_start_pray",
+                "text": "Smoke phase! Melee distance, flick Protect Melee and Magic",
+                "audioFile": "smoke_start.ogg",
+                "category": "transition", "priority": 60,
+                "audioOffset": 0, "visualOffset": 0,
+                "visual": { "type": "text", "color": "#9E9E9E", "durationTicks": 6 }
+              }],
+              "cooldown": 100
+            },
+            {
+              "mechanicId": "choke",
+              "name": "Choke (virus)",
+              "triggers": [{ "triggerId": "shout_choke", "type": "shout", "containsText": "Let the virus flow through you" }],
+              "callouts": [{
+                "calloutId": "choke_callout",
+                "text": "Choke! Spread out, choke tank step away",
+                "audioFile": "choke.ogg",
+                "category": "warning", "priority": 70,
+                "audioOffset": 0, "visualOffset": 0,
+                "visual": { "type": "text", "color": "#2E7D32", "durationTicks": 4 }
+              }],
+              "cooldown": 16
+            },
+            {
+              "mechanicId": "smoke_dash",
+              "name": "Smoke Dash (There is no escape)",
+              "triggers": [{ "triggerId": "shout_dash", "type": "shout", "containsText": "no escape" }],
+              "callouts": [{
+                "calloutId": "dash_callout",
+                "text": "Smoke dash! Move off the bridge path!",
+                "audioFile": "smoke_dash.ogg",
+                "category": "critical", "priority": 90,
+                "audioOffset": -1, "visualOffset": 0,
+                "visual": { "type": "text", "color": "#FF0000", "durationTicks": 4 }
+              }],
+              "cooldown": 12
+            }
+          ]
+        },
+        {
+          "phaseId": "shadow",
+          "name": "Shadow",
+          "entryTrigger": { "type": "npc_spawn", "npcId": 11278 },
+          "exitTriggers": [
+            { "type": "hp", "npcId": 11278, "hpThreshold": 60, "hpDirection": "below" }
+          ],
+          "mechanics": [
+            {
+              "mechanicId": "shadow_phase_start",
+              "name": "Shadow phase prayer guidance",
+              "triggers": [{ "triggerId": "shout_darken", "type": "shout", "containsText": "Darken my shadow" }],
+              "callouts": [{
+                "calloutId": "shadow_start_pray",
+                "text": "Shadow phase! Pray Missiles now",
+                "audioFile": "shadow_start.ogg",
+                "category": "critical", "priority": 85,
+                "audioOffset": -2, "visualOffset": 0,
+                "visual": { "type": "prayer_icon", "color": "#3F51B5", "durationTicks": 6 }
+              }],
+              "cooldown": 100
+            },
+            {
+              "mechanicId": "shadow_smash",
+              "name": "Shadow Smash",
+              "triggers": [{ "triggerId": "shout_smash", "type": "shout", "containsText": "Fear the shadow" }],
+              "callouts": [{
+                "calloutId": "smash_callout",
+                "text": "Shadow smash! Move within 3 ticks!",
+                "audioFile": "shadow_smash.ogg",
+                "category": "critical", "priority": 92,
+                "audioOffset": 0, "visualOffset": 0,
+                "visual": { "type": "text", "color": "#FF0000", "durationTicks": 4 }
+              }],
+              "cooldown": 12
+            },
+            {
+              "mechanicId": "embrace_darkness",
+              "name": "Embrace Darkness",
+              "triggers": [{ "triggerId": "shout_darkness", "type": "shout", "containsText": "Embrace darkness" }],
+              "callouts": [{
+                "calloutId": "darkness_callout",
+                "text": "Darkness! Run away from Nex NOW!",
+                "audioFile": "darkness.ogg",
+                "category": "critical", "priority": 95,
+                "audioOffset": -1, "visualOffset": 0,
+                "visual": { "type": "text", "color": "#FF0000", "durationTicks": 5 }
+              }],
+              "cooldown": 12
+            }
+          ]
+        },
+        {
+          "phaseId": "blood",
+          "name": "Blood",
+          "entryTrigger": { "type": "npc_spawn", "npcId": 11278 },
+          "exitTriggers": [
+            { "type": "hp", "npcId": 11278, "hpThreshold": 40, "hpDirection": "below" }
+          ],
+          "mechanics": [
+            {
+              "mechanicId": "blood_phase_start",
+              "name": "Blood phase prayer guidance",
+              "triggers": [{ "triggerId": "shout_flood", "type": "shout", "containsText": "Flood my lungs with blood" }],
+              "callouts": [{
+                "calloutId": "blood_start_pray",
+                "text": "Blood phase! Pray Magic, spread out",
+                "audioFile": "blood_start.ogg",
+                "category": "critical", "priority": 85,
+                "audioOffset": -2, "visualOffset": 0,
+                "visual": { "type": "prayer_icon", "color": "#B71C1C", "durationTicks": 6 }
+              }],
+              "cooldown": 100
+            },
+            {
+              "mechanicId": "blood_siphon",
+              "name": "Blood Siphon",
+              "triggers": [{ "triggerId": "shout_siphon", "type": "shout", "containsText": "A siphon will solve this" }],
+              "callouts": [{
+                "calloutId": "siphon_callout",
+                "text": "Siphon! STOP attacking — kill reavers",
+                "audioFile": "siphon.ogg",
+                "category": "critical", "priority": 93,
+                "audioOffset": -1, "visualOffset": 0,
+                "visual": { "type": "text", "color": "#B71C1C", "durationTicks": 6 }
+              }],
+              "cooldown": 12
+            },
+            {
+              "mechanicId": "blood_sacrifice",
+              "name": "Blood Sacrifice",
+              "triggers": [{ "triggerId": "shout_sacrifice", "type": "shout", "containsText": "I demand a blood sacrifice" }],
+              "callouts": [{
+                "calloutId": "sacrifice_callout",
+                "text": "Sacrifice marked! Run 7+ tiles from Nex!",
+                "audioFile": "sacrifice.ogg",
+                "category": "critical", "priority": 96,
+                "audioOffset": -1, "visualOffset": 0,
+                "visual": { "type": "text", "color": "#FF0000", "durationTicks": 5 }
+              }],
+              "cooldown": 12
+            }
+          ]
+        },
+        {
+          "phaseId": "ice",
+          "name": "Ice",
+          "entryTrigger": { "type": "npc_spawn", "npcId": 11278 },
+          "exitTriggers": [
+            { "type": "hp", "npcId": 11278, "hpThreshold": 20, "hpDirection": "below" }
+          ],
+          "mechanics": [
+            {
+              "mechanicId": "ice_phase_start",
+              "name": "Ice phase prayer guidance",
+              "triggers": [{ "triggerId": "shout_infuse", "type": "shout", "containsText": "power of ice" }],
+              "callouts": [{
+                "calloutId": "ice_start_pray",
+                "text": "Ice phase! Pray Magic to avoid freeze",
+                "audioFile": "ice_start.ogg",
+                "category": "critical", "priority": 85,
+                "audioOffset": -2, "visualOffset": 0,
+                "visual": { "type": "prayer_icon", "color": "#4FC3F7", "durationTicks": 6 }
+              }],
+              "cooldown": 100
+            },
+            {
+              "mechanicId": "containment",
+              "name": "Containment",
+              "triggers": [{ "triggerId": "shout_contain", "type": "shout", "containsText": "Contain this" }],
+              "callouts": [{
+                "calloutId": "contain_callout",
+                "text": "Containment! Move out of the 5x5!",
+                "audioFile": "containment.ogg",
+                "category": "critical", "priority": 94,
+                "audioOffset": -1, "visualOffset": 0,
+                "visual": { "type": "safe_tile", "color": "#4FC3F7", "durationTicks": 4 }
+              }],
+              "cooldown": 12
+            },
+            {
+              "mechanicId": "ice_prison",
+              "name": "Ice Prison",
+              "triggers": [{ "triggerId": "shout_prison", "type": "shout", "containsText": "prison of ice" }],
+              "callouts": [{
+                "calloutId": "prison_callout",
+                "text": "Ice prison! Break a stalagmite fast!",
+                "audioFile": "ice_prison.ogg",
+                "category": "critical", "priority": 93,
+                "audioOffset": -1, "visualOffset": 0,
+                "visual": { "type": "text", "color": "#4FC3F7", "durationTicks": 5 }
+              }],
+              "cooldown": 12
+            }
+          ]
+        },
+        {
+          "phaseId": "zaros",
+          "name": "Zaros",
+          "entryTrigger": { "type": "npc_spawn", "npcId": 11278 },
+          "exitTriggers": [],
+          "mechanics": [
+            {
+              "mechanicId": "zaros_phase_start",
+              "name": "Zaros phase prayer guidance",
+              "triggers": [{ "triggerId": "shout_zaros", "type": "shout", "containsText": "power of zaros" }],
+              "callouts": [{
+                "calloutId": "zaros_start_pray",
+                "text": "Zaros phase! Pray Magic, watch her overheads",
+                "audioFile": "zaros_start.ogg",
+                "category": "critical", "priority": 85,
+                "audioOffset": -2, "visualOffset": 0,
+                "visual": { "type": "prayer_icon", "color": "#4A148C", "durationTicks": 6 }
+              }],
+              "cooldown": 100
+            },
+            {
+              "mechanicId": "wrath",
+              "name": "Wrath (death AoE)",
+              "triggers": [{ "triggerId": "death_despawn", "type": "npc_despawn", "npcId": 11278 }],
+              "callouts": [{
+                "calloutId": "wrath_callout",
+                "text": "WRATH! Run 5 tiles from the body NOW!",
+                "audioFile": "wrath.ogg",
+                "category": "critical", "priority": 99,
+                "audioOffset": 0, "visualOffset": 0,
+                "visual": { "type": "safe_tile", "color": "#4A148C", "durationTicks": 5 }
+              }],
+              "cooldown": 10
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

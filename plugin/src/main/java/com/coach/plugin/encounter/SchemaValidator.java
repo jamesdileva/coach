@@ -22,7 +22,7 @@ public final class SchemaValidator
 {
 	private static final Set<String> TRIGGER_TYPES = Set.of(
 		"animation", "projectile", "graphic", "npc_spawn", "npc_despawn",
-		"hp", "tick_timer", "player_state", "location", "custom", "composite");
+		"hp", "tick_timer", "player_state", "location", "shout", "custom", "composite");
 
 	private static final Set<String> CALLOUT_CATEGORIES = Set.of(
 		"critical", "warning", "info", "transition");
