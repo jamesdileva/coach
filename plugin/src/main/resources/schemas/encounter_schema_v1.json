@@ -97,10 +97,16 @@
         "triggerId": { "type": "string", "description": "Optional unique id within the mechanic for diagnostics." },
         "type": {
           "enum": ["animation", "projectile", "graphic", "npc_spawn", "npc_despawn",
-                   "hp", "tick_timer", "player_state", "location", "shout", "custom", "composite"],
-          "description": "Detection kind. 'shout' matches boss telegraph chat messages; 'custom' requires ConditionEvaluator support (Sprint 7+)."
+                   "hp", "tick_timer", "player_state", "location", "shout", "wave_cleared",
+                   "custom", "composite"],
+          "description": "Detection kind. 'shout' matches boss telegraph chat messages; 'wave_cleared' fires when every NPC of npcIds has spawned and died; 'custom' requires ConditionEvaluator support (Sprint 7+)."
         },
         "npcId": { "type": "integer", "description": "animation/graphic: filter to this NPC. npc_spawn/npc_despawn/hp: which NPC." },
+        "npcIds": {
+          "type": "array",
+          "items": { "type": "integer" },
+          "description": "Multi-NPC form. npc_spawn/npc_despawn: any id matches. wave_cleared: the tracked set that must fully spawn then die."
+        },
         "animationId": { "type": "integer", "description": "animation/player_state: animation id to match." },
         "projectId": { "type": "integer", "description": "projectile: projectile id to match." },
         "srcNpcId": { "type": "integer", "description": "projectile: optional source NPC filter." },

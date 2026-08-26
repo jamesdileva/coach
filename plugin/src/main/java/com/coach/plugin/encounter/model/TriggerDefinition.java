@@ -13,6 +13,7 @@ public class TriggerDefinition
 
 	// type-specific fields
 	public Integer npcId;
+	public List<Integer> npcIds;    // multi-NPC form (spawn sets, wave_cleared)
 	public Integer animationId;
 	public Integer projectId;
 	public Integer srcNpcId;      // projectile: optional source NPC filter

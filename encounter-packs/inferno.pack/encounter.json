@@ -1,0 +1,8525 @@
+{
+ "schemaVersion": "1.0",
+ "metadata": {
+  "packId": "inferno",
+  "name": "The Inferno",
+  "description": "All 69 waves + basic TzKal-Zuk. Wave transitions detected via wave_cleared triggers (all wave NPCs dead); prayer callouts via attack animations. Animation/NPC ids are best-known community values \u2014 see README verification checklist.",
+  "author": "Project Coach",
+  "version": "1.0.0",
+  "gameVersion": "230"
+ },
+ "bosses": [
+  {
+   "bossId": "inferno",
+   "name": "The Inferno",
+   "npcId": 7706,
+   "phases": [
+    {
+     "phaseId": "wave_1",
+     "name": "Wave 1",
+     "entryTrigger": {
+      "triggerId": "wave1_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7694
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave1_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7694
+       ]
+      }
+     ],
+     "mechanics": []
+    },
+    {
+     "phaseId": "wave_2",
+     "name": "Wave 2",
+     "entryTrigger": {
+      "triggerId": "wave2_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7694
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave2_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7694
+       ]
+      }
+     ],
+     "mechanics": []
+    },
+    {
+     "phaseId": "wave_3",
+     "name": "Wave 3",
+     "entryTrigger": {
+      "triggerId": "wave3_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave3_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693
+       ]
+      }
+     ],
+     "mechanics": []
+    },
+    {
+     "phaseId": "wave_4",
+     "name": "Wave 4",
+     "entryTrigger": {
+      "triggerId": "wave4_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7695
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave4_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7695,
+        7703,
+        7704,
+        7705
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "blob_attack",
+       "name": "Jal-Ak attacking",
+       "triggers": [
+        {
+         "triggerId": "blob_a",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7581
+        },
+        {
+         "triggerId": "blob_b",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7583
+        },
+        {
+         "triggerId": "blob_c",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7582
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "blob_attacking",
+         "text": "Blob attacking \u2014 switch prayer!",
+         "audioFile": "blob_attack.ogg",
+         "category": "warning",
+         "priority": 65,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_5",
+     "name": "Wave 5",
+     "entryTrigger": {
+      "triggerId": "wave5_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7694,
+       7695
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave5_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7694,
+        7695,
+        7703,
+        7704,
+        7705
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "blob_attack",
+       "name": "Jal-Ak attacking",
+       "triggers": [
+        {
+         "triggerId": "blob_a",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7581
+        },
+        {
+         "triggerId": "blob_b",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7583
+        },
+        {
+         "triggerId": "blob_c",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7582
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "blob_attacking",
+         "text": "Blob attacking \u2014 switch prayer!",
+         "audioFile": "blob_attack.ogg",
+         "category": "warning",
+         "priority": 65,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_6",
+     "name": "Wave 6",
+     "entryTrigger": {
+      "triggerId": "wave6_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7694,
+       7695
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave6_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7694,
+        7695,
+        7703,
+        7704,
+        7705
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "blob_attack",
+       "name": "Jal-Ak attacking",
+       "triggers": [
+        {
+         "triggerId": "blob_a",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7581
+        },
+        {
+         "triggerId": "blob_b",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7583
+        },
+        {
+         "triggerId": "blob_c",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7582
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "blob_attacking",
+         "text": "Blob attacking \u2014 switch prayer!",
+         "audioFile": "blob_attack.ogg",
+         "category": "warning",
+         "priority": 65,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_7",
+     "name": "Wave 7",
+     "entryTrigger": {
+      "triggerId": "wave7_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7695
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave7_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7695,
+        7703,
+        7704,
+        7705
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "blob_attack",
+       "name": "Jal-Ak attacking",
+       "triggers": [
+        {
+         "triggerId": "blob_a",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7581
+        },
+        {
+         "triggerId": "blob_b",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7583
+        },
+        {
+         "triggerId": "blob_c",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7582
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "blob_attacking",
+         "text": "Blob attacking \u2014 switch prayer!",
+         "audioFile": "blob_attack.ogg",
+         "category": "warning",
+         "priority": 65,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_8",
+     "name": "Wave 8",
+     "entryTrigger": {
+      "triggerId": "wave8_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave8_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693
+       ]
+      }
+     ],
+     "mechanics": []
+    },
+    {
+     "phaseId": "wave_9",
+     "name": "Wave 9",
+     "entryTrigger": {
+      "triggerId": "wave9_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7696
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave9_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7696
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "meleer_attack",
+       "name": "Jal-ImKot attacking",
+       "triggers": [
+        {
+         "triggerId": "meleer_anim",
+         "type": "animation",
+         "npcIds": [
+          7696
+         ],
+         "animationId": 7597
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_melee_meleer",
+         "text": "Pray Melee!",
+         "audioFile": "pray_melee.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_10",
+     "name": "Wave 10",
+     "entryTrigger": {
+      "triggerId": "wave10_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7694,
+       7696
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave10_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7694,
+        7696
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "meleer_attack",
+       "name": "Jal-ImKot attacking",
+       "triggers": [
+        {
+         "triggerId": "meleer_anim",
+         "type": "animation",
+         "npcIds": [
+          7696
+         ],
+         "animationId": 7597
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_melee_meleer",
+         "text": "Pray Melee!",
+         "audioFile": "pray_melee.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_11",
+     "name": "Wave 11",
+     "entryTrigger": {
+      "triggerId": "wave11_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7694,
+       7696
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave11_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7694,
+        7696
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "meleer_attack",
+       "name": "Jal-ImKot attacking",
+       "triggers": [
+        {
+         "triggerId": "meleer_anim",
+         "type": "animation",
+         "npcIds": [
+          7696
+         ],
+         "animationId": 7597
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_melee_meleer",
+         "text": "Pray Melee!",
+         "audioFile": "pray_melee.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_12",
+     "name": "Wave 12",
+     "entryTrigger": {
+      "triggerId": "wave12_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7695,
+       7696
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave12_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7695,
+        7696,
+        7703,
+        7704,
+        7705
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "meleer_attack",
+       "name": "Jal-ImKot attacking",
+       "triggers": [
+        {
+         "triggerId": "meleer_anim",
+         "type": "animation",
+         "npcIds": [
+          7696
+         ],
+         "animationId": 7597
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_melee_meleer",
+         "text": "Pray Melee!",
+         "audioFile": "pray_melee.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "blob_attack",
+       "name": "Jal-Ak attacking",
+       "triggers": [
+        {
+         "triggerId": "blob_a",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7581
+        },
+        {
+         "triggerId": "blob_b",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7583
+        },
+        {
+         "triggerId": "blob_c",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7582
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "blob_attacking",
+         "text": "Blob attacking \u2014 switch prayer!",
+         "audioFile": "blob_attack.ogg",
+         "category": "warning",
+         "priority": 65,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_13",
+     "name": "Wave 13",
+     "entryTrigger": {
+      "triggerId": "wave13_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7694,
+       7695,
+       7696
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave13_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7694,
+        7695,
+        7696,
+        7703,
+        7704,
+        7705
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "meleer_attack",
+       "name": "Jal-ImKot attacking",
+       "triggers": [
+        {
+         "triggerId": "meleer_anim",
+         "type": "animation",
+         "npcIds": [
+          7696
+         ],
+         "animationId": 7597
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_melee_meleer",
+         "text": "Pray Melee!",
+         "audioFile": "pray_melee.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "blob_attack",
+       "name": "Jal-Ak attacking",
+       "triggers": [
+        {
+         "triggerId": "blob_a",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7581
+        },
+        {
+         "triggerId": "blob_b",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7583
+        },
+        {
+         "triggerId": "blob_c",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7582
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "blob_attacking",
+         "text": "Blob attacking \u2014 switch prayer!",
+         "audioFile": "blob_attack.ogg",
+         "category": "warning",
+         "priority": 65,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_14",
+     "name": "Wave 14",
+     "entryTrigger": {
+      "triggerId": "wave14_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7694,
+       7695,
+       7696
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave14_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7694,
+        7695,
+        7696,
+        7703,
+        7704,
+        7705
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "meleer_attack",
+       "name": "Jal-ImKot attacking",
+       "triggers": [
+        {
+         "triggerId": "meleer_anim",
+         "type": "animation",
+         "npcIds": [
+          7696
+         ],
+         "animationId": 7597
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_melee_meleer",
+         "text": "Pray Melee!",
+         "audioFile": "pray_melee.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "blob_attack",
+       "name": "Jal-Ak attacking",
+       "triggers": [
+        {
+         "triggerId": "blob_a",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7581
+        },
+        {
+         "triggerId": "blob_b",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7583
+        },
+        {
+         "triggerId": "blob_c",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7582
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "blob_attacking",
+         "text": "Blob attacking \u2014 switch prayer!",
+         "audioFile": "blob_attack.ogg",
+         "category": "warning",
+         "priority": 65,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_15",
+     "name": "Wave 15",
+     "entryTrigger": {
+      "triggerId": "wave15_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7695,
+       7696
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave15_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7695,
+        7696,
+        7703,
+        7704,
+        7705
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "meleer_attack",
+       "name": "Jal-ImKot attacking",
+       "triggers": [
+        {
+         "triggerId": "meleer_anim",
+         "type": "animation",
+         "npcIds": [
+          7696
+         ],
+         "animationId": 7597
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_melee_meleer",
+         "text": "Pray Melee!",
+         "audioFile": "pray_melee.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "blob_attack",
+       "name": "Jal-Ak attacking",
+       "triggers": [
+        {
+         "triggerId": "blob_a",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7581
+        },
+        {
+         "triggerId": "blob_b",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7583
+        },
+        {
+         "triggerId": "blob_c",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7582
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "blob_attacking",
+         "text": "Blob attacking \u2014 switch prayer!",
+         "audioFile": "blob_attack.ogg",
+         "category": "warning",
+         "priority": 65,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_16",
+     "name": "Wave 16",
+     "entryTrigger": {
+      "triggerId": "wave16_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7696
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave16_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7696
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "meleer_attack",
+       "name": "Jal-ImKot attacking",
+       "triggers": [
+        {
+         "triggerId": "meleer_anim",
+         "type": "animation",
+         "npcIds": [
+          7696
+         ],
+         "animationId": 7597
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_melee_meleer",
+         "text": "Pray Melee!",
+         "audioFile": "pray_melee.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_17",
+     "name": "Wave 17",
+     "entryTrigger": {
+      "triggerId": "wave17_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave17_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693
+       ]
+      }
+     ],
+     "mechanics": []
+    },
+    {
+     "phaseId": "wave_18",
+     "name": "Wave 18",
+     "entryTrigger": {
+      "triggerId": "wave18_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7698
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave18_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7698
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "ranger_attack",
+       "name": "Jal-Xil attacking",
+       "triggers": [
+        {
+         "triggerId": "ranger_range",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7605
+        },
+        {
+         "triggerId": "ranger_melee",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7604
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_ranged_ranger",
+         "text": "Pray Ranged!",
+         "audioFile": "pray_ranged.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "ranger_melee_warn",
+         "text": "Ranger melee!",
+         "audioFile": "ranger_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_19",
+     "name": "Wave 19",
+     "entryTrigger": {
+      "triggerId": "wave19_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7694,
+       7698
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave19_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7694,
+        7698
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "ranger_attack",
+       "name": "Jal-Xil attacking",
+       "triggers": [
+        {
+         "triggerId": "ranger_range",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7605
+        },
+        {
+         "triggerId": "ranger_melee",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7604
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_ranged_ranger",
+         "text": "Pray Ranged!",
+         "audioFile": "pray_ranged.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "ranger_melee_warn",
+         "text": "Ranger melee!",
+         "audioFile": "ranger_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_20",
+     "name": "Wave 20",
+     "entryTrigger": {
+      "triggerId": "wave20_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7694,
+       7698
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave20_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7694,
+        7698
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "ranger_attack",
+       "name": "Jal-Xil attacking",
+       "triggers": [
+        {
+         "triggerId": "ranger_range",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7605
+        },
+        {
+         "triggerId": "ranger_melee",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7604
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_ranged_ranger",
+         "text": "Pray Ranged!",
+         "audioFile": "pray_ranged.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "ranger_melee_warn",
+         "text": "Ranger melee!",
+         "audioFile": "ranger_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_21",
+     "name": "Wave 21",
+     "entryTrigger": {
+      "triggerId": "wave21_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7695,
+       7698
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave21_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7695,
+        7698,
+        7703,
+        7704,
+        7705
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "ranger_attack",
+       "name": "Jal-Xil attacking",
+       "triggers": [
+        {
+         "triggerId": "ranger_range",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7605
+        },
+        {
+         "triggerId": "ranger_melee",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7604
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_ranged_ranger",
+         "text": "Pray Ranged!",
+         "audioFile": "pray_ranged.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "ranger_melee_warn",
+         "text": "Ranger melee!",
+         "audioFile": "ranger_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "blob_attack",
+       "name": "Jal-Ak attacking",
+       "triggers": [
+        {
+         "triggerId": "blob_a",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7581
+        },
+        {
+         "triggerId": "blob_b",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7583
+        },
+        {
+         "triggerId": "blob_c",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7582
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "blob_attacking",
+         "text": "Blob attacking \u2014 switch prayer!",
+         "audioFile": "blob_attack.ogg",
+         "category": "warning",
+         "priority": 65,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_22",
+     "name": "Wave 22",
+     "entryTrigger": {
+      "triggerId": "wave22_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7694,
+       7695,
+       7698
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave22_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7694,
+        7695,
+        7698,
+        7703,
+        7704,
+        7705
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "ranger_attack",
+       "name": "Jal-Xil attacking",
+       "triggers": [
+        {
+         "triggerId": "ranger_range",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7605
+        },
+        {
+         "triggerId": "ranger_melee",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7604
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_ranged_ranger",
+         "text": "Pray Ranged!",
+         "audioFile": "pray_ranged.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "ranger_melee_warn",
+         "text": "Ranger melee!",
+         "audioFile": "ranger_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "blob_attack",
+       "name": "Jal-Ak attacking",
+       "triggers": [
+        {
+         "triggerId": "blob_a",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7581
+        },
+        {
+         "triggerId": "blob_b",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7583
+        },
+        {
+         "triggerId": "blob_c",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7582
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "blob_attacking",
+         "text": "Blob attacking \u2014 switch prayer!",
+         "audioFile": "blob_attack.ogg",
+         "category": "warning",
+         "priority": 65,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_23",
+     "name": "Wave 23",
+     "entryTrigger": {
+      "triggerId": "wave23_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7694,
+       7695,
+       7698
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave23_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7694,
+        7695,
+        7698,
+        7703,
+        7704,
+        7705
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "ranger_attack",
+       "name": "Jal-Xil attacking",
+       "triggers": [
+        {
+         "triggerId": "ranger_range",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7605
+        },
+        {
+         "triggerId": "ranger_melee",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7604
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_ranged_ranger",
+         "text": "Pray Ranged!",
+         "audioFile": "pray_ranged.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "ranger_melee_warn",
+         "text": "Ranger melee!",
+         "audioFile": "ranger_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "blob_attack",
+       "name": "Jal-Ak attacking",
+       "triggers": [
+        {
+         "triggerId": "blob_a",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7581
+        },
+        {
+         "triggerId": "blob_b",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7583
+        },
+        {
+         "triggerId": "blob_c",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7582
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "blob_attacking",
+         "text": "Blob attacking \u2014 switch prayer!",
+         "audioFile": "blob_attack.ogg",
+         "category": "warning",
+         "priority": 65,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_24",
+     "name": "Wave 24",
+     "entryTrigger": {
+      "triggerId": "wave24_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7695,
+       7698
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave24_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7695,
+        7698,
+        7703,
+        7704,
+        7705
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "ranger_attack",
+       "name": "Jal-Xil attacking",
+       "triggers": [
+        {
+         "triggerId": "ranger_range",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7605
+        },
+        {
+         "triggerId": "ranger_melee",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7604
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_ranged_ranger",
+         "text": "Pray Ranged!",
+         "audioFile": "pray_ranged.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "ranger_melee_warn",
+         "text": "Ranger melee!",
+         "audioFile": "ranger_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "blob_attack",
+       "name": "Jal-Ak attacking",
+       "triggers": [
+        {
+         "triggerId": "blob_a",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7581
+        },
+        {
+         "triggerId": "blob_b",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7583
+        },
+        {
+         "triggerId": "blob_c",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7582
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "blob_attacking",
+         "text": "Blob attacking \u2014 switch prayer!",
+         "audioFile": "blob_attack.ogg",
+         "category": "warning",
+         "priority": 65,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_25",
+     "name": "Wave 25",
+     "entryTrigger": {
+      "triggerId": "wave25_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7696,
+       7698
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave25_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7696,
+        7698
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "meleer_attack",
+       "name": "Jal-ImKot attacking",
+       "triggers": [
+        {
+         "triggerId": "meleer_anim",
+         "type": "animation",
+         "npcIds": [
+          7696
+         ],
+         "animationId": 7597
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_melee_meleer",
+         "text": "Pray Melee!",
+         "audioFile": "pray_melee.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "ranger_attack",
+       "name": "Jal-Xil attacking",
+       "triggers": [
+        {
+         "triggerId": "ranger_range",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7605
+        },
+        {
+         "triggerId": "ranger_melee",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7604
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_ranged_ranger",
+         "text": "Pray Ranged!",
+         "audioFile": "pray_ranged.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "ranger_melee_warn",
+         "text": "Ranger melee!",
+         "audioFile": "ranger_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_26",
+     "name": "Wave 26",
+     "entryTrigger": {
+      "triggerId": "wave26_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7694,
+       7696,
+       7698
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave26_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7694,
+        7696,
+        7698
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "meleer_attack",
+       "name": "Jal-ImKot attacking",
+       "triggers": [
+        {
+         "triggerId": "meleer_anim",
+         "type": "animation",
+         "npcIds": [
+          7696
+         ],
+         "animationId": 7597
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_melee_meleer",
+         "text": "Pray Melee!",
+         "audioFile": "pray_melee.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "ranger_attack",
+       "name": "Jal-Xil attacking",
+       "triggers": [
+        {
+         "triggerId": "ranger_range",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7605
+        },
+        {
+         "triggerId": "ranger_melee",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7604
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_ranged_ranger",
+         "text": "Pray Ranged!",
+         "audioFile": "pray_ranged.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "ranger_melee_warn",
+         "text": "Ranger melee!",
+         "audioFile": "ranger_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_27",
+     "name": "Wave 27",
+     "entryTrigger": {
+      "triggerId": "wave27_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7694,
+       7696,
+       7698
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave27_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7694,
+        7696,
+        7698
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "meleer_attack",
+       "name": "Jal-ImKot attacking",
+       "triggers": [
+        {
+         "triggerId": "meleer_anim",
+         "type": "animation",
+         "npcIds": [
+          7696
+         ],
+         "animationId": 7597
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_melee_meleer",
+         "text": "Pray Melee!",
+         "audioFile": "pray_melee.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "ranger_attack",
+       "name": "Jal-Xil attacking",
+       "triggers": [
+        {
+         "triggerId": "ranger_range",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7605
+        },
+        {
+         "triggerId": "ranger_melee",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7604
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_ranged_ranger",
+         "text": "Pray Ranged!",
+         "audioFile": "pray_ranged.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "ranger_melee_warn",
+         "text": "Ranger melee!",
+         "audioFile": "ranger_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_28",
+     "name": "Wave 28",
+     "entryTrigger": {
+      "triggerId": "wave28_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7695,
+       7696,
+       7698
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave28_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7695,
+        7696,
+        7698,
+        7703,
+        7704,
+        7705
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "meleer_attack",
+       "name": "Jal-ImKot attacking",
+       "triggers": [
+        {
+         "triggerId": "meleer_anim",
+         "type": "animation",
+         "npcIds": [
+          7696
+         ],
+         "animationId": 7597
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_melee_meleer",
+         "text": "Pray Melee!",
+         "audioFile": "pray_melee.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "ranger_attack",
+       "name": "Jal-Xil attacking",
+       "triggers": [
+        {
+         "triggerId": "ranger_range",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7605
+        },
+        {
+         "triggerId": "ranger_melee",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7604
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_ranged_ranger",
+         "text": "Pray Ranged!",
+         "audioFile": "pray_ranged.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "ranger_melee_warn",
+         "text": "Ranger melee!",
+         "audioFile": "ranger_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "blob_attack",
+       "name": "Jal-Ak attacking",
+       "triggers": [
+        {
+         "triggerId": "blob_a",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7581
+        },
+        {
+         "triggerId": "blob_b",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7583
+        },
+        {
+         "triggerId": "blob_c",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7582
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "blob_attacking",
+         "text": "Blob attacking \u2014 switch prayer!",
+         "audioFile": "blob_attack.ogg",
+         "category": "warning",
+         "priority": 65,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_29",
+     "name": "Wave 29",
+     "entryTrigger": {
+      "triggerId": "wave29_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7694,
+       7695,
+       7696,
+       7698
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave29_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7694,
+        7695,
+        7696,
+        7698,
+        7703,
+        7704,
+        7705
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "meleer_attack",
+       "name": "Jal-ImKot attacking",
+       "triggers": [
+        {
+         "triggerId": "meleer_anim",
+         "type": "animation",
+         "npcIds": [
+          7696
+         ],
+         "animationId": 7597
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_melee_meleer",
+         "text": "Pray Melee!",
+         "audioFile": "pray_melee.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "ranger_attack",
+       "name": "Jal-Xil attacking",
+       "triggers": [
+        {
+         "triggerId": "ranger_range",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7605
+        },
+        {
+         "triggerId": "ranger_melee",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7604
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_ranged_ranger",
+         "text": "Pray Ranged!",
+         "audioFile": "pray_ranged.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "ranger_melee_warn",
+         "text": "Ranger melee!",
+         "audioFile": "ranger_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "blob_attack",
+       "name": "Jal-Ak attacking",
+       "triggers": [
+        {
+         "triggerId": "blob_a",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7581
+        },
+        {
+         "triggerId": "blob_b",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7583
+        },
+        {
+         "triggerId": "blob_c",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7582
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "blob_attacking",
+         "text": "Blob attacking \u2014 switch prayer!",
+         "audioFile": "blob_attack.ogg",
+         "category": "warning",
+         "priority": 65,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_30",
+     "name": "Wave 30",
+     "entryTrigger": {
+      "triggerId": "wave30_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7694,
+       7695,
+       7696,
+       7698
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave30_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7694,
+        7695,
+        7696,
+        7698,
+        7703,
+        7704,
+        7705
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "meleer_attack",
+       "name": "Jal-ImKot attacking",
+       "triggers": [
+        {
+         "triggerId": "meleer_anim",
+         "type": "animation",
+         "npcIds": [
+          7696
+         ],
+         "animationId": 7597
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_melee_meleer",
+         "text": "Pray Melee!",
+         "audioFile": "pray_melee.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "ranger_attack",
+       "name": "Jal-Xil attacking",
+       "triggers": [
+        {
+         "triggerId": "ranger_range",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7605
+        },
+        {
+         "triggerId": "ranger_melee",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7604
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_ranged_ranger",
+         "text": "Pray Ranged!",
+         "audioFile": "pray_ranged.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "ranger_melee_warn",
+         "text": "Ranger melee!",
+         "audioFile": "ranger_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "blob_attack",
+       "name": "Jal-Ak attacking",
+       "triggers": [
+        {
+         "triggerId": "blob_a",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7581
+        },
+        {
+         "triggerId": "blob_b",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7583
+        },
+        {
+         "triggerId": "blob_c",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7582
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "blob_attacking",
+         "text": "Blob attacking \u2014 switch prayer!",
+         "audioFile": "blob_attack.ogg",
+         "category": "warning",
+         "priority": 65,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_31",
+     "name": "Wave 31",
+     "entryTrigger": {
+      "triggerId": "wave31_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7695,
+       7696,
+       7698
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave31_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7695,
+        7696,
+        7698,
+        7703,
+        7704,
+        7705
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "meleer_attack",
+       "name": "Jal-ImKot attacking",
+       "triggers": [
+        {
+         "triggerId": "meleer_anim",
+         "type": "animation",
+         "npcIds": [
+          7696
+         ],
+         "animationId": 7597
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_melee_meleer",
+         "text": "Pray Melee!",
+         "audioFile": "pray_melee.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "ranger_attack",
+       "name": "Jal-Xil attacking",
+       "triggers": [
+        {
+         "triggerId": "ranger_range",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7605
+        },
+        {
+         "triggerId": "ranger_melee",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7604
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_ranged_ranger",
+         "text": "Pray Ranged!",
+         "audioFile": "pray_ranged.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "ranger_melee_warn",
+         "text": "Ranger melee!",
+         "audioFile": "ranger_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "blob_attack",
+       "name": "Jal-Ak attacking",
+       "triggers": [
+        {
+         "triggerId": "blob_a",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7581
+        },
+        {
+         "triggerId": "blob_b",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7583
+        },
+        {
+         "triggerId": "blob_c",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7582
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "blob_attacking",
+         "text": "Blob attacking \u2014 switch prayer!",
+         "audioFile": "blob_attack.ogg",
+         "category": "warning",
+         "priority": 65,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_32",
+     "name": "Wave 32",
+     "entryTrigger": {
+      "triggerId": "wave32_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7696,
+       7698
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave32_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7696,
+        7698
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "meleer_attack",
+       "name": "Jal-ImKot attacking",
+       "triggers": [
+        {
+         "triggerId": "meleer_anim",
+         "type": "animation",
+         "npcIds": [
+          7696
+         ],
+         "animationId": 7597
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_melee_meleer",
+         "text": "Pray Melee!",
+         "audioFile": "pray_melee.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "ranger_attack",
+       "name": "Jal-Xil attacking",
+       "triggers": [
+        {
+         "triggerId": "ranger_range",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7605
+        },
+        {
+         "triggerId": "ranger_melee",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7604
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_ranged_ranger",
+         "text": "Pray Ranged!",
+         "audioFile": "pray_ranged.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "ranger_melee_warn",
+         "text": "Ranger melee!",
+         "audioFile": "ranger_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_33",
+     "name": "Wave 33",
+     "entryTrigger": {
+      "triggerId": "wave33_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7698
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave33_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7698
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "ranger_attack",
+       "name": "Jal-Xil attacking",
+       "triggers": [
+        {
+         "triggerId": "ranger_range",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7605
+        },
+        {
+         "triggerId": "ranger_melee",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7604
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_ranged_ranger",
+         "text": "Pray Ranged!",
+         "audioFile": "pray_ranged.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "ranger_melee_warn",
+         "text": "Ranger melee!",
+         "audioFile": "ranger_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_34",
+     "name": "Wave 34",
+     "entryTrigger": {
+      "triggerId": "wave34_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave34_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693
+       ]
+      }
+     ],
+     "mechanics": []
+    },
+    {
+     "phaseId": "wave_35",
+     "name": "Wave 35",
+     "entryTrigger": {
+      "triggerId": "wave35_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7699
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave35_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7699
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "mager_attack",
+       "name": "Jal-Zek attacking",
+       "triggers": [
+        {
+         "triggerId": "mager_magic",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7610
+        },
+        {
+         "triggerId": "mager_melee",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7612
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_magic_mager",
+         "text": "Pray Magic!",
+         "audioFile": "pray_magic.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "mager_melee_warn",
+         "text": "Mager melee!",
+         "audioFile": "mager_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_36",
+     "name": "Wave 36",
+     "entryTrigger": {
+      "triggerId": "wave36_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7694,
+       7699
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave36_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7694,
+        7699
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "mager_attack",
+       "name": "Jal-Zek attacking",
+       "triggers": [
+        {
+         "triggerId": "mager_magic",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7610
+        },
+        {
+         "triggerId": "mager_melee",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7612
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_magic_mager",
+         "text": "Pray Magic!",
+         "audioFile": "pray_magic.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "mager_melee_warn",
+         "text": "Mager melee!",
+         "audioFile": "mager_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_37",
+     "name": "Wave 37",
+     "entryTrigger": {
+      "triggerId": "wave37_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7694,
+       7699
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave37_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7694,
+        7699
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "mager_attack",
+       "name": "Jal-Zek attacking",
+       "triggers": [
+        {
+         "triggerId": "mager_magic",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7610
+        },
+        {
+         "triggerId": "mager_melee",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7612
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_magic_mager",
+         "text": "Pray Magic!",
+         "audioFile": "pray_magic.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "mager_melee_warn",
+         "text": "Mager melee!",
+         "audioFile": "mager_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_38",
+     "name": "Wave 38",
+     "entryTrigger": {
+      "triggerId": "wave38_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7695,
+       7699
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave38_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7695,
+        7699,
+        7703,
+        7704,
+        7705
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "mager_attack",
+       "name": "Jal-Zek attacking",
+       "triggers": [
+        {
+         "triggerId": "mager_magic",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7610
+        },
+        {
+         "triggerId": "mager_melee",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7612
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_magic_mager",
+         "text": "Pray Magic!",
+         "audioFile": "pray_magic.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "mager_melee_warn",
+         "text": "Mager melee!",
+         "audioFile": "mager_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "blob_attack",
+       "name": "Jal-Ak attacking",
+       "triggers": [
+        {
+         "triggerId": "blob_a",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7581
+        },
+        {
+         "triggerId": "blob_b",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7583
+        },
+        {
+         "triggerId": "blob_c",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7582
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "blob_attacking",
+         "text": "Blob attacking \u2014 switch prayer!",
+         "audioFile": "blob_attack.ogg",
+         "category": "warning",
+         "priority": 65,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_39",
+     "name": "Wave 39",
+     "entryTrigger": {
+      "triggerId": "wave39_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7694,
+       7695,
+       7699
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave39_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7694,
+        7695,
+        7699,
+        7703,
+        7704,
+        7705
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "mager_attack",
+       "name": "Jal-Zek attacking",
+       "triggers": [
+        {
+         "triggerId": "mager_magic",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7610
+        },
+        {
+         "triggerId": "mager_melee",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7612
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_magic_mager",
+         "text": "Pray Magic!",
+         "audioFile": "pray_magic.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "mager_melee_warn",
+         "text": "Mager melee!",
+         "audioFile": "mager_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "blob_attack",
+       "name": "Jal-Ak attacking",
+       "triggers": [
+        {
+         "triggerId": "blob_a",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7581
+        },
+        {
+         "triggerId": "blob_b",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7583
+        },
+        {
+         "triggerId": "blob_c",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7582
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "blob_attacking",
+         "text": "Blob attacking \u2014 switch prayer!",
+         "audioFile": "blob_attack.ogg",
+         "category": "warning",
+         "priority": 65,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_40",
+     "name": "Wave 40",
+     "entryTrigger": {
+      "triggerId": "wave40_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7694,
+       7695,
+       7699
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave40_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7694,
+        7695,
+        7699,
+        7703,
+        7704,
+        7705
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "mager_attack",
+       "name": "Jal-Zek attacking",
+       "triggers": [
+        {
+         "triggerId": "mager_magic",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7610
+        },
+        {
+         "triggerId": "mager_melee",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7612
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_magic_mager",
+         "text": "Pray Magic!",
+         "audioFile": "pray_magic.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "mager_melee_warn",
+         "text": "Mager melee!",
+         "audioFile": "mager_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "blob_attack",
+       "name": "Jal-Ak attacking",
+       "triggers": [
+        {
+         "triggerId": "blob_a",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7581
+        },
+        {
+         "triggerId": "blob_b",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7583
+        },
+        {
+         "triggerId": "blob_c",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7582
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "blob_attacking",
+         "text": "Blob attacking \u2014 switch prayer!",
+         "audioFile": "blob_attack.ogg",
+         "category": "warning",
+         "priority": 65,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_41",
+     "name": "Wave 41",
+     "entryTrigger": {
+      "triggerId": "wave41_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7695,
+       7699
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave41_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7695,
+        7699,
+        7703,
+        7704,
+        7705
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "mager_attack",
+       "name": "Jal-Zek attacking",
+       "triggers": [
+        {
+         "triggerId": "mager_magic",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7610
+        },
+        {
+         "triggerId": "mager_melee",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7612
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_magic_mager",
+         "text": "Pray Magic!",
+         "audioFile": "pray_magic.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "mager_melee_warn",
+         "text": "Mager melee!",
+         "audioFile": "mager_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "blob_attack",
+       "name": "Jal-Ak attacking",
+       "triggers": [
+        {
+         "triggerId": "blob_a",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7581
+        },
+        {
+         "triggerId": "blob_b",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7583
+        },
+        {
+         "triggerId": "blob_c",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7582
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "blob_attacking",
+         "text": "Blob attacking \u2014 switch prayer!",
+         "audioFile": "blob_attack.ogg",
+         "category": "warning",
+         "priority": 65,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_42",
+     "name": "Wave 42",
+     "entryTrigger": {
+      "triggerId": "wave42_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7696,
+       7699
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave42_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7696,
+        7699
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "meleer_attack",
+       "name": "Jal-ImKot attacking",
+       "triggers": [
+        {
+         "triggerId": "meleer_anim",
+         "type": "animation",
+         "npcIds": [
+          7696
+         ],
+         "animationId": 7597
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_melee_meleer",
+         "text": "Pray Melee!",
+         "audioFile": "pray_melee.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "mager_attack",
+       "name": "Jal-Zek attacking",
+       "triggers": [
+        {
+         "triggerId": "mager_magic",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7610
+        },
+        {
+         "triggerId": "mager_melee",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7612
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_magic_mager",
+         "text": "Pray Magic!",
+         "audioFile": "pray_magic.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "mager_melee_warn",
+         "text": "Mager melee!",
+         "audioFile": "mager_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_43",
+     "name": "Wave 43",
+     "entryTrigger": {
+      "triggerId": "wave43_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7694,
+       7696,
+       7699
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave43_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7694,
+        7696,
+        7699
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "meleer_attack",
+       "name": "Jal-ImKot attacking",
+       "triggers": [
+        {
+         "triggerId": "meleer_anim",
+         "type": "animation",
+         "npcIds": [
+          7696
+         ],
+         "animationId": 7597
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_melee_meleer",
+         "text": "Pray Melee!",
+         "audioFile": "pray_melee.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "mager_attack",
+       "name": "Jal-Zek attacking",
+       "triggers": [
+        {
+         "triggerId": "mager_magic",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7610
+        },
+        {
+         "triggerId": "mager_melee",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7612
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_magic_mager",
+         "text": "Pray Magic!",
+         "audioFile": "pray_magic.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "mager_melee_warn",
+         "text": "Mager melee!",
+         "audioFile": "mager_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_44",
+     "name": "Wave 44",
+     "entryTrigger": {
+      "triggerId": "wave44_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7694,
+       7696,
+       7699
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave44_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7694,
+        7696,
+        7699
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "meleer_attack",
+       "name": "Jal-ImKot attacking",
+       "triggers": [
+        {
+         "triggerId": "meleer_anim",
+         "type": "animation",
+         "npcIds": [
+          7696
+         ],
+         "animationId": 7597
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_melee_meleer",
+         "text": "Pray Melee!",
+         "audioFile": "pray_melee.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "mager_attack",
+       "name": "Jal-Zek attacking",
+       "triggers": [
+        {
+         "triggerId": "mager_magic",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7610
+        },
+        {
+         "triggerId": "mager_melee",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7612
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_magic_mager",
+         "text": "Pray Magic!",
+         "audioFile": "pray_magic.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "mager_melee_warn",
+         "text": "Mager melee!",
+         "audioFile": "mager_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_45",
+     "name": "Wave 45",
+     "entryTrigger": {
+      "triggerId": "wave45_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7695,
+       7696,
+       7699
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave45_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7695,
+        7696,
+        7699,
+        7703,
+        7704,
+        7705
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "meleer_attack",
+       "name": "Jal-ImKot attacking",
+       "triggers": [
+        {
+         "triggerId": "meleer_anim",
+         "type": "animation",
+         "npcIds": [
+          7696
+         ],
+         "animationId": 7597
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_melee_meleer",
+         "text": "Pray Melee!",
+         "audioFile": "pray_melee.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "mager_attack",
+       "name": "Jal-Zek attacking",
+       "triggers": [
+        {
+         "triggerId": "mager_magic",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7610
+        },
+        {
+         "triggerId": "mager_melee",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7612
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_magic_mager",
+         "text": "Pray Magic!",
+         "audioFile": "pray_magic.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "mager_melee_warn",
+         "text": "Mager melee!",
+         "audioFile": "mager_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "blob_attack",
+       "name": "Jal-Ak attacking",
+       "triggers": [
+        {
+         "triggerId": "blob_a",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7581
+        },
+        {
+         "triggerId": "blob_b",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7583
+        },
+        {
+         "triggerId": "blob_c",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7582
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "blob_attacking",
+         "text": "Blob attacking \u2014 switch prayer!",
+         "audioFile": "blob_attack.ogg",
+         "category": "warning",
+         "priority": 65,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_46",
+     "name": "Wave 46",
+     "entryTrigger": {
+      "triggerId": "wave46_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7694,
+       7695,
+       7696,
+       7699
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave46_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7694,
+        7695,
+        7696,
+        7699,
+        7703,
+        7704,
+        7705
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "meleer_attack",
+       "name": "Jal-ImKot attacking",
+       "triggers": [
+        {
+         "triggerId": "meleer_anim",
+         "type": "animation",
+         "npcIds": [
+          7696
+         ],
+         "animationId": 7597
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_melee_meleer",
+         "text": "Pray Melee!",
+         "audioFile": "pray_melee.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "mager_attack",
+       "name": "Jal-Zek attacking",
+       "triggers": [
+        {
+         "triggerId": "mager_magic",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7610
+        },
+        {
+         "triggerId": "mager_melee",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7612
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_magic_mager",
+         "text": "Pray Magic!",
+         "audioFile": "pray_magic.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "mager_melee_warn",
+         "text": "Mager melee!",
+         "audioFile": "mager_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "blob_attack",
+       "name": "Jal-Ak attacking",
+       "triggers": [
+        {
+         "triggerId": "blob_a",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7581
+        },
+        {
+         "triggerId": "blob_b",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7583
+        },
+        {
+         "triggerId": "blob_c",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7582
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "blob_attacking",
+         "text": "Blob attacking \u2014 switch prayer!",
+         "audioFile": "blob_attack.ogg",
+         "category": "warning",
+         "priority": 65,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_47",
+     "name": "Wave 47",
+     "entryTrigger": {
+      "triggerId": "wave47_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7694,
+       7695,
+       7696,
+       7699
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave47_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7694,
+        7695,
+        7696,
+        7699,
+        7703,
+        7704,
+        7705
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "meleer_attack",
+       "name": "Jal-ImKot attacking",
+       "triggers": [
+        {
+         "triggerId": "meleer_anim",
+         "type": "animation",
+         "npcIds": [
+          7696
+         ],
+         "animationId": 7597
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_melee_meleer",
+         "text": "Pray Melee!",
+         "audioFile": "pray_melee.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "mager_attack",
+       "name": "Jal-Zek attacking",
+       "triggers": [
+        {
+         "triggerId": "mager_magic",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7610
+        },
+        {
+         "triggerId": "mager_melee",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7612
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_magic_mager",
+         "text": "Pray Magic!",
+         "audioFile": "pray_magic.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "mager_melee_warn",
+         "text": "Mager melee!",
+         "audioFile": "mager_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "blob_attack",
+       "name": "Jal-Ak attacking",
+       "triggers": [
+        {
+         "triggerId": "blob_a",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7581
+        },
+        {
+         "triggerId": "blob_b",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7583
+        },
+        {
+         "triggerId": "blob_c",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7582
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "blob_attacking",
+         "text": "Blob attacking \u2014 switch prayer!",
+         "audioFile": "blob_attack.ogg",
+         "category": "warning",
+         "priority": 65,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_48",
+     "name": "Wave 48",
+     "entryTrigger": {
+      "triggerId": "wave48_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7695,
+       7696,
+       7699
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave48_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7695,
+        7696,
+        7699,
+        7703,
+        7704,
+        7705
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "meleer_attack",
+       "name": "Jal-ImKot attacking",
+       "triggers": [
+        {
+         "triggerId": "meleer_anim",
+         "type": "animation",
+         "npcIds": [
+          7696
+         ],
+         "animationId": 7597
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_melee_meleer",
+         "text": "Pray Melee!",
+         "audioFile": "pray_melee.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "mager_attack",
+       "name": "Jal-Zek attacking",
+       "triggers": [
+        {
+         "triggerId": "mager_magic",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7610
+        },
+        {
+         "triggerId": "mager_melee",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7612
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_magic_mager",
+         "text": "Pray Magic!",
+         "audioFile": "pray_magic.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "mager_melee_warn",
+         "text": "Mager melee!",
+         "audioFile": "mager_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "blob_attack",
+       "name": "Jal-Ak attacking",
+       "triggers": [
+        {
+         "triggerId": "blob_a",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7581
+        },
+        {
+         "triggerId": "blob_b",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7583
+        },
+        {
+         "triggerId": "blob_c",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7582
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "blob_attacking",
+         "text": "Blob attacking \u2014 switch prayer!",
+         "audioFile": "blob_attack.ogg",
+         "category": "warning",
+         "priority": 65,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_49",
+     "name": "Wave 49",
+     "entryTrigger": {
+      "triggerId": "wave49_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7696,
+       7699
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave49_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7696,
+        7699
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "meleer_attack",
+       "name": "Jal-ImKot attacking",
+       "triggers": [
+        {
+         "triggerId": "meleer_anim",
+         "type": "animation",
+         "npcIds": [
+          7696
+         ],
+         "animationId": 7597
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_melee_meleer",
+         "text": "Pray Melee!",
+         "audioFile": "pray_melee.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "mager_attack",
+       "name": "Jal-Zek attacking",
+       "triggers": [
+        {
+         "triggerId": "mager_magic",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7610
+        },
+        {
+         "triggerId": "mager_melee",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7612
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_magic_mager",
+         "text": "Pray Magic!",
+         "audioFile": "pray_magic.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "mager_melee_warn",
+         "text": "Mager melee!",
+         "audioFile": "mager_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_50",
+     "name": "Wave 50",
+     "entryTrigger": {
+      "triggerId": "wave50_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7698,
+       7699
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave50_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7698,
+        7699
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "ranger_attack",
+       "name": "Jal-Xil attacking",
+       "triggers": [
+        {
+         "triggerId": "ranger_range",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7605
+        },
+        {
+         "triggerId": "ranger_melee",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7604
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_ranged_ranger",
+         "text": "Pray Ranged!",
+         "audioFile": "pray_ranged.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "ranger_melee_warn",
+         "text": "Ranger melee!",
+         "audioFile": "ranger_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "mager_attack",
+       "name": "Jal-Zek attacking",
+       "triggers": [
+        {
+         "triggerId": "mager_magic",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7610
+        },
+        {
+         "triggerId": "mager_melee",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7612
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_magic_mager",
+         "text": "Pray Magic!",
+         "audioFile": "pray_magic.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "mager_melee_warn",
+         "text": "Mager melee!",
+         "audioFile": "mager_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_51",
+     "name": "Wave 51",
+     "entryTrigger": {
+      "triggerId": "wave51_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7694,
+       7698,
+       7699
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave51_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7694,
+        7698,
+        7699
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "ranger_attack",
+       "name": "Jal-Xil attacking",
+       "triggers": [
+        {
+         "triggerId": "ranger_range",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7605
+        },
+        {
+         "triggerId": "ranger_melee",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7604
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_ranged_ranger",
+         "text": "Pray Ranged!",
+         "audioFile": "pray_ranged.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "ranger_melee_warn",
+         "text": "Ranger melee!",
+         "audioFile": "ranger_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "mager_attack",
+       "name": "Jal-Zek attacking",
+       "triggers": [
+        {
+         "triggerId": "mager_magic",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7610
+        },
+        {
+         "triggerId": "mager_melee",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7612
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_magic_mager",
+         "text": "Pray Magic!",
+         "audioFile": "pray_magic.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "mager_melee_warn",
+         "text": "Mager melee!",
+         "audioFile": "mager_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_52",
+     "name": "Wave 52",
+     "entryTrigger": {
+      "triggerId": "wave52_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7694,
+       7698,
+       7699
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave52_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7694,
+        7698,
+        7699
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "ranger_attack",
+       "name": "Jal-Xil attacking",
+       "triggers": [
+        {
+         "triggerId": "ranger_range",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7605
+        },
+        {
+         "triggerId": "ranger_melee",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7604
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_ranged_ranger",
+         "text": "Pray Ranged!",
+         "audioFile": "pray_ranged.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "ranger_melee_warn",
+         "text": "Ranger melee!",
+         "audioFile": "ranger_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "mager_attack",
+       "name": "Jal-Zek attacking",
+       "triggers": [
+        {
+         "triggerId": "mager_magic",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7610
+        },
+        {
+         "triggerId": "mager_melee",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7612
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_magic_mager",
+         "text": "Pray Magic!",
+         "audioFile": "pray_magic.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "mager_melee_warn",
+         "text": "Mager melee!",
+         "audioFile": "mager_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_53",
+     "name": "Wave 53",
+     "entryTrigger": {
+      "triggerId": "wave53_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7695,
+       7698,
+       7699
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave53_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7695,
+        7698,
+        7699,
+        7703,
+        7704,
+        7705
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "ranger_attack",
+       "name": "Jal-Xil attacking",
+       "triggers": [
+        {
+         "triggerId": "ranger_range",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7605
+        },
+        {
+         "triggerId": "ranger_melee",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7604
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_ranged_ranger",
+         "text": "Pray Ranged!",
+         "audioFile": "pray_ranged.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "ranger_melee_warn",
+         "text": "Ranger melee!",
+         "audioFile": "ranger_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "mager_attack",
+       "name": "Jal-Zek attacking",
+       "triggers": [
+        {
+         "triggerId": "mager_magic",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7610
+        },
+        {
+         "triggerId": "mager_melee",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7612
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_magic_mager",
+         "text": "Pray Magic!",
+         "audioFile": "pray_magic.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "mager_melee_warn",
+         "text": "Mager melee!",
+         "audioFile": "mager_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "blob_attack",
+       "name": "Jal-Ak attacking",
+       "triggers": [
+        {
+         "triggerId": "blob_a",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7581
+        },
+        {
+         "triggerId": "blob_b",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7583
+        },
+        {
+         "triggerId": "blob_c",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7582
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "blob_attacking",
+         "text": "Blob attacking \u2014 switch prayer!",
+         "audioFile": "blob_attack.ogg",
+         "category": "warning",
+         "priority": 65,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_54",
+     "name": "Wave 54",
+     "entryTrigger": {
+      "triggerId": "wave54_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7694,
+       7695,
+       7698,
+       7699
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave54_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7694,
+        7695,
+        7698,
+        7699,
+        7703,
+        7704,
+        7705
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "ranger_attack",
+       "name": "Jal-Xil attacking",
+       "triggers": [
+        {
+         "triggerId": "ranger_range",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7605
+        },
+        {
+         "triggerId": "ranger_melee",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7604
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_ranged_ranger",
+         "text": "Pray Ranged!",
+         "audioFile": "pray_ranged.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "ranger_melee_warn",
+         "text": "Ranger melee!",
+         "audioFile": "ranger_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "mager_attack",
+       "name": "Jal-Zek attacking",
+       "triggers": [
+        {
+         "triggerId": "mager_magic",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7610
+        },
+        {
+         "triggerId": "mager_melee",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7612
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_magic_mager",
+         "text": "Pray Magic!",
+         "audioFile": "pray_magic.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "mager_melee_warn",
+         "text": "Mager melee!",
+         "audioFile": "mager_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "blob_attack",
+       "name": "Jal-Ak attacking",
+       "triggers": [
+        {
+         "triggerId": "blob_a",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7581
+        },
+        {
+         "triggerId": "blob_b",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7583
+        },
+        {
+         "triggerId": "blob_c",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7582
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "blob_attacking",
+         "text": "Blob attacking \u2014 switch prayer!",
+         "audioFile": "blob_attack.ogg",
+         "category": "warning",
+         "priority": 65,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_55",
+     "name": "Wave 55",
+     "entryTrigger": {
+      "triggerId": "wave55_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7694,
+       7695,
+       7698,
+       7699
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave55_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7694,
+        7695,
+        7698,
+        7699,
+        7703,
+        7704,
+        7705
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "ranger_attack",
+       "name": "Jal-Xil attacking",
+       "triggers": [
+        {
+         "triggerId": "ranger_range",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7605
+        },
+        {
+         "triggerId": "ranger_melee",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7604
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_ranged_ranger",
+         "text": "Pray Ranged!",
+         "audioFile": "pray_ranged.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "ranger_melee_warn",
+         "text": "Ranger melee!",
+         "audioFile": "ranger_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "mager_attack",
+       "name": "Jal-Zek attacking",
+       "triggers": [
+        {
+         "triggerId": "mager_magic",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7610
+        },
+        {
+         "triggerId": "mager_melee",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7612
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_magic_mager",
+         "text": "Pray Magic!",
+         "audioFile": "pray_magic.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "mager_melee_warn",
+         "text": "Mager melee!",
+         "audioFile": "mager_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "blob_attack",
+       "name": "Jal-Ak attacking",
+       "triggers": [
+        {
+         "triggerId": "blob_a",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7581
+        },
+        {
+         "triggerId": "blob_b",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7583
+        },
+        {
+         "triggerId": "blob_c",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7582
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "blob_attacking",
+         "text": "Blob attacking \u2014 switch prayer!",
+         "audioFile": "blob_attack.ogg",
+         "category": "warning",
+         "priority": 65,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_56",
+     "name": "Wave 56",
+     "entryTrigger": {
+      "triggerId": "wave56_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7695,
+       7698,
+       7699
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave56_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7695,
+        7698,
+        7699,
+        7703,
+        7704,
+        7705
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "ranger_attack",
+       "name": "Jal-Xil attacking",
+       "triggers": [
+        {
+         "triggerId": "ranger_range",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7605
+        },
+        {
+         "triggerId": "ranger_melee",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7604
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_ranged_ranger",
+         "text": "Pray Ranged!",
+         "audioFile": "pray_ranged.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "ranger_melee_warn",
+         "text": "Ranger melee!",
+         "audioFile": "ranger_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "mager_attack",
+       "name": "Jal-Zek attacking",
+       "triggers": [
+        {
+         "triggerId": "mager_magic",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7610
+        },
+        {
+         "triggerId": "mager_melee",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7612
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_magic_mager",
+         "text": "Pray Magic!",
+         "audioFile": "pray_magic.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "mager_melee_warn",
+         "text": "Mager melee!",
+         "audioFile": "mager_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "blob_attack",
+       "name": "Jal-Ak attacking",
+       "triggers": [
+        {
+         "triggerId": "blob_a",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7581
+        },
+        {
+         "triggerId": "blob_b",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7583
+        },
+        {
+         "triggerId": "blob_c",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7582
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "blob_attacking",
+         "text": "Blob attacking \u2014 switch prayer!",
+         "audioFile": "blob_attack.ogg",
+         "category": "warning",
+         "priority": 65,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_57",
+     "name": "Wave 57",
+     "entryTrigger": {
+      "triggerId": "wave57_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7696,
+       7698,
+       7699
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave57_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7696,
+        7698,
+        7699
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "meleer_attack",
+       "name": "Jal-ImKot attacking",
+       "triggers": [
+        {
+         "triggerId": "meleer_anim",
+         "type": "animation",
+         "npcIds": [
+          7696
+         ],
+         "animationId": 7597
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_melee_meleer",
+         "text": "Pray Melee!",
+         "audioFile": "pray_melee.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "ranger_attack",
+       "name": "Jal-Xil attacking",
+       "triggers": [
+        {
+         "triggerId": "ranger_range",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7605
+        },
+        {
+         "triggerId": "ranger_melee",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7604
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_ranged_ranger",
+         "text": "Pray Ranged!",
+         "audioFile": "pray_ranged.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "ranger_melee_warn",
+         "text": "Ranger melee!",
+         "audioFile": "ranger_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "mager_attack",
+       "name": "Jal-Zek attacking",
+       "triggers": [
+        {
+         "triggerId": "mager_magic",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7610
+        },
+        {
+         "triggerId": "mager_melee",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7612
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_magic_mager",
+         "text": "Pray Magic!",
+         "audioFile": "pray_magic.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "mager_melee_warn",
+         "text": "Mager melee!",
+         "audioFile": "mager_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_58",
+     "name": "Wave 58",
+     "entryTrigger": {
+      "triggerId": "wave58_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7694,
+       7696,
+       7698,
+       7699
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave58_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7694,
+        7696,
+        7698,
+        7699
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "meleer_attack",
+       "name": "Jal-ImKot attacking",
+       "triggers": [
+        {
+         "triggerId": "meleer_anim",
+         "type": "animation",
+         "npcIds": [
+          7696
+         ],
+         "animationId": 7597
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_melee_meleer",
+         "text": "Pray Melee!",
+         "audioFile": "pray_melee.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "ranger_attack",
+       "name": "Jal-Xil attacking",
+       "triggers": [
+        {
+         "triggerId": "ranger_range",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7605
+        },
+        {
+         "triggerId": "ranger_melee",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7604
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_ranged_ranger",
+         "text": "Pray Ranged!",
+         "audioFile": "pray_ranged.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "ranger_melee_warn",
+         "text": "Ranger melee!",
+         "audioFile": "ranger_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "mager_attack",
+       "name": "Jal-Zek attacking",
+       "triggers": [
+        {
+         "triggerId": "mager_magic",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7610
+        },
+        {
+         "triggerId": "mager_melee",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7612
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_magic_mager",
+         "text": "Pray Magic!",
+         "audioFile": "pray_magic.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "mager_melee_warn",
+         "text": "Mager melee!",
+         "audioFile": "mager_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_59",
+     "name": "Wave 59",
+     "entryTrigger": {
+      "triggerId": "wave59_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7694,
+       7696,
+       7698,
+       7699
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave59_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7694,
+        7696,
+        7698,
+        7699
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "meleer_attack",
+       "name": "Jal-ImKot attacking",
+       "triggers": [
+        {
+         "triggerId": "meleer_anim",
+         "type": "animation",
+         "npcIds": [
+          7696
+         ],
+         "animationId": 7597
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_melee_meleer",
+         "text": "Pray Melee!",
+         "audioFile": "pray_melee.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "ranger_attack",
+       "name": "Jal-Xil attacking",
+       "triggers": [
+        {
+         "triggerId": "ranger_range",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7605
+        },
+        {
+         "triggerId": "ranger_melee",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7604
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_ranged_ranger",
+         "text": "Pray Ranged!",
+         "audioFile": "pray_ranged.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "ranger_melee_warn",
+         "text": "Ranger melee!",
+         "audioFile": "ranger_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "mager_attack",
+       "name": "Jal-Zek attacking",
+       "triggers": [
+        {
+         "triggerId": "mager_magic",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7610
+        },
+        {
+         "triggerId": "mager_melee",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7612
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_magic_mager",
+         "text": "Pray Magic!",
+         "audioFile": "pray_magic.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "mager_melee_warn",
+         "text": "Mager melee!",
+         "audioFile": "mager_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_60",
+     "name": "Wave 60",
+     "entryTrigger": {
+      "triggerId": "wave60_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7695,
+       7696,
+       7698,
+       7699
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave60_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7695,
+        7696,
+        7698,
+        7699,
+        7703,
+        7704,
+        7705
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "meleer_attack",
+       "name": "Jal-ImKot attacking",
+       "triggers": [
+        {
+         "triggerId": "meleer_anim",
+         "type": "animation",
+         "npcIds": [
+          7696
+         ],
+         "animationId": 7597
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_melee_meleer",
+         "text": "Pray Melee!",
+         "audioFile": "pray_melee.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "ranger_attack",
+       "name": "Jal-Xil attacking",
+       "triggers": [
+        {
+         "triggerId": "ranger_range",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7605
+        },
+        {
+         "triggerId": "ranger_melee",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7604
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_ranged_ranger",
+         "text": "Pray Ranged!",
+         "audioFile": "pray_ranged.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "ranger_melee_warn",
+         "text": "Ranger melee!",
+         "audioFile": "ranger_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "mager_attack",
+       "name": "Jal-Zek attacking",
+       "triggers": [
+        {
+         "triggerId": "mager_magic",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7610
+        },
+        {
+         "triggerId": "mager_melee",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7612
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_magic_mager",
+         "text": "Pray Magic!",
+         "audioFile": "pray_magic.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "mager_melee_warn",
+         "text": "Mager melee!",
+         "audioFile": "mager_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "blob_attack",
+       "name": "Jal-Ak attacking",
+       "triggers": [
+        {
+         "triggerId": "blob_a",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7581
+        },
+        {
+         "triggerId": "blob_b",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7583
+        },
+        {
+         "triggerId": "blob_c",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7582
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "blob_attacking",
+         "text": "Blob attacking \u2014 switch prayer!",
+         "audioFile": "blob_attack.ogg",
+         "category": "warning",
+         "priority": 65,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_61",
+     "name": "Wave 61",
+     "entryTrigger": {
+      "triggerId": "wave61_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7694,
+       7695,
+       7696,
+       7698,
+       7699
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave61_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7694,
+        7695,
+        7696,
+        7698,
+        7699,
+        7703,
+        7704,
+        7705
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "meleer_attack",
+       "name": "Jal-ImKot attacking",
+       "triggers": [
+        {
+         "triggerId": "meleer_anim",
+         "type": "animation",
+         "npcIds": [
+          7696
+         ],
+         "animationId": 7597
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_melee_meleer",
+         "text": "Pray Melee!",
+         "audioFile": "pray_melee.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "ranger_attack",
+       "name": "Jal-Xil attacking",
+       "triggers": [
+        {
+         "triggerId": "ranger_range",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7605
+        },
+        {
+         "triggerId": "ranger_melee",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7604
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_ranged_ranger",
+         "text": "Pray Ranged!",
+         "audioFile": "pray_ranged.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "ranger_melee_warn",
+         "text": "Ranger melee!",
+         "audioFile": "ranger_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "mager_attack",
+       "name": "Jal-Zek attacking",
+       "triggers": [
+        {
+         "triggerId": "mager_magic",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7610
+        },
+        {
+         "triggerId": "mager_melee",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7612
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_magic_mager",
+         "text": "Pray Magic!",
+         "audioFile": "pray_magic.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "mager_melee_warn",
+         "text": "Mager melee!",
+         "audioFile": "mager_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "blob_attack",
+       "name": "Jal-Ak attacking",
+       "triggers": [
+        {
+         "triggerId": "blob_a",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7581
+        },
+        {
+         "triggerId": "blob_b",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7583
+        },
+        {
+         "triggerId": "blob_c",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7582
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "blob_attacking",
+         "text": "Blob attacking \u2014 switch prayer!",
+         "audioFile": "blob_attack.ogg",
+         "category": "warning",
+         "priority": 65,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_62",
+     "name": "Wave 62",
+     "entryTrigger": {
+      "triggerId": "wave62_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7694,
+       7695,
+       7696,
+       7698,
+       7699
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave62_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7694,
+        7695,
+        7696,
+        7698,
+        7699,
+        7703,
+        7704,
+        7705
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "meleer_attack",
+       "name": "Jal-ImKot attacking",
+       "triggers": [
+        {
+         "triggerId": "meleer_anim",
+         "type": "animation",
+         "npcIds": [
+          7696
+         ],
+         "animationId": 7597
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_melee_meleer",
+         "text": "Pray Melee!",
+         "audioFile": "pray_melee.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "ranger_attack",
+       "name": "Jal-Xil attacking",
+       "triggers": [
+        {
+         "triggerId": "ranger_range",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7605
+        },
+        {
+         "triggerId": "ranger_melee",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7604
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_ranged_ranger",
+         "text": "Pray Ranged!",
+         "audioFile": "pray_ranged.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "ranger_melee_warn",
+         "text": "Ranger melee!",
+         "audioFile": "ranger_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "mager_attack",
+       "name": "Jal-Zek attacking",
+       "triggers": [
+        {
+         "triggerId": "mager_magic",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7610
+        },
+        {
+         "triggerId": "mager_melee",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7612
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_magic_mager",
+         "text": "Pray Magic!",
+         "audioFile": "pray_magic.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "mager_melee_warn",
+         "text": "Mager melee!",
+         "audioFile": "mager_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "blob_attack",
+       "name": "Jal-Ak attacking",
+       "triggers": [
+        {
+         "triggerId": "blob_a",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7581
+        },
+        {
+         "triggerId": "blob_b",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7583
+        },
+        {
+         "triggerId": "blob_c",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7582
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "blob_attacking",
+         "text": "Blob attacking \u2014 switch prayer!",
+         "audioFile": "blob_attack.ogg",
+         "category": "warning",
+         "priority": 65,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_63",
+     "name": "Wave 63",
+     "entryTrigger": {
+      "triggerId": "wave63_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7695,
+       7696,
+       7698,
+       7699
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave63_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7695,
+        7696,
+        7698,
+        7699,
+        7703,
+        7704,
+        7705
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "meleer_attack",
+       "name": "Jal-ImKot attacking",
+       "triggers": [
+        {
+         "triggerId": "meleer_anim",
+         "type": "animation",
+         "npcIds": [
+          7696
+         ],
+         "animationId": 7597
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_melee_meleer",
+         "text": "Pray Melee!",
+         "audioFile": "pray_melee.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "ranger_attack",
+       "name": "Jal-Xil attacking",
+       "triggers": [
+        {
+         "triggerId": "ranger_range",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7605
+        },
+        {
+         "triggerId": "ranger_melee",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7604
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_ranged_ranger",
+         "text": "Pray Ranged!",
+         "audioFile": "pray_ranged.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "ranger_melee_warn",
+         "text": "Ranger melee!",
+         "audioFile": "ranger_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "mager_attack",
+       "name": "Jal-Zek attacking",
+       "triggers": [
+        {
+         "triggerId": "mager_magic",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7610
+        },
+        {
+         "triggerId": "mager_melee",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7612
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_magic_mager",
+         "text": "Pray Magic!",
+         "audioFile": "pray_magic.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "mager_melee_warn",
+         "text": "Mager melee!",
+         "audioFile": "mager_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "blob_attack",
+       "name": "Jal-Ak attacking",
+       "triggers": [
+        {
+         "triggerId": "blob_a",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7581
+        },
+        {
+         "triggerId": "blob_b",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7583
+        },
+        {
+         "triggerId": "blob_c",
+         "type": "animation",
+         "npcIds": [
+          7695
+         ],
+         "animationId": 7582
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "blob_attacking",
+         "text": "Blob attacking \u2014 switch prayer!",
+         "audioFile": "blob_attack.ogg",
+         "category": "warning",
+         "priority": 65,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_64",
+     "name": "Wave 64",
+     "entryTrigger": {
+      "triggerId": "wave64_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7696,
+       7698,
+       7699
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave64_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7696,
+        7698,
+        7699
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "meleer_attack",
+       "name": "Jal-ImKot attacking",
+       "triggers": [
+        {
+         "triggerId": "meleer_anim",
+         "type": "animation",
+         "npcIds": [
+          7696
+         ],
+         "animationId": 7597
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_melee_meleer",
+         "text": "Pray Melee!",
+         "audioFile": "pray_melee.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "ranger_attack",
+       "name": "Jal-Xil attacking",
+       "triggers": [
+        {
+         "triggerId": "ranger_range",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7605
+        },
+        {
+         "triggerId": "ranger_melee",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7604
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_ranged_ranger",
+         "text": "Pray Ranged!",
+         "audioFile": "pray_ranged.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "ranger_melee_warn",
+         "text": "Ranger melee!",
+         "audioFile": "ranger_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "mager_attack",
+       "name": "Jal-Zek attacking",
+       "triggers": [
+        {
+         "triggerId": "mager_magic",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7610
+        },
+        {
+         "triggerId": "mager_melee",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7612
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_magic_mager",
+         "text": "Pray Magic!",
+         "audioFile": "pray_magic.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "mager_melee_warn",
+         "text": "Mager melee!",
+         "audioFile": "mager_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_65",
+     "name": "Wave 65",
+     "entryTrigger": {
+      "triggerId": "wave65_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7698,
+       7699
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave65_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7698,
+        7699
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "ranger_attack",
+       "name": "Jal-Xil attacking",
+       "triggers": [
+        {
+         "triggerId": "ranger_range",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7605
+        },
+        {
+         "triggerId": "ranger_melee",
+         "type": "animation",
+         "npcIds": [
+          7698
+         ],
+         "animationId": 7604
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_ranged_ranger",
+         "text": "Pray Ranged!",
+         "audioFile": "pray_ranged.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "ranger_melee_warn",
+         "text": "Ranger melee!",
+         "audioFile": "ranger_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "mager_attack",
+       "name": "Jal-Zek attacking",
+       "triggers": [
+        {
+         "triggerId": "mager_magic",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7610
+        },
+        {
+         "triggerId": "mager_melee",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7612
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_magic_mager",
+         "text": "Pray Magic!",
+         "audioFile": "pray_magic.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "mager_melee_warn",
+         "text": "Mager melee!",
+         "audioFile": "mager_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_66",
+     "name": "Wave 66",
+     "entryTrigger": {
+      "triggerId": "wave66_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7690,
+       7691,
+       7692,
+       7693,
+       7699
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave66_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7690,
+        7691,
+        7692,
+        7693,
+        7699
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "mager_attack",
+       "name": "Jal-Zek attacking",
+       "triggers": [
+        {
+         "triggerId": "mager_magic",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7610
+        },
+        {
+         "triggerId": "mager_melee",
+         "type": "animation",
+         "npcIds": [
+          7699
+         ],
+         "animationId": 7612
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "pray_magic_mager",
+         "text": "Pray Magic!",
+         "audioFile": "pray_magic.ogg",
+         "category": "critical",
+         "priority": 90,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "mager_melee_warn",
+         "text": "Mager melee!",
+         "audioFile": "mager_melee.ogg",
+         "category": "warning",
+         "priority": 60,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_67",
+     "name": "Wave 67",
+     "entryTrigger": {
+      "triggerId": "wave67_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7700
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave67_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7700
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "jad_attack",
+       "name": "JalTok-Jad attacking",
+       "triggers": [
+        {
+         "triggerId": "jad_magic",
+         "type": "animation",
+         "npcIds": [
+          7700
+         ],
+         "animationId": 7592
+        },
+        {
+         "triggerId": "jad_ranged",
+         "type": "animation",
+         "npcIds": [
+          7700
+         ],
+         "animationId": 7593
+        },
+        {
+         "triggerId": "jad_melee",
+         "type": "animation",
+         "npcIds": [
+          7700
+         ],
+         "animationId": 7594
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "jad_pray_magic",
+         "text": "PRAY MAGIC!",
+         "audioFile": "pray_magic.ogg",
+         "category": "critical",
+         "priority": 99,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "jad_pray_ranged",
+         "text": "PRAY RANGED!",
+         "audioFile": "pray_ranged.ogg",
+         "category": "critical",
+         "priority": 99,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "jad_pray_melee",
+         "text": "PRAY MELEE!",
+         "audioFile": "pray_melee.ogg",
+         "category": "critical",
+         "priority": 99,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "jad_healers",
+       "name": "Yt-HurKot healers spawned",
+       "triggers": [
+        {
+         "triggerId": "healer_spawn",
+         "type": "npc_spawn",
+         "npcIds": [
+          7701
+         ]
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "healers_callout",
+         "text": "Healers! Tag them off the Jad",
+         "audioFile": "healers.ogg",
+         "category": "warning",
+         "priority": 75,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 4
+         }
+        }
+       ],
+       "cooldown": 8
+      }
+     ]
+    },
+    {
+     "phaseId": "wave_68",
+     "name": "Wave 68",
+     "entryTrigger": {
+      "triggerId": "wave68_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7700
+      ]
+     },
+     "exitTriggers": [
+      {
+       "triggerId": "wave68_clear",
+       "type": "wave_cleared",
+       "npcIds": [
+        7700
+       ]
+      }
+     ],
+     "mechanics": [
+      {
+       "mechanicId": "jad_attack",
+       "name": "JalTok-Jad attacking",
+       "triggers": [
+        {
+         "triggerId": "jad_magic",
+         "type": "animation",
+         "npcIds": [
+          7700
+         ],
+         "animationId": 7592
+        },
+        {
+         "triggerId": "jad_ranged",
+         "type": "animation",
+         "npcIds": [
+          7700
+         ],
+         "animationId": 7593
+        },
+        {
+         "triggerId": "jad_melee",
+         "type": "animation",
+         "npcIds": [
+          7700
+         ],
+         "animationId": 7594
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "jad_pray_magic",
+         "text": "PRAY MAGIC!",
+         "audioFile": "pray_magic.ogg",
+         "category": "critical",
+         "priority": 99,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "jad_pray_ranged",
+         "text": "PRAY RANGED!",
+         "audioFile": "pray_ranged.ogg",
+         "category": "critical",
+         "priority": 99,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        },
+        {
+         "calloutId": "jad_pray_melee",
+         "text": "PRAY MELEE!",
+         "audioFile": "pray_melee.ogg",
+         "category": "critical",
+         "priority": 99,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "jad_healers",
+       "name": "Yt-HurKot healers spawned",
+       "triggers": [
+        {
+         "triggerId": "healer_spawn",
+         "type": "npc_spawn",
+         "npcIds": [
+          7701
+         ]
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "healers_callout",
+         "text": "Healers! Tag them off the Jad",
+         "audioFile": "healers.ogg",
+         "category": "warning",
+         "priority": 75,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF9800",
+          "durationTicks": 4
+         }
+        }
+       ],
+       "cooldown": 8
+      }
+     ]
+    },
+    {
+     "phaseId": "zuk",
+     "name": "TzKal-Zuk",
+     "entryTrigger": {
+      "triggerId": "zuk_entry",
+      "type": "npc_spawn",
+      "npcIds": [
+       7706
+      ]
+     },
+     "exitTriggers": [],
+     "mechanics": [
+      {
+       "mechanicId": "zuk_attack",
+       "name": "Zuk attacking",
+       "triggers": [
+        {
+         "triggerId": "zuk_anim",
+         "type": "animation",
+         "npcIds": [
+          7706
+         ],
+         "animationId": 7566
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "zuk_attacking",
+         "text": "Zuk attacking \u2014 check shield spot!",
+         "audioFile": "zuk_attack.ogg",
+         "category": "warning",
+         "priority": 80,
+         "audioOffset": 0,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF5722",
+          "durationTicks": 3
+         }
+        }
+       ],
+       "cooldown": 1
+      },
+      {
+       "mechanicId": "zuk_jad_spawn",
+       "name": "Jad spawned in Zuk",
+       "triggers": [
+        {
+         "triggerId": "zuk_jad",
+         "type": "npc_spawn",
+         "npcIds": [
+          7700
+         ]
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "zuk_jad_callout",
+         "text": "JAD spawned behind you!",
+         "audioFile": "jad_spawned.ogg",
+         "category": "critical",
+         "priority": 97,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF0000",
+          "durationTicks": 4
+         }
+        }
+       ],
+       "cooldown": 20
+      },
+      {
+       "mechanicId": "zuk_healers_spawn",
+       "name": "Zuk healers spawned",
+       "triggers": [
+        {
+         "triggerId": "zuk_healers",
+         "type": "npc_spawn",
+         "npcIds": [
+          7702
+         ]
+        }
+       ],
+       "callouts": [
+        {
+         "calloutId": "zuk_healers_callout",
+         "text": "Zuk healers! Attack them fast",
+         "audioFile": "healers.ogg",
+         "category": "critical",
+         "priority": 95,
+         "audioOffset": -1,
+         "visualOffset": 0,
+         "visual": {
+          "type": "text",
+          "color": "#FF5722",
+          "durationTicks": 4
+         }
+        }
+       ],
+       "cooldown": 20
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

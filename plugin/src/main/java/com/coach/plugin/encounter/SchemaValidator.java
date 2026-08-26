@@ -22,7 +22,8 @@ public final class SchemaValidator
 {
 	private static final Set<String> TRIGGER_TYPES = Set.of(
 		"animation", "projectile", "graphic", "npc_spawn", "npc_despawn",
-		"hp", "tick_timer", "player_state", "location", "shout", "custom", "composite");
+		"hp", "tick_timer", "player_state", "location", "shout", "wave_cleared",
+		"custom", "composite");
 
 	private static final Set<String> CALLOUT_CATEGORIES = Set.of(
 		"critical", "warning", "info", "transition");
@@ -119,7 +120,8 @@ public final class SchemaValidator
 			validatePhase(boss.bossId, phase, phaseIds);
 		}
 
-		validateMechanics(boss.bossId, boss.mechanics, new HashSet<>(), label + ".mechanics");
+		// shared boss-level mechanics have their own id scope
+		validateMechanics(boss.bossId, boss.mechanics, label + ".mechanics");
 	}
 
 	private void validatePhase(String bossId, PhaseDefinition phase, Set<String> phaseIds)
@@ -152,23 +154,26 @@ public final class SchemaValidator
 			}
 		}
 
-		validateMechanics(bossId, phase.mechanics, phaseIds, label + ".mechanics");
+		validateMechanics(bossId, phase.mechanics, label + ".mechanics");
 	}
 
-	private void validateMechanics(String bossId, List<MechanicDefinition> mechanics,
-		Set<String> usedIds, String label)
+	private void validateMechanics(String bossId, List<MechanicDefinition> mechanics, String label)
 	{
 		if (mechanics == null)
 		{
 			return;
 		}
+		// id uniqueness is scoped per mechanic list (one phase or the shared
+		// boss-level list) — generated wave packs legitimately reuse attack
+		// mechanics across phases, and runtime only evaluates the active phase.
+		Set<String> scopeIds = new HashSet<>();
 		for (MechanicDefinition mechanic : mechanics)
 		{
 			mechanic.bossId = bossId;
 			String mLabel = label + "[" + (mechanic.mechanicId != null ? mechanic.mechanicId : "?") + "]";
 
 			if (!requireText(mechanic.mechanicId, mLabel + ".mechanicId")) continue;
-			if (!usedIds.add(mechanic.mechanicId))
+			if (!scopeIds.add(mechanic.mechanicId))
 			{
 				errors.add("duplicate mechanicId '" + mechanic.mechanicId + "' in boss " + bossId);
 			}
@@ -329,3 +334,4 @@ public final class SchemaValidator
 		return "boss[" + (boss.bossId != null ? boss.bossId : "?") + "]";
 	}
 }
+

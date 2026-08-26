@@ -30,9 +30,10 @@ public class TriggerRegistry
 		builders.put("animation", def -> new AnimationTriggerEvaluator(def.npcId, requireInt(def.animationId, "animationId")));
 		builders.put("projectile", def -> new ProjectileTriggerEvaluator(requireInt(def.projectId, "projectId"), def.srcNpcId));
 		builders.put("graphic", def -> new GraphicTriggerEvaluator(def.npcId, requireInt(def.graphicId, "graphicId")));
-		builders.put("npc_spawn", def -> new NpcSpawnTriggerEvaluator(def.npcId, true));
-		builders.put("npc_despawn", def -> new NpcSpawnTriggerEvaluator(def.npcId, false));
+		builders.put("npc_spawn", def -> new NpcSpawnTriggerEvaluator(def.npcId, def.npcIds, true));
+		builders.put("npc_despawn", def -> new NpcSpawnTriggerEvaluator(def.npcId, def.npcIds, false));
 		builders.put("shout", this::buildShout);
+		builders.put("wave_cleared", this::buildWaveCleared);
 		builders.put("hp", this::buildHp);
 		builders.put("tick_timer", this::buildTickTimer);
 		builders.put("player_state", this::buildPlayerState);
@@ -67,6 +68,15 @@ public class TriggerRegistry
 			log.warn("[coach] trigger type '{}' missing field {}: {}", definition.type, e.field, e.getMessage());
 			return Optional.empty();
 		}
+	}
+
+	private TriggerEvaluator buildWaveCleared(TriggerDefinition def)
+	{
+		if (def.npcIds == null || def.npcIds.isEmpty())
+		{
+			throw new MissingFieldException("npcIds");
+		}
+		return new WaveClearedEvaluator(def.npcIds);
 	}
 
 	private TriggerEvaluator buildShout(TriggerDefinition def)

@@ -13,12 +13,19 @@ import net.runelite.api.events.NpcSpawned;
  */
 public class NpcSpawnTriggerEvaluator implements TriggerEvaluator
 {
-	private final Integer npcId; // null = any NPC
-	private final boolean spawn; // true = NpcSpawned, false = NpcDespawned
+	private final Integer npcId;      // single-NPC form (null when npcIds set used)
+	private final Set<Integer> npcIds; // multi-NPC form: any id in the set matches
+	private final boolean spawn;       // true = NpcSpawned, false = NpcDespawned
 
 	public NpcSpawnTriggerEvaluator(Integer npcId, boolean spawn)
 	{
+		this(npcId, null, spawn);
+	}
+
+	public NpcSpawnTriggerEvaluator(Integer npcId, java.util.List<Integer> npcIds, boolean spawn)
+	{
 		this.npcId = npcId;
+		this.npcIds = npcIds != null ? new java.util.HashSet<>(npcIds) : null;
 		this.spawn = spawn;
 	}
 
@@ -45,12 +52,20 @@ public class NpcSpawnTriggerEvaluator implements TriggerEvaluator
 		{
 			return false;
 		}
+		if (npcIds != null)
+		{
+			return npc.getId() != 0 && npcIds.contains(npc.getId());
+		}
 		return npcId == null || npc.getId() == npcId;
 	}
 
 	@Override
 	public String describe()
 	{
+		if (npcIds != null)
+		{
+			return (spawn ? "npc_spawn any of " : "npc_despawn any of ") + npcIds;
+		}
 		return (spawn ? "npc_spawn" : "npc_despawn") + (npcId != null ? " " + npcId : " any");
 	}
 }

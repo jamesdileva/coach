@@ -4,6 +4,60 @@ Running log of sprints: what was done, key decisions, deviations from the docs.
 
 ---
 
+## Sprint 13 — Inferno Implementation (2026-08-26)
+
+**Objective:** The beast: all 69 waves + basic Zuk, wave-transition detection,
+per-attack prayer callouts. Roadmap estimated 300 minutes; it was right.
+
+### Done
+
+- **Engine extension — `wave_cleared` trigger type**: stateful evaluator
+  tracking the alive subset of a configured NPC id set; fires once when every
+  tracked NPC has spawned and then died; re-arms for repeated compositions
+  (mager revives and blob splits correctly re-block the clear).
+- **Multi-NPC triggers**: `npcIds` list on npc_spawn/npc_despawn (any-id match)
+  for wave entry composites.
+- **`generate_inferno_pack.py`**: canonical wave table (OSRS Wiki) → full pack:
+  - 69 phases: waves 1-68 chained by `wave_cleared` exits (blob-split and
+    Jad-healer ids included in relevant waves' clear sets), Zuk terminal
+  - attack-callout mechanics injected per-wave by composition: Meleer →
+    "Pray Melee!", Ranger → "Pray Ranged!", Mager → "Pray Magic!",
+    Blob → switch-prayer warning (all critical, -1 tick audio), Jad →
+    per-style "PRAY MAGIC/RANGED/MELEE!" at priority 99, healer spawn alerts
+  - 135 mechanics total from ~15 shared definitions
+- **9 TTS voice lines** via the edge-tts→ffmpeg pipeline; packaged as
+  `inferno_1.0.0.zip` (150 KB).
+- Pack README with rule-8 verification checklist (NPC id ranges 7690-7706,
+  attack animation table with sources, revive/split semantics).
+
+### Verified
+
+- Tests: **130/130 pass** (+12: WaveClearedEvaluatorTest ×4 incl. revive and
+  re-arm semantics, InfernoPackTest ×4 against the real zip, registry/schema
+  updates covered transitively).
+
+### Decisions
+
+- Wave-clear = **all spawned wave NPCs dead**, including blob splits and Jad
+  healers — matches real gating; mager revives naturally block clears because
+  revived mobs re-spawn under tracked ids.
+- Attack callouts reuse calloutIds across waves ("pray_ranged" everywhere):
+  dedupes TTS assets and lets the callout-level cooldown suppress flick spam.
+- Validator scope fix found by this pack: mechanicId uniqueness is now scoped
+  per phase / shared-list instead of whole-boss — generated packs legitimately
+  reuse attack mechanics across phases, and runtime only evaluates active ones.
+- Zuk v1: attack tick warning + healer/Jad spawn alerts only. His single
+  attack animation covers both prayer styles — real per-style calls need
+  projectile triggers (noted in README).
+
+### Deviations from docs
+
+- Roadmap's "waves generated programmatically with rules" escape hatch used —
+  hand-writing 69 phases would be insane.
+- Roadmap wanted `arena` concept for Zuk safe tiles; deferred with Zuk v1 scope.
+
+---
+
 ## Sprint 12 — Nex Implementation (2026-08-26)
 
 **Objective:** First real encounter pack: full five-phase Nex with special
