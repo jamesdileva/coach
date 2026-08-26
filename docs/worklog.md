@@ -4,6 +4,58 @@ Running log of sprints: what was done, key decisions, deviations from the docs.
 
 ---
 
+## Sprint 23 — Wiki Parser + Raw Extraction (2026-08-26)
+
+**Objective:** Python tooling that fetches OSRS Wiki pages and extracts
+structured boss data. Phase 5 (Knowledge Pipeline) begins.
+
+### Done
+
+- **`knowledge-pipeline/`** scaffolded: pyproject (requests, bs4, pytest),
+  `src/` + `tests/` + committed fixtures.
+- **`wiki_fetcher.py`** — fetches wiki pages with a proper User-Agent, caches
+  verbatim HTML under the cache dir (`Nex/Strategies` → `Nex__Strategies`
+  slug), offline-friendly.
+- **`models.py`** — Boss / Phase / Mechanic dataclasses with JSON
+  serialisation.
+- **`wiki_parser.py`**:
+  - infobox flattening → NPC ids (Monster ID row: 11278-11282 for Nex),
+    combat level, max hit, attack styles
+  - section extraction robust to MediaWiki's non-sibling heading structure
+    (document-order traversal until next h2/h3/h4, keeping p/ul content)
+  - phases = h3 sections titled "… phase"
+  - mechanics = bullet lists with bold lead names; descriptions derived from
+    full bullet text minus the name
+  - **shout capture**: boss telegraphs are wrapped in `span.in-game-message`
+    on the wiki — extracted per mechanic and per phase
+- Real fixtures committed: `nex.html` (268 KB) + `nex_strategies.html`,
+  fetched live during development.
+
+### Verified
+
+- **pytest 7/7 pass** against the REAL Nex pages: infobox facts (ids/level/
+  styles), all five phases in order, specials with shouts ("There is...
+  NO ESCAPE!", "I demand a blood sacrifice!", "Taste my wrath!"...), JSON
+  round-trip, fetcher cache/slug behaviour.
+
+### Decisions
+
+- Mechanics data lives on `/Strategies` subpages, not main boss pages — the
+  pipeline fetches both and merges (infobox from main, phases from strategies).
+- Shout spans are gold: they're the game's own telegraph strings, exactly what
+  our `shout` trigger type consumes — this directly feeds pack generation later.
+- Tests run fully offline against committed fixtures; network only needed to
+  refresh caches or add new bosses.
+
+### Deviations from docs
+
+- Roadmap listed mechanics on the main page; reality required the two-page
+  merge described above.
+- Console output needed PYTHONIOENCODING=utf-8 on this machine (checkmark
+  glyphs in wiki text crash cp1252 printing) — noted for future tooling runs.
+
+---
+
 ## Sprint 22 — Profile Management (2026-08-26)
 
 **Objective:** Profile export/import as JSON files, validation before load,
