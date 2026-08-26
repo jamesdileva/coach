@@ -4,6 +4,57 @@ Running log of sprints: what was done, key decisions, deviations from the docs.
 
 ---
 
+## Sprint 3 — Logging System + Debug Overlay (2026-08-25)
+
+**Objective:** Debug logging (ring buffer + file) and an in-game debug overlay
+showing recent events with tick numbers. (Roadmap Sprint 3.)
+
+### Done
+
+- `logging/LogBuffer` — central sink: 100-entry ring buffer + optional file writer.
+- `logging/FileLogWriter` — lazy append-only writer to
+  `.runelite/coach/logs/coach-debug.log`; never throws into the caller.
+- `logging/EventLogger` — formats every event in each tick batch:
+  `t<tick> <TYPE> <payload summary>` (actor/anim ids, projectile ids,
+  npc spawn/despawn, stat levels, varbit id/value, container id).
+- `logging/TriggerLogger`, `CalloutLogger` — stable APIs defined now;
+  they start receiving real traffic in Sprints 5+/8+.
+- `overlay/DebugOverlay` — top-left overlay rendering the last 30 entries.
+- `CoachConfig`: added "Log To File" toggle alongside existing Debug Mode.
+- `CoachPlugin`: debug enable/disable is now live-reactive via ConfigChanged —
+  attaches/detaches the EventLogger listener, file writer, and overlay without
+  plugin restart.
+
+### Verified
+
+- `gradlew.bat --no-daemon build` → BUILD SUCCESSFUL (deprecation warnings only)
+- Tests: **15/15 pass** (7 from Sprint 2 + LogBufferTest ×4 + EventLoggerTest ×3).
+
+### Decisions
+
+- Introduced `LogBuffer` as a shared sink rather than three separate loggers
+  writing to different places — one ring buffer feeds both the overlay and the
+  file; TriggerLogger/CalloutLogger just log lines into it.
+- Debug logging is fully gated behind Debug Mode: when off, no listener is
+  attached to the internal bus at all (zero per-tick overhead for normal play).
+- EventBus gained `unsubscribe(Listener)` so debugging can detach live.
+- Overlay shows last 30 of 100 buffered entries (readability over completeness).
+
+### Deviations from docs
+
+- Roadmap expected separate EventLogger/TriggerLogger/CalloutLogger classes
+  each owning their output; kept the class names but routed them through the
+  shared LogBuffer instead (simpler, single source of truth).
+
+### Manual testing (pending, user — see Sprint 2 note re: safe local testing)
+
+1. Load JAR in RuneLite (sideboard plugins dir or dev runner).
+2. Enable Debug Mode → overlay appears top-left showing live event lines.
+3. Enable Log To File → check `.runelite/coach/logs/coach-debug.log`.
+4. Toggle Debug Mode off → overlay disappears, logging stops, no restart needed.
+
+---
+
 ## Sprint 2 — Event System (2026-08-25)
 
 **Objective:** Subscribe to core RuneLite game events and establish the internal

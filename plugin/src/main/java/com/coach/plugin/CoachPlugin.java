@@ -5,10 +5,14 @@ import com.coach.plugin.events.EventBus;
 import com.coach.plugin.events.EventType;
 import com.coach.plugin.events.GameEvent;
 import com.coach.plugin.events.GameStateBridge;
+import com.coach.plugin.logging.CalloutLogger;
+import com.coach.plugin.logging.EventLogger;
+import com.coach.plugin.logging.FileLogWriter;
+import com.coach.plugin.logging.LogBuffer;
+import com.coach.plugin.logging.TriggerLogger;
+import com.coach.plugin.overlay.DebugOverlay;
 import com.google.inject.Provides;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import java.nio.file.Path;
 import javax.inject.Inject;
 import net.runelite.api.Client;
 import net.runelite.api.events.AnimationChanged;
@@ -21,10 +25,13 @@ import net.runelite.api.events.NpcSpawned;
 import net.runelite.api.events.ProjectileMoved;
 import net.runelite.api.events.StatChanged;
 import net.runelite.api.events.VarbitChanged;
+import net.runelite.client.RuneLite;
 import net.runelite.client.config.ConfigManager;
+import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
-import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.ui.overlay.OverlayManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,6 +50,12 @@ public class CoachPlugin extends Plugin
 	@Inject
 	private CoachConfig config;
 
+	@Inject
+	private OverlayManager overlayManager;
+
+	@Inject
+	private LogBuffer logBuffer;
+
 	/**
 	 * RuneLite's event bus — fully qualified because our internal bus shares the name.
 	 */
@@ -51,19 +64,30 @@ public class CoachPlugin extends Plugin
 
 	private final EventBus coachEventBus = new EventBus();
 	private final GameStateBridge gameStateBridge = new GameStateBridge();
-	private final Map<EventType, Integer> tickEventCounts = new EnumMap<>(EventType.class);
+	private final EventLogger eventLogger = new EventLogger(logBuffer);
+	private final TriggerLogger triggerLogger = new TriggerLogger(logBuffer);
+	private final CalloutLogger calloutLogger = new CalloutLogger(logBuffer);
+
+	private DebugOverlay debugOverlay;
+	private boolean debugOverlayAdded;
+	private EventBus.Listener debugListener;
 
 	@Override
 	protected void startUp() throws Exception
 	{
-		coachEventBus.subscribe(this::onTickBatch);
 		runeLiteEventBus.register(this);
 		log.info("Project Coach started (debug={})", config.debugMode());
+
+		if (config.debugMode())
+		{
+			enableDebugging();
+		}
 	}
 
 	@Override
 	protected void shutDown() throws Exception
 	{
+		disableDebugging();
 		runeLiteEventBus.unregister(this);
 		log.info("Project Coach shut down");
 	}
@@ -130,6 +154,28 @@ public class CoachPlugin extends Plugin
 		post(EventType.ITEM_CONTAINER_CHANGED, event);
 	}
 
+	// ---- Config changes ----
+
+	@Subscribe
+	public void onConfigChanged(ConfigChanged event)
+	{
+		if (!"coach".equals(event.getGroup()))
+		{
+			return;
+		}
+		if ("debugMode".equals(event.getKey()) || "logToFile".equals(event.getKey()))
+		{
+			if (config.debugMode())
+			{
+				enableDebugging();
+			}
+			else
+			{
+				disableDebugging();
+			}
+		}
+	}
+
 	// ---- Internal bus ----
 
 	EventBus getCoachEventBus()
@@ -142,29 +188,59 @@ public class CoachPlugin extends Plugin
 		return gameStateBridge;
 	}
 
+	TriggerLogger getTriggerLogger()
+	{
+		return triggerLogger;
+	}
+
+	CalloutLogger getCalloutLogger()
+	{
+		return calloutLogger;
+	}
+
 	private void post(EventType type, Object payload)
 	{
-		Integer count = tickEventCounts.get(type);
-		tickEventCounts.put(type, count == null ? 1 : count + 1);
 		coachEventBus.post(new GameEvent(type, client.getTickCount(), payload));
 	}
 
-	private void onTickBatch(int tick, List<GameEvent> events)
+	private synchronized void enableDebugging()
 	{
-		if (config.debugMode() && !tickEventCounts.isEmpty())
+		if (debugListener == null)
 		{
-			StringBuilder sb = new StringBuilder();
-			for (Map.Entry<EventType, Integer> entry : tickEventCounts.entrySet())
-			{
-				if (sb.length() > 0)
-				{
-					sb.append(' ');
-				}
-				sb.append(entry.getKey()).append('=').append(entry.getValue());
-			}
-			log.info("[coach] tick {}: {} event(s): {}", tick, events.size() - 1, sb);
+			debugListener = eventLogger;
+			coachEventBus.subscribe(debugListener);
 		}
-		tickEventCounts.clear();
+
+		if (config.logToFile())
+		{
+			Path logFile = RuneLite.RUNELITE_DIR.toPath().resolve("coach").resolve("logs").resolve("coach-debug.log");
+			logBuffer.setFileWriter(new FileLogWriter(logFile));
+		}
+
+		if (!debugOverlayAdded)
+		{
+			debugOverlay = new DebugOverlay(logBuffer);
+			overlayManager.add(debugOverlay);
+			debugOverlayAdded = true;
+		}
+	}
+
+	private synchronized void disableDebugging()
+	{
+		if (debugListener != null)
+		{
+			coachEventBus.unsubscribe(debugListener);
+			debugListener = null;
+		}
+		logBuffer.setFileWriter(null);
+
+		if (debugOverlayAdded && debugOverlay != null)
+		{
+			overlayManager.remove(debugOverlay);
+			debugOverlay = null;
+			debugOverlayAdded = false;
+		}
+		logBuffer.clear();
 	}
 
 	@Provides

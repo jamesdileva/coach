@@ -32,6 +32,11 @@ public class EventBus
 		listeners.add(listener);
 	}
 
+	public void unsubscribe(Listener listener)
+	{
+		listeners.remove(listener);
+	}
+
 	/**
 	 * Buffer an event, or flush the current batch if this is the TICK event.
 	 */

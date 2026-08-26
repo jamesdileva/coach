@@ -20,9 +20,19 @@ public interface CoachConfig extends Config
 	@ConfigItem(
 		keyName = "debugMode",
 		name = "Debug Mode",
-		description = "Show debug overlays and verbose logging"
+		description = "Show the in-game debug overlay and record all game events"
 	)
 	default boolean debugMode()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+		keyName = "logToFile",
+		name = "Log To File",
+		description = "Write debug entries to coach/logs/coach-debug.log (requires Debug Mode)"
+	)
+	default boolean logToFile()
 	{
 		return false;
 	}
