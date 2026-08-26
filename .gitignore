@@ -1,0 +1,19 @@
+# Gradle
+.gradle/
+build/
+plugin/build/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Logs
+*.log
+
+# Local tooling (machine-specific JDK/Gradle installs live outside the repo)
+/tools-local/
