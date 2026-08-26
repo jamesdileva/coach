@@ -75,6 +75,39 @@ public interface CoachConfig extends Config
 	}
 
 	@ConfigItem(
+		keyName = "criticalVolume",
+		name = "Critical Volume",
+		description = "Volume multiplier for critical callouts (0-100)",
+		position = 7
+	)
+	default int criticalVolume()
+	{
+		return 100;
+	}
+
+	@ConfigItem(
+		keyName = "warningVolume",
+		name = "Warning Volume",
+		description = "Volume multiplier for warning callouts (0-100)",
+		position = 8
+	)
+	default int warningVolume()
+	{
+		return 80;
+	}
+
+	@ConfigItem(
+		keyName = "infoVolume",
+		name = "Info Volume",
+		description = "Volume multiplier for info callouts (0-100)",
+		position = 9
+	)
+	default int infoVolume()
+	{
+		return 60;
+	}
+
+	@ConfigItem(
 		keyName = "criticalCallouts",
 		name = "Critical Callouts",
 		description = "Show/speak critical callouts (immediate action required)",

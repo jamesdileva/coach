@@ -4,6 +4,56 @@ Running log of sprints: what was done, key decisions, deviations from the docs.
 
 ---
 
+## Sprint 19 — Audio Improvements (2026-08-26)
+
+**Objective:** Priority-based audio: higher categories interrupt, same/lower
+queue, per-category volume sliders.
+
+### Done
+
+- `AudioCategory` enum (TRANSITION < INFO < WARNING < CRITICAL) with
+  callout-category mapping; `AudioPriorityResolver` wraps it.
+- `AudioInterruptManager` — the arbitration core (pure, fully unit-tested):
+  - higher priority interrupts the playing clip
+  - same/lower priority queues
+  - on playback finish, highest-priority queued request starts,
+    FIFO within a category; re-arms automatically
+- `AudioEngine` refactor:
+  - submits through the interrupt manager; starters hand off to the single
+    playback thread
+  - interruption = stop current clip before starting new; stale Clip STOP
+    events ignored via identity check so an interrupted clip can't falsely
+    trigger queue draining
+  - per-category volume map (critical 100 / warning 80 / info 60 /
+    transition 50 defaults), effective gain = master × category, both live
+- Config: Critical/Warning/Info volume sliders (transition uses default),
+  all live-reactive via ConfigChanged.
+- Plugin passes callout category into every play request.
+
+### Verified
+
+- Tests: **161/161 pass** (+6: AudioInterruptManagerTest ×6 covering idle
+  start, same-category queuing, lower-priority queuing, interruption,
+  drain ordering (priority then FIFO), and reset).
+
+### Decisions
+
+- Same-category requests **queue rather than overlap** — two "Pray Ranged!"
+  back-to-back play sequentially, matching the acceptance criteria.
+- Interruption safety: engine keeps an identity reference to the active Clip;
+  a stopped-but-stale clip's STOP event is ignored so it cannot pull the next
+  queued item while its replacement is still playing.
+- Transition volume keeps its guide-default (50) without a slider for now;
+  adding the fourth slider is trivial if wanted.
+
+### Deviations from docs
+
+- Roadmap's `ticksOnNpc`-style timing verification ("stopwatch") is an
+  in-game check; headless we assert the arbitration logic instead. The queued
+  starter hands off to the playback pool, so tick-thread latency is unchanged.
+
+---
+
 ## Sprint 18 — Overlay Improvements (2026-08-26)
 
 **Objective:** Dedicated overlay types with per-overlay config toggles and

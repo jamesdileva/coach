@@ -240,6 +240,18 @@ public class CoachPlugin extends Plugin
 		{
 			audioEngine.setMasterVolume(config.masterVolume());
 		}
+		else if ("criticalVolume".equals(event.getKey()))
+		{
+			audioEngine.setCategoryVolume("critical", config.criticalVolume());
+		}
+		else if ("warningVolume".equals(event.getKey()))
+		{
+			audioEngine.setCategoryVolume("warning", config.warningVolume());
+		}
+		else if ("infoVolume".equals(event.getKey()))
+		{
+			audioEngine.setCategoryVolume("info", config.infoVolume());
+		}
 	}
 
 	// ---- Internal bus ----
@@ -320,8 +332,9 @@ public class CoachPlugin extends Plugin
 			: null;
 		if (callout.audioFile != null && packId != null)
 		{
-			boolean played = audioEngine.play(packId, callout.audioFile);
-			log.debug("[coach] audio {}: {}", callout.audioFile, played ? "playing" : "unavailable");
+			boolean handled = audioEngine.play(packId, callout.audioFile, callout.category);
+			log.debug("[coach] audio {}: {}", callout.audioFile,
+				handled ? "playing/queued" : "unavailable");
 		}
 
 		if (config.debugMode())

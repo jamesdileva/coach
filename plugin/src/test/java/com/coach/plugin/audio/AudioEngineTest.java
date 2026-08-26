@@ -62,15 +62,16 @@ class AudioEngineTest
 		engine.loadFromZip(packZipWithAudio("pray_ranged.wav"), "pack1");
 
 		assertEquals(1, engine.getLoadedCount());
-		assertTrue(engine.play("pack1", "pray_ranged.wav"), "playback accepted");
+		assertTrue(engine.play("pack1", "pray_ranged.wav", "critical"),
+			"playback accepted (or queued)");
 	}
 
 	@Test
 	void missingFileAndNullAreGracefulNoOps()
 	{
 		AudioEngine engine = new AudioEngine();
-		assertFalse(engine.play("pack1", "missing.wav"));
-		assertFalse(engine.play("pack1", null));
+		assertFalse(engine.play("pack1", "missing.wav", "info"));
+		assertFalse(engine.play("pack1", null, "info"));
 	}
 
 	@Test
@@ -80,15 +81,17 @@ class AudioEngineTest
 		engine.setMuted(true);
 
 		assertTrue(engine.isMuted());
-		assertFalse(engine.play("any", "any.wav"), "muted -> never plays");
+		assertFalse(engine.play("any", "any.wav", "critical"), "muted -> never plays");
 	}
 
 	@Test
-	void volumeClampedToRange()
+	void volumesClampToRange()
 	{
 		AudioEngine engine = new AudioEngine();
 		engine.setMasterVolume(-5);   // clamps to 0 internally
 		engine.setMasterVolume(150);  // clamps to 100 internally
+		engine.setCategoryVolume("critical", -50);
+		engine.setCategoryVolume("bogus_category", 80); // unknown -> INFO bucket
 		engine.setMuted(false);
 		// no assertion beyond "didn't throw": volume is applied at playback time
 	}

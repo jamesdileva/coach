@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
+import java.util.EnumMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -12,6 +13,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +23,11 @@ import org.slf4j.LoggerFactory;
  *
  * Audio bytes are pre-loaded into memory at pack load so playback latency is
  * near zero. Playback is asynchronous and never blocks the tick thread.
+ *
+ * Priority model (roadmap Sprint 19): higher-category requests interrupt the
+ * playing clip; same/lower categories queue; the highest-priority queued
+ * request starts when the current clip finishes. Volume is
+ * master × per-category, both configurable live.
  *
  * Format note: Java supports WAV/PCM out of the box but has no Ogg/Vorbis
  * decoder. The TTS pipeline (Sprint 27) ships .ogg; a decoder integration is
@@ -38,8 +45,21 @@ public class AudioEngine
 		return thread;
 	});
 
+	private final AudioInterruptManager interruptManager = new AudioInterruptManager();
+	private volatile Clip currentClip;
+
 	private volatile boolean muted;
 	private volatile int masterVolume = 70;
+	private final Map<AudioCategory, Integer> categoryVolumes =
+		new EnumMap<>(AudioCategory.class);
+
+	public AudioEngine()
+	{
+		categoryVolumes.put(AudioCategory.CRITICAL, 100);
+		categoryVolumes.put(AudioCategory.WARNING, 80);
+		categoryVolumes.put(AudioCategory.INFO, 60);
+		categoryVolumes.put(AudioCategory.TRANSITION, 50);
+	}
 
 	public void setMuted(boolean muted)
 	{
@@ -48,7 +68,18 @@ public class AudioEngine
 
 	public void setMasterVolume(int volume)
 	{
-		this.masterVolume = Math.max(0, Math.min(100, volume));
+		this.masterVolume = clamp(volume);
+	}
+
+	public void setCategoryVolume(String calloutCategory, int volume)
+	{
+		categoryVolumes.put(
+			AudioCategory.fromCalloutCategory(calloutCategory), clamp(volume));
+	}
+
+	public void resetQueue()
+	{
+		interruptManager.reset();
 	}
 
 	public boolean isMuted()
@@ -88,6 +119,7 @@ public class AudioEngine
 	public void clear()
 	{
 		cache.clear();
+		resetQueue();
 	}
 
 	public int getLoadedCount()
@@ -96,10 +128,11 @@ public class AudioEngine
 	}
 
 	/**
-	 * Attempt playback; returns false when muted or the file is unavailable.
-	 * Never throws — audio failure must not break coaching.
+	 * Submit an audio request for playback; returns false when muted or the
+	 * file is unavailable (it may also return false when queued — that is not
+	 * an error). Never throws — audio failure must not break coaching.
 	 */
-	public boolean play(String packId, String audioFile)
+	public boolean play(String packId, String audioFile, String calloutCategory)
 	{
 		if (muted || audioFile == null)
 		{
@@ -111,45 +144,92 @@ public class AudioEngine
 			log.debug("[coach] audio file not in pack: {}/{}", packId, audioFile);
 			return false;
 		}
-		int volume = masterVolume;
-		playbackPool.execute(() -> playBytes(data, volume));
+
+		AudioCategory category = new AudioPriorityResolver().resolve(calloutCategory);
+		float gainDb = effectiveGain(category);
+		byte[] clipData = data.clone();
+
+		boolean started = interruptManager.submit(category, () ->
+			playbackPool.execute(() -> startClip(clipData, gainDb)));
+		log.debug("[coach] audio {}: {} ({})", audioFile,
+			started ? "playing" : "queued", category);
 		return true;
 	}
 
-	private void playBytes(byte[] data, int volume)
+	private void startClip(byte[] data, float gainDb)
 	{
+		stopCurrentClip();
 		try
 		{
-			try (Clip clip = AudioSystem.getClip())
-			{
-				clip.open(AudioSystem.getAudioInputStream(new ByteArrayInputStream(data)));
-				applyVolume(clip, volume);
-				clip.start();
-				// Clip plays on its own line; keep reference until done.
-				Thread.sleep(Math.max(1, clip.getMicrosecondLength() / 1000) + 50);
-			}
+			Clip clip = AudioSystem.getClip();
+			clip.open(AudioSystem.getAudioInputStream(new ByteArrayInputStream(data)));
+			applyVolume(clip, gainDb);
+			clip.addLineListener(event -> {
+				if (event.getType() == LineEvent.Type.STOP && event.getLine() == clip)
+				{
+					if (currentClip == clip)
+					{
+						currentClip = null;
+						interruptManager.onPlaybackFinished();
+					}
+				}
+			});
+			currentClip = clip;
+			clip.start();
+			// keep the line alive until it finishes; STOP listener handles cleanup
+			playbackPool.execute(() -> {
+				try
+				{
+					Thread.sleep(Math.max(1, clip.getMicrosecondLength() / 1000) + 50);
+				}
+				catch (InterruptedException e)
+				{
+					Thread.currentThread().interrupt();
+				}
+			});
 		}
 		catch (Exception e)
 		{
 			log.debug("[coach] audio playback failed (headless or unsupported format): {}", e.getMessage());
+			currentClip = null;
+			interruptManager.onPlaybackFinished();
 		}
 	}
 
-	private void applyVolume(Clip clip, int volumePercent)
+	private synchronized void stopCurrentClip()
+	{
+		if (currentClip != null)
+		{
+			currentClip.stop(); // stale STOP event ignored via identity check
+		}
+	}
+
+	private float effectiveGain(AudioCategory category)
+	{
+		int master = masterVolume;
+		int categoryVolume = categoryVolumes.getOrDefault(category, 70);
+		return (master / 100f) * (categoryVolume / 100f);
+	}
+
+	private void applyVolume(Clip clip, float linearPercent)
 	{
 		try
 		{
 			javax.sound.sampled.FloatControl gain =
 				(javax.sound.sampled.FloatControl) clip.getControl(javax.sound.sampled.FloatControl.Type.MASTER_GAIN);
 			float min = gain.getMinimum();
-			float max = gain.getMaximum(); // usually 6 dB
-			float db = min + (max - min) * (Math.max(0, Math.min(100, volumePercent)) / 100f);
-			gain.setValue(db);
+			float max = gain.getMaximum();
+			gain.setValue(min + (max - min) * Math.max(0f, Math.min(1f, linearPercent)));
 		}
 		catch (Exception ignored)
 		{
 			// volume control unsupported: play at default
 		}
+	}
+
+	private static int clamp(int value)
+	{
+		return Math.max(0, Math.min(100, value));
 	}
 
 	private static byte[] readAll(InputStream in) throws IOException
