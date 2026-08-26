@@ -1,0 +1,326 @@
+{
+  "schemaVersion": "1.0",
+  "metadata": {
+    "packId": "toa",
+    "name": "Tombs of Amascut",
+    "description": "ToA v1: HP-driven mechanic warnings for Zebak (specials + enrage), Akkha (shadow phases), Ba-Ba (knockbacks), and the Wardens (enrage). Invocation-aware callouts require per-raid config — planned with Sprint 17 settings. Animation-based prayer callouts pending verified ids.",
+    "author": "Project Coach",
+    "version": "1.0.0",
+    "gameVersion": "230"
+  },
+  "bosses": [
+    {
+      "bossId": "zebak",
+      "name": "Zebak",
+      "npcId": 11730,
+      "phases": [
+        {
+          "phaseId": "zebak_main",
+          "name": "Zebak",
+          "entryTrigger": { "type": "npc_spawn", "npcIds": [11730] },
+          "exitTriggers": [],
+          "mechanics": [
+            {
+              "mechanicId": "zebak_start",
+              "name": "Encounter start",
+              "triggers": [{ "triggerId": "spawn", "type": "npc_spawn", "npcIds": [11730] }],
+              "callouts": [{
+                "calloutId": "zebak_start_callout",
+                "text": "Zebak! Watch for waves and jugs",
+                "audioFile": "zebak_start.ogg",
+                "category": "critical", "priority": 80,
+                "audioOffset": -1, "visualOffset": 0,
+                "visual": { "type": "text", "color": "#00695C", "durationTicks": 6 }
+              }],
+              "cooldown": 100
+            },
+            {
+              "mechanicId": "zebak_special_1",
+              "name": "Special queued (roar or waves)",
+              "triggers": [{ "triggerId": "hp85", "type": "hp", "npcIds": [11730], "hpThreshold": 85, "hpDirection": "below" }],
+              "callouts": [{
+                "calloutId": "zebak_special_callout",
+                "text": "Special incoming! Waves or roar — get ready!",
+                "audioFile": "zebak_special.ogg",
+                "category": "warning", "priority": 75,
+                "audioOffset": 0, "visualOffset": 0,
+                "visual": { "type": "text", "color": "#FF9800", "durationTicks": 4 }
+              }],
+              "cooldown": 30
+            },
+            {
+              "mechanicId": "zebak_special_2",
+              "name": "Special queued #2",
+              "triggers": [{ "triggerId": "hp70", "type": "hp", "npcIds": [11730], "hpThreshold": 70, "hpDirection": "below" }],
+              "callouts": [{
+                "calloutId": "zebak_special2_callout",
+                "text": "Special incoming! Waves or roar — get ready!",
+                "audioFile": "zebak_special.ogg",
+                "category": "warning", "priority": 75,
+                "audioOffset": 0, "visualOffset": 0,
+                "visual": { "type": "text", "color": "#FF9800", "durationTicks": 4 }
+              }],
+              "cooldown": 30
+            },
+            {
+              "mechanicId": "zebak_special_3",
+              "name": "Special queued #3",
+              "triggers": [{ "triggerId": "hp55", "type": "hp", "npcIds": [11730], "hpThreshold": 55, "hpDirection": "below" }],
+              "callouts": [{
+                "calloutId": "zebak_special3_callout",
+                "text": "Special incoming! Waves or roar — get ready!",
+                "audioFile": "zebak_special.ogg",
+                "category": "warning", "priority": 75,
+                "audioOffset": 0, "visualOffset": 0,
+                "visual": { "type": "text", "color": "#FF9800", "durationTicks": 4 }
+              }],
+              "cooldown": 30
+            },
+            {
+              "mechanicId": "zebak_special_4",
+              "name": "Special queued #4",
+              "triggers": [{ "triggerId": "hp40", "type": "hp", "npcIds": [11730], "hpThreshold": 40, "hpDirection": "below" }],
+              "callouts": [{
+                "calloutId": "zebak_special4_callout",
+                "text": "Last special before enrage!",
+                "audioFile": "zebak_special.ogg",
+                "category": "warning", "priority": 75,
+                "audioOffset": 0, "visualOffset": 0,
+                "visual": { "type": "text", "color": "#FF9800", "durationTicks": 4 }
+              }],
+              "cooldown": 30
+            },
+            {
+              "mechanicId": "zebak_enrage",
+              "name": "Enrage",
+              "triggers": [{ "triggerId": "hp25", "type": "hp", "npcIds": [11730], "hpThreshold": 25, "hpDirection": "below" }],
+              "callouts": [{
+                "calloutId": "zebak_enrage_callout",
+                "text": "Zebak enraged! Attacks much faster now!",
+                "audioFile": "zebak_enrage.ogg",
+                "category": "critical", "priority": 88,
+                "audioOffset": -1, "visualOffset": 0,
+                "visual": { "type": "text", "color": "#FF0000", "durationTicks": 5 }
+              }],
+              "cooldown": 100
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "bossId": "akkha",
+      "name": "Akkha",
+      "npcId": 11796,
+      "phases": [
+        {
+          "phaseId": "akkha_main",
+          "name": "Akkha",
+          "entryTrigger": { "type": "npc_spawn", "npcIds": [11796] },
+          "exitTriggers": [],
+          "mechanics": [
+            {
+              "mechanicId": "akkha_start",
+              "name": "Encounter start",
+              "triggers": [{ "triggerId": "spawn", "type": "npc_spawn", "npcIds": [11796] }],
+              "callouts": [{
+                "calloutId": "akkha_start_callout",
+                "text": "Akkha! Match prayers to his style",
+                "audioFile": "akkha_start.ogg",
+                "category": "critical", "priority": 80,
+                "audioOffset": -1, "visualOffset": 0,
+                "visual": { "type": "text", "color": "#FBC02D", "durationTicks": 6 }
+              }],
+              "cooldown": 100
+            },
+            {
+              "mechanicId": "akkha_shadows_1",
+              "name": "Shadow phase #1",
+              "triggers": [{ "triggerId": "hp80", "type": "hp", "npcIds": [11796], "hpThreshold": 80, "hpDirection": "below" }],
+              "callouts": [{
+                "calloutId": "akkha_shadows1_callout",
+                "text": "Shadows appear! Kill one, lure him there",
+                "audioFile": "akkha_shadows.ogg",
+                "category": "critical", "priority": 92,
+                "audioOffset": -1, "visualOffset": 0,
+                "visual": { "type": "text", "color": "#FF0000", "durationTicks": 6 }
+              }],
+              "cooldown": 50
+            },
+            {
+              "mechanicId": "akkha_shadows_2",
+              "name": "Shadow phase #2",
+              "triggers": [{ "triggerId": "hp60", "type": "hp", "npcIds": [11796], "hpThreshold": 60, "hpDirection": "below" }],
+              "callouts": [{
+                "calloutId": "akkha_shadows2_callout",
+                "text": "Shadows restored! Break another corner",
+                "audioFile": "akkha_shadows.ogg",
+                "category": "critical", "priority": 92,
+                "audioOffset": -1, "visualOffset": 0,
+                "visual": { "type": "text", "color": "#FF0000", "durationTicks": 6 }
+              }],
+              "cooldown": 50
+            },
+            {
+              "mechanicId": "akkha_shadows_3",
+              "name": "Shadow phase #3",
+              "triggers": [{ "triggerId": "hp40", "type": "hp", "npcIds": [11796], "hpThreshold": 40, "hpDirection": "below" }],
+              "callouts": [{
+                "calloutId": "akkha_shadows3_callout",
+                "text": "Shadows restored! Break another corner",
+                "audioFile": "akkha_shadows.ogg",
+                "category": "critical", "priority": 92,
+                "audioOffset": -1, "visualOffset": 0,
+                "visual": { "type": "text", "color": "#FF0000", "durationTicks": 6 }
+              }],
+              "cooldown": 50
+            },
+            {
+              "mechanicId": "akkha_shadows_4",
+              "name": "Shadow phase #4",
+              "triggers": [{ "triggerId": "hp20", "type": "hp", "npcIds": [11796], "hpThreshold": 20, "hpDirection": "below" }],
+              "callouts": [{
+                "calloutId": "akkha_shadows4_callout",
+                "text": "Final shadows! Last corner break",
+                "audioFile": "akkha_shadows.ogg",
+                "category": "critical", "priority": 92,
+                "audioOffset": -1, "visualOffset": 0,
+                "visual": { "type": "text", "color": "#FF0000", "durationTicks": 6 }
+              }],
+              "cooldown": 50
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "bossId": "baba",
+      "name": "Ba-Ba",
+      "npcId": 11778,
+      "phases": [
+        {
+          "phaseId": "baba_main",
+          "name": "Ba-Ba",
+          "entryTrigger": { "type": "npc_spawn", "npcIds": [11778] },
+          "exitTriggers": [],
+          "mechanics": [
+            {
+              "mechanicId": "baba_start",
+              "name": "Encounter start",
+              "triggers": [{ "triggerId": "spawn", "type": "npc_spawn", "npcIds": [11778] }],
+              "callouts": [{
+                "calloutId": "baba_start_callout",
+                "text": "Ba-Ba! Melee distance, dodge boulders",
+                "audioFile": "baba_start.ogg",
+                "category": "critical", "priority": 80,
+                "audioOffset": -1, "visualOffset": 0,
+                "visual": { "type": "text", "color": "#8D6E63", "durationTicks": 6 }
+              }],
+              "cooldown": 100
+            },
+            {
+              "mechanicId": "baba_knockback_1",
+              "name": "Knockback #1 (Mind the Gap!)",
+              "triggers": [{ "triggerId": "hp66", "type": "hp", "npcIds": [11778], "hpThreshold": 66, "hpDirection": "below" }],
+              "callouts": [{
+                "calloutId": "baba_kb1_callout",
+                "text": "Knockback soon! Stand north/south sides!",
+                "audioFile": "baba_knockback.ogg",
+                "category": "critical", "priority": 94,
+                "audioOffset": -1, "visualOffset": 0,
+                "visual": { "type": "safe_tile", "color": "#FF0000", "durationTicks": 6 }
+              }],
+              "cooldown": 50
+            },
+            {
+              "mechanicId": "baba_knockback_2",
+              "name": "Knockback #2",
+              "triggers": [{ "triggerId": "hp33", "type": "hp", "npcIds": [11778], "hpThreshold": 33, "hpDirection": "below" }],
+              "callouts": [{
+                "calloutId": "baba_kb2_callout",
+                "text": "Second knockback! Sides of the room!",
+                "audioFile": "baba_knockback.ogg",
+                "category": "critical", "priority": 94,
+                "audioOffset": -1, "visualOffset": 0,
+                "visual": { "type": "safe_tile", "color": "#FF0000", "durationTicks": 6 }
+              }],
+              "cooldown": 50
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "bossId": "kephri",
+      "name": "Kephri",
+      "npcId": 11719,
+      "phases": [
+        {
+          "phaseId": "kephri_main",
+          "name": "Kephri",
+          "entryTrigger": { "type": "npc_spawn", "npcIds": [11719] },
+          "exitTriggers": [],
+          "mechanics": [
+            {
+              "mechanicId": "kephri_start",
+              "name": "Encounter start",
+              "triggers": [{ "triggerId": "spawn", "type": "npc_spawn", "npcIds": [11719] }],
+              "callouts": [{
+                "calloutId": "kephri_start_callout",
+                "text": "Kephri! Clear swarms, break the shield",
+                "audioFile": "kephri_start.ogg",
+                "category": "critical", "priority": 80,
+                "audioOffset": -1, "visualOffset": 0,
+                "visual": { "type": "text", "color": "#7CB342", "durationTicks": 6 }
+              }],
+              "cooldown": 100
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "bossId": "wardens",
+      "name": "The Wardens",
+      "npcId": 11750,
+      "phases": [
+        {
+          "phaseId": "wardens_main",
+          "name": "The Wardens",
+          "entryTrigger": { "type": "npc_spawn", "npcIds": [11750, 11791] },
+          "exitTriggers": [],
+          "mechanics": [
+            {
+              "mechanicId": "wardens_start",
+              "name": "Encounter start",
+              "triggers": [{ "triggerId": "spawn", "type": "npc_spawn", "npcIds": [11750, 11791] }],
+              "callouts": [{
+                "calloutId": "wardens_start_callout",
+                "text": "Wardens! Attack the obelisk, pick your trough",
+                "audioFile": "wardens_start.ogg",
+                "category": "critical", "priority": 80,
+                "audioOffset": -1, "visualOffset": 0,
+                "visual": { "type": "text", "color": "#512DA8", "durationTicks": 6 }
+              }],
+              "cooldown": 100
+            },
+            {
+              "mechanicId": "warden_enrage",
+              "name": "Phase 3 enrage",
+              "triggers": [{ "triggerId": "hp5", "type": "hp", "npcIds": [11750, 11791], "hpThreshold": 5, "hpDirection": "below" }],
+              "callouts": [{
+                "calloutId": "warden_enrage_callout",
+                "text": "Enrage! It heals 20% — finish it fast!",
+                "audioFile": "warden_enrage.ogg",
+                "category": "critical", "priority": 90,
+                "audioOffset": -1, "visualOffset": 0,
+                "visual": { "type": "text", "color": "#FF0000", "durationTicks": 5 }
+              }],
+              "cooldown": 100
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

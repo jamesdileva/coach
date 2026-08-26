@@ -4,6 +4,55 @@ Running log of sprints: what was done, key decisions, deviations from the docs.
 
 ---
 
+## Sprint 15 — Tombs of Amascut (2026-08-26)
+
+**Objective:** ToA pack covering all four path bosses + the Wardens, using
+mechanics that are honestly detectable (HP thresholds are ToA's friend).
+
+### Done
+
+- `encounter-packs/toa.pack/` + packaged `toa_1.0.0.zip` (254 KB):
+  - **Zebak**: special-queue warnings at 85/70/55/40% (wiki-verified special
+    queue points), enrage warning at 25%
+  - **Akkha**: shadow-phase warnings at 80/60/40/20% (wiki-verified invuln
+    thresholds)
+  - **Ba-Ba**: knockback warnings at 66%/33% ("Mind the Gap!" danger)
+  - **Kephri**: encounter-start guidance only (v1)
+  - **Wardens**: start guidance + phase-3 enrage at <5% (heals 20%)
+- 10 TTS voice lines; ToaPackTest guards the real zip (boss coverage +
+  wiki-matched threshold assertions).
+
+### Verified
+
+- Tests: **136/136 pass** (+4 ToaPackTest).
+
+### Decisions
+
+- HP-threshold-first design: ToA's biggest mechanics are HP-driven per wiki,
+  so v1 delivers verified-value warnings without animation-id guesswork.
+- Invocation-aware callouts explicitly deferred to Sprint 17 (needs per-raid
+  config plumbing) — roadmap listed it as an acceptance item; noted there.
+- NPC ids flagged for live verification (README checklist): wrong ids fail
+  silent (no callouts), so they're the top checklist item.
+
+### Deviations from docs
+
+- Roadmap says "Akkhan" — correct name is Akkha.
+- Roadmap wanted "at least 3 bosses"; shipped 5.
+
+---
+
+## Backlog addition — rest-of-ToB rooms (from user review of Sprint 14)
+
+The Sprint 14 roadmap mechanic list ("crab rave, green/red orbs, lightning,
+web bombs") maps to the OTHER ToB rooms: Nylocas (crabs), Xarpus, Verzik
+(lightning/webs), Maiden, Bloat. Deferred as a future pack expansion — all
+these rooms share Sotetseg's problem: no reliably-sourced animation/projectile
+ids for their telegraphs. Structure will follow once ids are captured live
+(same README-checklist pattern).
+
+---
+
 ## Sprint 14 — Theatre of Blood: Sotetseg (2026-08-26)
 
 **Objective:** First ToB encounter pack. Deliberately scoped to what can be
