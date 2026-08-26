@@ -17,3 +17,7 @@ Thumbs.db
 
 # Local tooling (machine-specific JDK/Gradle installs live outside the repo)
 /tools-local/
+
+# Python
+__pycache__/
+*.pyc
