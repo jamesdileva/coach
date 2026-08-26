@@ -11,6 +11,7 @@ public class MechanicDefinition
 	public String name;
 	public List<TriggerDefinition> triggers;
 	public List<CalloutDefinition> callouts;
+	public List<ConditionDefinition> conditions;
 	public Integer cooldown;
 	public Boolean interruptible;
 

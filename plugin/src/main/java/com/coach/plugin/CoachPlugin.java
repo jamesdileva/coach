@@ -84,10 +84,11 @@ public class CoachPlugin extends Plugin
 	protected void startUp() throws Exception
 	{
 		runeLiteEventBus.register(this);
-		encounterEngine = new EncounterEngine();
+		encounterEngine = new EncounterEngine(client);
 		triggerEngine = new TriggerEngine(new TriggerRegistry(client));
 		triggerEngine.addFireListener(this::onTriggersFired);
 		coachEventBus.subscribe(triggerEngine);
+		coachEventBus.subscribe(encounterEngine);
 		reloadPacks("startup");
 		log.info("Project Coach started (debug={})", config.debugMode());
 
@@ -220,13 +221,16 @@ public class CoachPlugin extends Plugin
 
 	private void onTriggersFired(List<TriggerFire> fires)
 	{
-		if (!config.debugMode())
+		if (config.debugMode())
 		{
-			return;
+			for (TriggerFire fire : fires)
+			{
+				triggerLogger.triggerFired(fire.getTick(), fire.getContextId(), fire.getDescription());
+			}
 		}
-		for (TriggerFire fire : fires)
+		if (encounterEngine != null)
 		{
-			triggerLogger.triggerFired(fire.getTick(), fire.getContextId(), fire.getDescription());
+			encounterEngine.onTriggersFired(fires);
 		}
 	}
 

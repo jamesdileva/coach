@@ -4,6 +4,49 @@ Running log of sprints: what was done, key decisions, deviations from the docs.
 
 ---
 
+## Sprint 7 — Phase Machine + Conditions (2026-08-26)
+
+**Objective:** Runtime encounter state: phase transitions, mechanic tracking
+with cooldowns + condition gating, recovery on death/despawn.
+
+### Done
+
+- `ActiveEncounter` — runtime session per live boss: current phase,
+  phase/global tick counters, per-mechanic cooldown map.
+- `PhaseMachine` — entry via entryTrigger fires; exit triggers advance to the
+  NEXT phase in list order (last phase is terminal).
+- `MechanicManager` — mechanic trigger matching (exact or `#index` contexts)
+  and cooldown enforcement (`cooldown` ticks between activations).
+- `ConditionEvaluator` — gates activations: npc/player hp thresholds
+  (live client), tick_mod on phaseTick; unknown types warn once + fail closed.
+- `RecoveryHandler` — resets sessions on tracked-boss despawn or player HP 0.
+- `EncounterEngine` upgraded: consumes trigger fires, manages sessions,
+  emits `MechanicActivation`s to listeners (Sprint 8's Coaching Engine plugs in
+  here). Also subscribed to the internal bus for tick counters + recovery.
+- `ConditionDefinition` model + schema/validator support for `conditions`.
+- `GameStateBridge.findNpc` static helper (deduped NPC lookup from Sprint 6's
+  HpTriggerEvaluator).
+
+### Verified
+
+- Tests: **72/72 pass** (+15: PhaseMachineTest ×4, MechanicManagerTest ×3,
+  RecoveryHandlerTest ×3, ConditionEvaluatorTest ×4, EncounterEngineFlowTest ×1
+  covering the full flow: entry → gated activation → cooldown suppression →
+  re-activation → phase transition → despawn reset → re-entry).
+
+### Decisions
+
+- Phases are **sequential** for now (exit → next in list). Explicit transition
+  graphs (schema `transitions`) deferred until a boss actually needs them —
+  Nex's phases are HP-driven and sequential.
+- Conditions fail **closed** (unknown/unevaluable = false) so packs never fire
+  callouts on unverified state.
+- Sessions are keyed by npcId; multiple simultaneous bosses supported.
+- `globalTick` only advances via TICK batches — fires carry their own tick but
+  phase-relative conditions use the session clock.
+
+---
+
 ## Sprint 6 — Trigger Engine (Advanced Triggers) (2026-08-26)
 
 **Objective:** All remaining trigger types: npc_spawn/despawn, hp, tick_timer,

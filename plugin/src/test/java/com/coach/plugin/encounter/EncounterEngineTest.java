@@ -30,7 +30,7 @@ class EncounterEngineTest
 	@BeforeEach
 	void setUp()
 	{
-		engine = new EncounterEngine();
+		engine = new EncounterEngine(null);
 	}
 
 	private Path writeZip(String name, String encounterJson) throws Exception

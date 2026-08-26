@@ -46,4 +46,23 @@ public class GameStateBridge
 	{
 		return actor instanceof NPC && ((NPC) actor).getId() == npcId;
 	}
+
+	/**
+	 * Find a live NPC by id in the top-level world view, or null.
+	 */
+	public static NPC findNpc(Client client, int npcId)
+	{
+		if (client == null)
+		{
+			return null;
+		}
+		for (NPC candidate : client.getTopLevelWorldView().npcs())
+		{
+			if (candidate.getId() == npcId)
+			{
+				return candidate;
+			}
+		}
+		return null;
+	}
 }

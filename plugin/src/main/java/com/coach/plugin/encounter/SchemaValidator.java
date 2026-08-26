@@ -27,6 +27,11 @@ public final class SchemaValidator
 	private static final Set<String> CALLOUT_CATEGORIES = Set.of(
 		"critical", "warning", "info", "transition");
 
+	private static final Set<String> CONDITION_TYPES = Set.of(
+		"npc_hp_below", "npc_hp_above", "player_hp_below", "player_hp_above",
+		"tick_mod", "player_in_region", "prayer_active", "prayer_inactive",
+		"inventory_contains", "custom");
+
 	private static final int MIN_TICK_OFFSET = -5;
 	private static final int MAX_TICK_OFFSET = 10;
 
@@ -183,6 +188,34 @@ public final class SchemaValidator
 			{
 				errors.add(mLabel + ".cooldown must be >= 0");
 			}
+
+			if (mechanic.conditions != null)
+			{
+				int i = 0;
+				for (com.coach.plugin.encounter.model.ConditionDefinition condition : mechanic.conditions)
+				{
+					validateCondition(condition, mLabel + ".conditions[" + i++ + "]");
+				}
+			}
+		}
+	}
+
+	private void validateCondition(com.coach.plugin.encounter.model.ConditionDefinition condition, String label)
+	{
+		if (!requireText(condition.type, label + ".type")) return;
+		if (!CONDITION_TYPES.contains(condition.type))
+		{
+			errors.add(label + ": unknown condition type '" + condition.type + "'");
+			return;
+		}
+		if ((condition.type.endsWith("_hp_below") || condition.type.endsWith("_hp_above"))
+			&& condition.threshold == null)
+		{
+			errors.add(label + ": hp conditions require a threshold");
+		}
+		if ("tick_mod".equals(condition.type) && (condition.mod == null || condition.mod < 1))
+		{
+			errors.add(label + ": tick_mod requires mod >= 1");
 		}
 	}
 

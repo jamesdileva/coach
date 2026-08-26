@@ -2,7 +2,7 @@ package com.coach.plugin.trigger;
 
 import com.coach.plugin.events.EventType;
 import com.coach.plugin.events.GameEvent;
-import java.util.Iterator;
+import com.coach.plugin.events.GameStateBridge;
 import java.util.Set;
 import net.runelite.api.Client;
 import net.runelite.api.NPC;
@@ -64,20 +64,7 @@ public class HpTriggerEvaluator implements TriggerEvaluator
 
 	private NPC findNpc(int id)
 	{
-		if (client == null)
-		{
-			return null;
-		}
-		Iterator<? extends NPC> iterator = client.getTopLevelWorldView().npcs().iterator();
-		while (iterator.hasNext())
-		{
-			NPC candidate = iterator.next();
-			if (candidate.getId() == id)
-			{
-				return candidate;
-			}
-		}
-		return null;
+		return GameStateBridge.findNpc(client, id);
 	}
 
 	@Override
