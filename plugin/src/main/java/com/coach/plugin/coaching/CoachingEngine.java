@@ -4,7 +4,6 @@ import com.coach.plugin.encounter.MechanicActivation;
 import com.coach.plugin.encounter.model.CalloutDefinition;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,7 +75,12 @@ public class CoachingEngine
 	private final CooldownManager cooldownManager = new CooldownManager();
 	private final CalloutScheduler scheduler = new CalloutScheduler(queue, priorityResolver);
 	private final List<Listener> listeners = new ArrayList<>();
-	private volatile Predicate<CalloutDefinition> enabledFilter = c -> true;
+	/**
+	 * Settings gate: (bossId, callout) -> may fire. Set by the plugin from
+	 * live config (master enable, per-category toggles, per-boss disables).
+	 */
+	private volatile java.util.function.BiPredicate<String, CalloutDefinition> enabledFilter =
+		(bossId, callout) -> true;
 
 	public void addListener(Listener listener)
 	{
@@ -89,11 +93,12 @@ public class CoachingEngine
 	}
 
 	/**
-	 * Gate for per-callout enable/disable (full config toggles land in Sprint 17).
+	 * Gate for per-callout enable/disable (master enable, category toggles,
+	 * per-boss suppressions — fed from live config).
 	 */
-	public void setEnabledFilter(Predicate<CalloutDefinition> filter)
+	public void setEnabledFilter(java.util.function.BiPredicate<String, CalloutDefinition> filter)
 	{
-		this.enabledFilter = filter != null ? filter : c -> true;
+		this.enabledFilter = filter != null ? filter : (bossId, callout) -> true;
 	}
 
 	/**
@@ -103,7 +108,7 @@ public class CoachingEngine
 	{
 		for (CalloutDefinition callout : activation.getCallouts())
 		{
-			if (!enabledFilter.test(callout))
+			if (!enabledFilter.test(activation.getBossId(), callout))
 			{
 				continue;
 			}

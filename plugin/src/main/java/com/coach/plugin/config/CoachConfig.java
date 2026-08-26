@@ -73,4 +73,70 @@ public interface CoachConfig extends Config
 	{
 		return 70;
 	}
+
+	@ConfigItem(
+		keyName = "criticalCallouts",
+		name = "Critical Callouts",
+		description = "Show/speak critical callouts (immediate action required)",
+		position = 10
+	)
+	default boolean criticalCallouts()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "warningCallouts",
+		name = "Warning Callouts",
+		description = "Show/speak warning callouts (upcoming mechanics)",
+		position = 11
+	)
+	default boolean warningCallouts()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "infoCallouts",
+		name = "Info Callouts",
+		description = "Show/speak informational callouts",
+		position = 12
+	)
+	default boolean infoCallouts()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "transitionCallouts",
+		name = "Transition Callouts",
+		description = "Show/speak phase-transition callouts",
+		position = 13
+	)
+	default boolean transitionCallouts()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "disabledBosses",
+		name = "Disabled Bosses",
+		description = "Comma-separated bossIds with callouts suppressed (e.g. 'nex, inferno'). Boss ids come from the loaded packs.",
+		position = 14
+	)
+	default String disabledBosses()
+	{
+		return "";
+	}
+
+	@ConfigItem(
+		keyName = "profilesJson",
+		name = "Profiles",
+		description = "Internal: named settings profiles (managed via ProfileManager)",
+		hidden = true
+	)
+	default String profilesJson()
+	{
+		return "{}";
+	}
 }

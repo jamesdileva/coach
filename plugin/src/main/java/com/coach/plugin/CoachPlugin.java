@@ -1,6 +1,7 @@
 package com.coach.plugin;
 
 import com.coach.plugin.audio.AudioEngine;
+import com.coach.plugin.config.CalloutGate;
 import com.coach.plugin.coaching.CoachStateManager;
 import com.coach.plugin.coaching.CoachingEngine;
 import com.coach.plugin.config.CoachConfig;
@@ -106,6 +107,7 @@ public class CoachPlugin extends Plugin
 		coachEventBus.subscribe(encounterEngine);
 		coachEventBus.subscribe(this::onCoachingTick);
 		encounterEngine.addActivationListener(coachingEngine::onActivation);
+		coachingEngine.setEnabledFilter(new CalloutGate(config));
 		coachingEngine.addListener(this::onCalloutDelivered);
 		registerCoachOverlay();
 		audioEngine.setMuted(config.muted());

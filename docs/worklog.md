@@ -4,6 +4,54 @@ Running log of sprints: what was done, key decisions, deviations from the docs.
 
 ---
 
+## Sprint 17 — Settings Overhaul + Profile Groundwork (2026-08-26)
+
+**Objective:** Full settings gate: per-category callout toggles, per-boss
+suppression, and named profile save/apply logic. Phase 4 begins.
+
+### Done
+
+- `CoachConfig` additions:
+  - Category toggles: Critical / Warning / Info / Transition callouts
+    (all default on)
+  - "Disabled Bosses" — comma-separated bossId suppression list
+  - Hidden `profilesJson` storage item
+- `CalloutFilter` — pure, dependency-free decision function (master enable →
+  category toggle → per-boss suppress); `CalloutGate` wraps it as the live
+  BiPredicate fed to CoachingEngine. Config changes apply instantly because
+  the gate reads live config at every activation.
+- `CoachingEngine` filter upgraded to `BiPredicate<bossId, callout>`.
+- **`ProfileManager`** — named settings profiles persisted in the hidden
+  config item via RuneLite's ConfigManager: `saveProfile` / `applyProfile` /
+  `deleteProfile` / `listProfiles`. Learning/Practice/Performance-style
+  presets are just profiles with different toggles.
+- Tests: CalloutFilterTest ×5 (categories, per-boss csv case-insensitivity,
+  master kill switch), ProfileManagerTest ×3 (persist/apply roundtrip,
+  unknown profile, delete).
+
+### Verified
+
+- Tests: **147/147 pass** (+8).
+
+### Decisions
+
+- Kept ONE `CoachConfig` group instead of roadmap's `CoachConfigV2` — same
+  RuneLite config group can grow; a second class would split settings state.
+- Per-boss toggles stored as CSV string rather than JSON object: trivially
+  editable in RuneLite's raw config view and matches how packs name bosses.
+- Profiles persist through ConfigManager (RuneLite-native) rather than custom
+  files; export/import UI is Sprint 22's scope.
+- The settings gate caught a real bug during development: the filter initially
+  passed the boss id where the suppression CSV belonged — unit tests flagged
+  it immediately (rule 7 earning its keep).
+
+### Deviations from docs
+
+- Roadmap's Swing-based profile UI deferred to Sprint 22 (Profile Management);
+  this sprint ships the complete logic layer, testable headless.
+
+---
+
 ## Sprint 16 — CoX + Community Pack Template (2026-08-26)
 
 **Objective:** CoX guidance pack, the community authoring template

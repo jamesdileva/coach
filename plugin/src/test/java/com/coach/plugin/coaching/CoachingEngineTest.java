@@ -76,7 +76,7 @@ class CoachingEngineTest
 	@Test
 	void disabledFilterBlocksCallouts()
 	{
-		engine.setEnabledFilter(c -> !c.calloutId.equals("muted"));
+		engine.setEnabledFilter((bossId, c) -> !c.calloutId.equals("muted"));
 		engine.onActivation(activation(1,
 			callout("kept", "critical", 90, 0, 0),
 			callout("muted", "warning", 70, 0, 0)));
