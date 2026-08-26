@@ -65,6 +65,18 @@ public final class SchemaValidator
 			requireText(pack.metadata.name, "metadata.name");
 			requireText(pack.metadata.version, "metadata.version");
 			requireText(pack.metadata.gameVersion, "metadata.gameVersion");
+			if (pack.metadata.dependencies != null)
+			{
+				int i = 0;
+				for (String dependency : pack.metadata.dependencies)
+				{
+					if (dependency == null || dependency.trim().isEmpty())
+					{
+						errors.add("metadata.dependencies[" + i + "] must be a non-empty packId");
+					}
+					i++;
+				}
+			}
 		}
 
 		if (pack.bosses == null || pack.bosses.isEmpty())

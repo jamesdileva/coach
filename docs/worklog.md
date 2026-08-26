@@ -4,6 +4,54 @@ Running log of sprints: what was done, key decisions, deviations from the docs.
 
 ---
 
+## Sprint 11 — Boss Loader + Pack Management (2026-08-26)
+
+**Objective:** Pack lifecycle management: statuses, boss-conflict detection,
+dependency reporting, pack visibility in the debug overlay.
+
+### Done
+
+- `PackManager` — owns the directory scan and per-file outcomes:
+  - `PackStatus` per zip: LOADED / REJECTED (invalid) / CONFLICT, with
+    human-readable `describe()` lines
+  - **boss conflict detection**: two packs claiming the same bossId →
+    alphabetically-first file wins, later ones marked CONFLICT and skipped;
+    duplicate packIds treated the same way
+  - **dependency reporting**: new optional `metadata.dependencies` (packIds);
+    unsatisfied deps are warnings — the pack still loads
+  - deterministic processing order (alphabetical filenames)
+- `EncounterEngine.loadPacks` now delegates to PackManager; exposes
+  `getPackStatuses()` + `getPackSummaryLines()`; rejections/conflicts/warnings
+  logged on every reload.
+- `DebugOverlay` gained a context-lines section: shows live pack statuses
+  (`a_golem.pack.zip -> golempack@1.0.0 [LOADED]`, ...) above the event log.
+- Schema v1.0 + validator updated for `metadata.dependencies`.
+- CoachPlugin already reloaded packs on config change (Sprint 4) — now the
+  reload also surfaces conflicts/warnings in logs.
+
+### Verified
+
+- Tests: **115/115 pass** (+7 PackManagerTest: distinct bosses, boss conflict
+  first-wins, duplicate packId, satisfied/missing dependency, rejected status,
+  overlay summary lines).
+
+### Decisions
+
+- Conflict policy is **first-pack-wins by filename order** — deterministic and
+  easy to reason about ("rename your file to win"); reported loudly either way.
+- Missing dependencies warn instead of rejecting: a pack missing an optional
+  companion still provides value for the bosses it does define.
+- Audio pre-loading was already implemented at reload time (Sprint 9); no
+  change needed this sprint.
+
+### Deviations from docs
+
+- Roadmap wanted separate `PackLoader.java`; its responsibilities (zip
+  extraction + validation) already lived in `EncounterLoader` since Sprint 4,
+  so only the missing lifecycle piece (`PackManager`) was created.
+
+---
+
 ## Sprint 10 — JSON Schema Formalization (2026-08-26)
 
 **Objective:** Finalize schema v1.0, add the migration framework, audio

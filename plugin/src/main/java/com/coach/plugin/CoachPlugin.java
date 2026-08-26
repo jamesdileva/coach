@@ -385,7 +385,10 @@ public class CoachPlugin extends Plugin
 
 		if (!debugOverlayAdded)
 		{
-			debugOverlay = new DebugOverlay(logBuffer);
+			debugOverlay = new DebugOverlay(logBuffer,
+				encounterEngine != null
+					? encounterEngine::getPackSummaryLines
+					: java.util.List::of);
 			overlayManager.add(debugOverlay);
 			debugOverlayAdded = true;
 		}

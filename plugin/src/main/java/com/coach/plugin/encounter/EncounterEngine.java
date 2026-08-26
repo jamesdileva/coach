@@ -45,6 +45,7 @@ public class EncounterEngine implements EventBus.Listener
 	}
 
 	private final EncounterLoader loader = new EncounterLoader();
+	private final PackManager packManager = new PackManager(loader);
 	private final PhaseMachine phaseMachine = new PhaseMachine();
 	private final MechanicManager mechanicManager = new MechanicManager();
 	private final RecoveryHandler recoveryHandler = new RecoveryHandler();
@@ -52,6 +53,7 @@ public class EncounterEngine implements EventBus.Listener
 	private final List<ActivationListener> activationListeners = new ArrayList<>();
 
 	private volatile List<EncounterPack> packs = Collections.emptyList();
+	private volatile List<PackStatus> packStatuses = Collections.emptyList();
 	private final Map<Integer, ActiveEncounter> sessions = new HashMap<>(); // npcId -> session
 
 	public EncounterEngine(Client client)
@@ -67,46 +69,64 @@ public class EncounterEngine implements EventBus.Listener
 	// ---- pack loading ----
 
 	/**
-	 * Scan the directory for *.zip packs, validate and load each one.
-	 * Invalid packs are logged and skipped, never fatal (rule 4).
+	 * Scan the directory for *.zip packs via the PackManager: validate, detect
+	 * conflicts and dependencies. Invalid/conflicting packs are logged and
+	 * skipped, never fatal (rule 4).
 	 *
 	 * @return number of successfully loaded packs
 	 */
 	public synchronized int loadPacks(Path directory)
 	{
-		List<EncounterPack> loaded = new ArrayList<>();
-
-		if (directory == null || !Files.isDirectory(directory))
+		List<EncounterPack> loaded;
+		try
 		{
-			log.info("[coach] no encounter pack directory at {} — nothing loaded",
-				directory);
-			packs = Collections.emptyList();
-			return 0;
-		}
+			PackManager.LoadResult result = packManager.loadDirectory(directory);
+			loaded = result.packs;
+			packStatuses = List.copyOf(result.statuses);
 
-		try (DirectoryStream<Path> stream = Files.newDirectoryStream(directory, "*.zip"))
-		{
-			for (Path zip : stream)
+			for (PackStatus status : result.statuses)
 			{
-				try
+				if (status.getState() != PackStatus.State.LOADED)
 				{
-					loaded.add(loader.loadZip(zip));
-				}
-				catch (PackLoadException e)
-				{
-					log.warn("[coach] rejected encounter pack: {}", e.getMessage());
+					log.warn("[coach] pack {}: {}", status.getState(), status.describe());
 				}
 			}
+			result.warnings.forEach(warning -> log.warn("[coach] {}", warning));
 		}
 		catch (IOException e)
 		{
 			log.warn("[coach] could not scan pack directory {}: {}", directory, e.getMessage());
+			loaded = Collections.emptyList();
+			packStatuses = Collections.emptyList();
+		}
+
+		if (!Files.isDirectory(directory))
+		{
+			log.info("[coach] no encounter pack directory at {} — nothing loaded", directory);
 		}
 
 		packs = Collections.unmodifiableList(loaded);
 		int bossCount = packs.stream().mapToInt(p -> p.bosses.size()).sum();
 		log.info("[coach] loaded {} encounter pack(s) covering {} boss(es)", packs.size(), bossCount);
 		return packs.size();
+	}
+
+	public List<PackStatus> getPackStatuses()
+	{
+		return packStatuses;
+	}
+
+	/**
+	 * Compact summary lines for the debug overlay.
+	 */
+	public List<String> getPackSummaryLines()
+	{
+		List<String> lines = new ArrayList<>();
+		for (PackStatus status : packStatuses)
+		{
+			lines.add(status.describe());
+		}
+		return lines;
 	}
 
 	public List<EncounterPack> getPacks()

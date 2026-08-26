@@ -15,7 +15,12 @@
         "description": { "type": "string", "description": "Optional free-text description of pack coverage." },
         "author": { "type": "string", "description": "Pack author or maintainer." },
         "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$", "description": "Pack semantic version (independent of plugin version)." },
-        "gameVersion": { "type": "string", "description": "OSRS game version this pack was verified against." }
+        "gameVersion": { "type": "string", "description": "OSRS game version this pack was verified against." },
+        "dependencies": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Optional list of packIds that must be present for this pack to work."
+        }
       }
     },
     "bosses": {

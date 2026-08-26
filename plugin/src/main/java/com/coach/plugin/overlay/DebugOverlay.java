@@ -22,11 +22,18 @@ public class DebugOverlay extends Overlay
 	private static final int PADDING = 6;
 
 	private final LogBuffer logBuffer;
+	private final java.util.function.Supplier<java.util.List<String>> contextLines;
 
 	@Inject
 	public DebugOverlay(LogBuffer logBuffer)
 	{
+		this(logBuffer, () -> java.util.List.of());
+	}
+
+	public DebugOverlay(LogBuffer logBuffer, java.util.function.Supplier<java.util.List<String>> contextLines)
+	{
 		this.logBuffer = logBuffer;
+		this.contextLines = contextLines;
 		setPosition(OverlayPosition.TOP_LEFT);
 		setPriority(OverlayPriority.LOW);
 	}
@@ -34,7 +41,8 @@ public class DebugOverlay extends Overlay
 	@Override
 	public Dimension render(Graphics2D graphics)
 	{
-		List<String> entries = logBuffer.snapshot();
+		List<String> entries = new java.util.ArrayList<>(contextLines.get());
+		entries.addAll(logBuffer.snapshot());
 		if (entries.isEmpty())
 		{
 			return null;
