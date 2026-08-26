@@ -1,0 +1,122 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Project Coach Encounter Pack Schema",
+  "description": "Reference copy of schema v1. The plugin enforces these rules at load time via SchemaValidator; the AI knowledge pipeline uses this document as the authoring contract.",
+  "type": "object",
+  "required": ["schemaVersion", "metadata", "bosses"],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "metadata": {
+      "type": "object",
+      "required": ["packId", "name", "version", "gameVersion"],
+      "properties": {
+        "packId": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "author": { "type": "string" },
+        "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+        "gameVersion": { "type": "string" }
+      }
+    },
+    "bosses": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/boss" }
+    }
+  },
+  "definitions": {
+    "boss": {
+      "type": "object",
+      "required": ["bossId", "name", "npcId", "phases"],
+      "properties": {
+        "bossId": { "type": "string" },
+        "name": { "type": "string" },
+        "npcId": { "type": "integer" },
+        "description": { "type": "string" },
+        "phases": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/phase" }
+        },
+        "mechanics": { "type": "array", "items": { "$ref": "#/definitions/mechanic" } },
+        "recovery": {
+          "type": "object",
+          "properties": {
+            "onPlayerDeath": { "enum": ["reset", "pause", "ignore"] },
+            "onBossDespawn": { "enum": ["reset", "pause", "ignore"] },
+            "resetPhase": { "type": "string" }
+          }
+        }
+      }
+    },
+    "phase": {
+      "type": "object",
+      "required": ["phaseId", "name", "entryTrigger"],
+      "properties": {
+        "phaseId": { "type": "string" },
+        "name": { "type": "string" },
+        "entryTrigger": { "$ref": "#/definitions/trigger" },
+        "exitTriggers": { "type": "array", "items": { "$ref": "#/definitions/trigger" } },
+        "mechanics": { "type": "array", "items": { "$ref": "#/definitions/mechanic" } }
+      }
+    },
+    "mechanic": {
+      "type": "object",
+      "required": ["mechanicId", "name", "triggers", "callouts"],
+      "properties": {
+        "mechanicId": { "type": "string" },
+        "name": { "type": "string" },
+        "triggers": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/trigger" }
+        },
+        "callouts": { "type": "array", "items": { "$ref": "#/definitions/callout" } },
+        "cooldown": { "type": "integer", "minimum": 0 },
+        "interruptible": { "type": "boolean" }
+      }
+    },
+    "trigger": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "triggerId": { "type": "string" },
+        "type": {
+          "enum": ["animation", "projectile", "graphic", "npc_spawn", "npc_despawn",
+                   "hp", "tick_timer", "player_state", "location", "custom", "composite"]
+        },
+        "npcId": { "type": "integer" },
+        "animationId": { "type": "integer" },
+        "projectId": { "type": "integer" },
+        "graphicId": { "type": "integer" },
+        "hpThreshold": { "type": "integer" },
+        "hpDirection": { "enum": ["below", "above"] },
+        "tickMod": { "type": "integer", "minimum": 1 },
+        "logic": { "enum": ["AND", "OR"] },
+        "children": { "type": "array", "items": { "$ref": "#/definitions/trigger" } }
+      }
+    },
+    "callout": {
+      "type": "object",
+      "required": ["calloutId", "text", "category"],
+      "properties": {
+        "calloutId": { "type": "string" },
+        "text": { "type": "string" },
+        "audioFile": { "type": "string" },
+        "category": { "enum": ["critical", "warning", "info", "transition"] },
+        "priority": { "type": "integer", "minimum": 1, "maximum": 100 },
+        "audioOffset": { "type": "integer", "minimum": -5, "maximum": 10 },
+        "visualOffset": { "type": "integer", "minimum": -5, "maximum": 10 },
+        "visual": {
+          "type": "object",
+          "properties": {
+            "type": { "enum": ["prayer_icon", "countdown", "text", "safe_tile", "status_bar", "timeline", "mini_hud"] },
+            "color": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+            "opacity": { "type": "number", "minimum": 0, "maximum": 1 },
+            "durationTicks": { "type": "integer", "minimum": 1 }
+          }
+        }
+      }
+    }
+  }
+}

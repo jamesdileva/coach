@@ -1,6 +1,7 @@
 package com.coach.plugin;
 
 import com.coach.plugin.config.CoachConfig;
+import com.coach.plugin.encounter.EncounterEngine;
 import com.coach.plugin.events.EventBus;
 import com.coach.plugin.events.EventType;
 import com.coach.plugin.events.GameEvent;
@@ -67,6 +68,7 @@ public class CoachPlugin extends Plugin
 	private final EventLogger eventLogger = new EventLogger(logBuffer);
 	private final TriggerLogger triggerLogger = new TriggerLogger(logBuffer);
 	private final CalloutLogger calloutLogger = new CalloutLogger(logBuffer);
+	private EncounterEngine encounterEngine;
 
 	private DebugOverlay debugOverlay;
 	private boolean debugOverlayAdded;
@@ -76,6 +78,8 @@ public class CoachPlugin extends Plugin
 	protected void startUp() throws Exception
 	{
 		runeLiteEventBus.register(this);
+		encounterEngine = new EncounterEngine();
+		reloadPacks("startup");
 		log.info("Project Coach started (debug={})", config.debugMode());
 
 		if (config.debugMode())
@@ -89,6 +93,7 @@ public class CoachPlugin extends Plugin
 	{
 		disableDebugging();
 		runeLiteEventBus.unregister(this);
+		encounterEngine = null;
 		log.info("Project Coach shut down");
 	}
 
@@ -163,6 +168,11 @@ public class CoachPlugin extends Plugin
 		{
 			return;
 		}
+		if ("packDirectory".equals(event.getKey()))
+		{
+			reloadPacks("config change");
+			return;
+		}
 		if ("debugMode".equals(event.getKey()) || "logToFile".equals(event.getKey()))
 		{
 			if (config.debugMode())
@@ -177,6 +187,21 @@ public class CoachPlugin extends Plugin
 	}
 
 	// ---- Internal bus ----
+
+	EncounterEngine getEncounterEngine()
+	{
+		return encounterEngine;
+	}
+
+	private void reloadPacks(String reason)
+	{
+		if (encounterEngine == null)
+		{
+			return;
+		}
+		int count = encounterEngine.loadPacks(java.nio.file.Paths.get(config.packDirectory()));
+		log.info("[coach] packs reloaded ({}): {} pack(s) loaded", reason, count);
+	}
 
 	EventBus getCoachEventBus()
 	{

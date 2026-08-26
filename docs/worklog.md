@@ -4,6 +4,59 @@ Running log of sprints: what was done, key decisions, deviations from the docs.
 
 ---
 
+## Sprint 4 — Encounter Engine (JSON Loader) (2026-08-25)
+
+**Objective:** Load encounter packs from the user's pack directory with
+schema validation; invalid packs rejected at load time. (Roadmap Sprint 4.)
+
+### Done
+
+- `encounter/model/` — schema v1 POJOs populated by Gson: `EncounterPack`,
+  `PackMetadata`, `BossDefinition`, `PhaseDefinition`, `MechanicDefinition`,
+  `CalloutDefinition`, `TriggerDefinition`, `VisualDefinition`.
+- `SchemaValidator` — plugin-side load gate implementing architecture §10 rules:
+  required fields, unique boss/phase/mechanic/callout ids, known trigger types
+  (incl. composite AND/OR children), callout categories, priority 1–100,
+  tick offsets −5..10, ≥1 phase per boss, ≥1 trigger per mechanic.
+- `EncounterLoader` — parses + validates; reads `encounter.json` out of `.zip`
+  packs; all failures become actionable `PackLoadException` messages.
+- `EncounterEngine` — scans `<packDir>/*.zip`, loads valid / rejects invalid
+  (logged, never fatal), supports hot reload; lookup by live NPC id.
+- `CoachConfig`: "Encounter Pack Directory" item (default
+  `.runelite/coach/encounters/`); changing it reloads packs without restart.
+- `resources/schemas/encounter_schema_v1.json` — authoring contract for the
+  future AI pipeline.
+- Tests: pack loading/rejection/reload via real zip fixtures in temp dirs.
+
+### Verified
+
+- `gradlew.bat --no-daemon build` → BUILD SUCCESSFUL
+- Tests: **31/31 pass** (15 prior + EncounterLoaderTest ×10 + EncounterEngineTest ×5).
+
+### Decisions
+
+- **No external JSON-Schema library** (rule: no deps beyond RuneLite). The
+  validator is hand-rolled against §10's rule list; full JSON-Schema checking
+  stays in the AI pipeline tool where dependencies are unconstrained.
+- Validation collects *all* violations per pack (not fail-fast) so pack authors
+  see every problem in one log line.
+- Trigger models store raw fields (npcId/animationId/...) — evaluation comes in
+  Sprint 5; nothing evaluates yet.
+
+### Deviations from docs
+
+- Roadmap listed model classes as `Encounter.java`/`Phase.java` etc. under a
+  runtime split from JSON classes; deferred that split until Sprint 7 adds
+  mutable state — for now one set of immutable DTOs serves both roles.
+
+### Manual testing (pending, user — optional)
+
+1. Create `.runelite/coach/encounters/`, drop in a valid test pack zip →
+   log shows "loaded 1 encounter pack(s)".
+2. Drop a corrupt zip → "rejected encounter pack: ..." in log, plugin fine.
+
+---
+
 ## Sprint 3 — Logging System + Debug Overlay (2026-08-25)
 
 **Objective:** Debug logging (ring buffer + file) and an in-game debug overlay
