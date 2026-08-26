@@ -4,6 +4,57 @@ Running log of sprints: what was done, key decisions, deviations from the docs.
 
 ---
 
+## Sprint 2 — Event System (2026-08-25)
+
+**Objective:** Subscribe to core RuneLite game events and establish the internal
+tick-batched Event Bus. (Roadmap Sprint 2.)
+
+### Done
+
+- `events/EventType.java` — internal enum of 10 event types.
+- `events/GameEvent.java` — immutable wrapper (type + tick + payload).
+- `events/EventBus.java` — internal pub-sub with tick batching: non-tick events
+  buffer between ticks; the TICK event flushes the whole batch to listeners.
+- `events/GameStateBridge.java` — RuneLite → internal state translation.
+- `model/PlayerState.java`, `model/BossState.java` — immutable snapshots
+  (plain-int positions to keep API types out of the engine).
+- `CoachPlugin` — `@Subscribe` handlers for all 10 events feeding the internal
+  bus; debug-mode per-tick count logging; register/unregister on start/shutdown.
+- Test deps added (JUnit 5.10, Mockito 4.11) + first unit tests.
+
+### Verified
+
+- `gradlew.bat --no-daemon build` → BUILD SUCCESSFUL
+- Tests: **8/8 pass** (`EventBusTest` ×5: batching, ordering, multi-listener,
+  empty tick, flush; `GameStateBridgeTest` ×3: player/boss extraction).
+
+### Decisions
+
+- Adapted the roadmap's event list to the **real RuneLite 1.12.x API**:
+  - `ProjectileSpawned` does not exist → using `ProjectileMoved` (fires on
+    spawn as the projectile's first movement; standard detection idiom).
+  - `NpcHpChanged` does not exist → NPC health is polled via
+    `getHealthRatio()/getHealthScale()` in `BossState`; dropped as an event.
+  - `StatsChanged` is singular: `StatChanged` → mapped to PLAYER_STATS_CHANGED.
+  - Added `GraphicsObjectCreated` (key for future boss-mechanic triggers) to
+    keep the count at 10 core event types.
+
+### Deviations from docs
+
+- Implementation guide's sample `EventBus.subscribe(...)` API doesn't match
+  RuneLite's actual bus methods (`register(Object)` / `unregister(Object)`),
+  confirmed via javap against client-1.12.36.jar.
+- Guide's `GameEvent.timestamp` field omitted (tick number suffices; avoids
+  clock dependence in tests).
+
+### Manual testing (pending, user)
+
+1. Build JAR, load into RuneLite, enable plugin + Debug Mode config toggle.
+2. Fight any mob → log lines like `[coach] tick 1234: 5 event(s):
+   ANIMATION_CHANGED=2 PROJECTILE_MOVED=1 ...` appear once per tick with events.
+
+---
+
 ## Sprint 1 — Project Scaffolding (2026-08-25)
 
 **Objective:** RuneLite Gradle plugin project, build pipeline, plugin manifest,
