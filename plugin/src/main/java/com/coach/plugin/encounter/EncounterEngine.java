@@ -132,6 +132,24 @@ public class EncounterEngine implements EventBus.Listener
 		return Optional.empty();
 	}
 
+	/**
+	 * The packId that defines the given boss, for audio file resolution.
+	 */
+	public Optional<String> getPackIdForBoss(String bossId)
+	{
+		for (EncounterPack pack : packs)
+		{
+			for (BossDefinition boss : pack.bosses)
+			{
+				if (boss.bossId.equals(bossId))
+				{
+					return Optional.ofNullable(pack.metadata != null ? pack.metadata.packId : null);
+				}
+			}
+		}
+		return Optional.empty();
+	}
+
 	// ---- runtime state ----
 
 	public synchronized Optional<String> getCurrentPhaseId(int npcId)
@@ -143,6 +161,14 @@ public class EncounterEngine implements EventBus.Listener
 	public synchronized boolean hasActiveSession(int npcId)
 	{
 		return sessions.containsKey(npcId);
+	}
+
+	/**
+	 * Snapshot copy of live sessions, for read-only consumers like prediction.
+	 */
+	public synchronized List<ActiveEncounter> getActiveSessions()
+	{
+		return List.copyOf(sessions.values());
 	}
 
 	/**

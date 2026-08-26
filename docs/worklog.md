@@ -4,6 +4,53 @@ Running log of sprints: what was done, key decisions, deviations from the docs.
 
 ---
 
+## Sprint 9 — Prediction + Audio/Visual Dispatch (2026-08-26)
+
+**Objective:** Close the coaching loop: predicted mechanics displayed, callouts
+rendered as overlays, audio played from pack files. Phase 2 complete.
+
+### Done
+
+- `coaching/PredictionEngine` — predicts tick_timer-driven mechanics within a
+  10-tick horizon using session phase clocks; event-driven mechanics are
+  deliberately NOT guessed.
+- `overlay/OverlayManager` — active visual store (pack-defined or default 3-tick
+  duration, max 5, oldest dropped) + prediction snapshot.
+- `overlay/CoachOverlay` — TOP_CENTER panel: active callouts color-coded by
+  category (critical=red, warning=orange, transition=cyan, info=white) plus
+  "next: mechanic (Nt)" prediction line.
+- `audio/AudioEngine` — pre-loads `audio/*` entries from pack zips into memory;
+  async playback on a daemon thread (never blocks ticks); master volume +
+  mute config items, live-reactive; graceful no-op for missing files.
+- `CoachPlugin` dispatch wiring: delivered callout → visual + audio together;
+  per-tick prediction refresh; pack reload also re-loads audio caches.
+- `EncounterEngine`: session snapshot + `getPackIdForBoss` for audio resolution.
+
+### Verified
+
+- Tests: **93/93 pass** (+12: PredictionEngineTest ×4, OverlayManagerTest ×4,
+  AudioEngineTest ×4 with a synthesized in-code WAV fixture).
+
+### Decisions
+
+- **No Ogg decoder bundled** — verified against client-1.12.36.jar contents and
+  POM. WAV/PCM playback ships now (fully testable headless); the .ogg decoder
+  integration lands in Sprint 27 alongside the real TTS output, where actual
+  .ogg fixtures exist to test against. Until then packs without audio are
+  first-class: visuals fire, audio is a logged no-op (rule 5 preserved).
+- Mute config gates **audio only**; visual-only/audio-only accessibility modes
+  are Sprint 20 as planned.
+- Predictions render only when honest (tick_timer-computable); no fake ETAs.
+
+### Deviations from docs
+
+- Guide §10 claims JOrbis/"OGG decoder bundled in RuneLite" — false per jar
+  inspection. Documented here rather than adding an untested dependency blind.
+- Roadmap wanted PredictionEngine inside CoachingEngine; it's wired at plugin
+  level instead (equivalent flow, less coupling between engines).
+
+---
+
 ## Sprint 8 — Coaching Engine (Priority + Queue) (2026-08-26)
 
 **Objective:** The decision core: consume mechanic activations, schedule

@@ -51,4 +51,26 @@ public interface CoachConfig extends Config
 	{
 		return RuneLite.RUNELITE_DIR.toPath().resolve("coach").resolve("encounters").toString();
 	}
+
+	@ConfigItem(
+		keyName = "muted",
+		name = "Mute All",
+		description = "Suppress all audio callouts",
+		position = 5
+	)
+	default boolean muted()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+		keyName = "masterVolume",
+		name = "Master Volume",
+		description = "Audio callout volume (0-100)",
+		position = 6
+	)
+	default int masterVolume()
+	{
+		return 70;
+	}
 }

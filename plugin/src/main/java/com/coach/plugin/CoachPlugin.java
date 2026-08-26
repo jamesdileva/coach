@@ -1,5 +1,6 @@
 package com.coach.plugin;
 
+import com.coach.plugin.audio.AudioEngine;
 import com.coach.plugin.coaching.CoachStateManager;
 import com.coach.plugin.coaching.CoachingEngine;
 import com.coach.plugin.config.CoachConfig;
@@ -13,6 +14,7 @@ import com.coach.plugin.logging.EventLogger;
 import com.coach.plugin.logging.FileLogWriter;
 import com.coach.plugin.logging.LogBuffer;
 import com.coach.plugin.logging.TriggerLogger;
+import com.coach.plugin.overlay.CoachOverlay;
 import com.coach.plugin.overlay.DebugOverlay;
 import com.coach.plugin.trigger.TriggerEngine;
 import com.coach.plugin.trigger.TriggerFire;
@@ -79,6 +81,12 @@ public class CoachPlugin extends Plugin
 	private TriggerEngine triggerEngine;
 	private final CoachStateManager coachStateManager = new CoachStateManager();
 	private CoachingEngine coachingEngine;
+	private final com.coach.plugin.overlay.OverlayManager coachOverlayManager = new com.coach.plugin.overlay.OverlayManager();
+	private final AudioEngine audioEngine = new AudioEngine();
+	private final com.coach.plugin.coaching.PredictionEngine predictionEngine =
+		new com.coach.plugin.coaching.PredictionEngine();
+	private CoachOverlay coachOverlay;
+	private boolean coachOverlayAdded;
 
 	private DebugOverlay debugOverlay;
 	private boolean debugOverlayAdded;
@@ -98,6 +106,9 @@ public class CoachPlugin extends Plugin
 		coachEventBus.subscribe(this::onCoachingTick);
 		encounterEngine.addActivationListener(coachingEngine::onActivation);
 		coachingEngine.addListener(this::onCalloutDelivered);
+		registerCoachOverlay();
+		audioEngine.setMuted(config.muted());
+		audioEngine.setMasterVolume(config.masterVolume());
 		reloadPacks("startup");
 		log.info("Project Coach started (debug={})", config.debugMode());
 
@@ -111,6 +122,8 @@ public class CoachPlugin extends Plugin
 	protected void shutDown() throws Exception
 	{
 		disableDebugging();
+		unregisterCoachOverlay();
+		audioEngine.clear();
 		runeLiteEventBus.unregister(this);
 		// internal bus is rebuilt on next startUp — no stale listener leaks
 		triggerEngine = null;
@@ -208,6 +221,15 @@ public class CoachPlugin extends Plugin
 			{
 				disableDebugging();
 			}
+			return;
+		}
+		if ("muted".equals(event.getKey()))
+		{
+			audioEngine.setMuted(config.muted());
+		}
+		else if ("masterVolume".equals(event.getKey()))
+		{
+			audioEngine.setMasterVolume(config.masterVolume());
 		}
 	}
 
@@ -223,14 +245,32 @@ public class CoachPlugin extends Plugin
 		// runs after trigger + encounter engines (subscription order)
 		coachStateManager.update(gameStateBridge, client, tick);
 		coachingEngine.onTick(tick);
+		coachOverlayManager.prune(tick);
+		if (encounterEngine != null)
+		{
+			coachOverlayManager.setPredictions(
+				predictionEngine.predict(encounterEngine.getActiveSessions(), tick));
+		}
 	}
 
 	private void onCalloutDelivered(com.coach.plugin.coaching.CoachingEngine.DeliveredCallout delivery)
 	{
+		com.coach.plugin.encounter.model.CalloutDefinition callout = delivery.getCallout();
+		coachOverlayManager.addVisual(delivery.getBossId(), callout, delivery.getTick());
+
+		String packId = encounterEngine != null
+			? encounterEngine.getPackIdForBoss(delivery.getBossId()).orElse(null)
+			: null;
+		if (callout.audioFile != null && packId != null)
+		{
+			boolean played = audioEngine.play(packId, callout.audioFile);
+			log.debug("[coach] audio {}: {}", callout.audioFile, played ? "playing" : "unavailable");
+		}
+
 		if (config.debugMode())
 		{
 			calloutLogger.calloutDelivered(delivery.getTick(),
-				delivery.getCallout().calloutId, delivery.toString());
+				callout.calloutId, delivery.toString());
 		}
 	}
 
@@ -240,12 +280,50 @@ public class CoachPlugin extends Plugin
 		{
 			return;
 		}
-		int count = encounterEngine.loadPacks(Paths.get(config.packDirectory()));
+		audioEngine.clear();
+		Path dir = Paths.get(config.packDirectory());
+		int count = encounterEngine.loadPacks(dir);
 		if (triggerEngine != null)
 		{
 			triggerEngine.rebuild(encounterEngine.getPacks());
 		}
-		log.info("[coach] packs reloaded ({}): {} pack(s) loaded", reason, count);
+		for (com.coach.plugin.encounter.model.EncounterPack pack : encounterEngine.getPacks())
+		{
+			if (pack.sourceName != null && pack.metadata != null)
+			{
+				audioEngine.loadFromZip(dir.resolve(pack.sourceName), pack.metadata.packId);
+			}
+		}
+		log.info("[coach] packs reloaded ({}): {} pack(s) loaded, {} audio file(s)",
+			reason, count, audioEngine.getLoadedCount());
+	}
+
+	private void registerCoachOverlay()
+	{
+		if (coachOverlayAdded)
+		{
+			return;
+		}
+		try
+		{
+			coachOverlay = new CoachOverlay(coachOverlayManager);
+			overlayManager.add(coachOverlay);
+			coachOverlayAdded = true;
+		}
+		catch (IllegalStateException e)
+		{
+			log.warn("[coach] could not register coach overlay: {}", e.getMessage());
+		}
+	}
+
+	private void unregisterCoachOverlay()
+	{
+		if (coachOverlayAdded && coachOverlay != null)
+		{
+			overlayManager.remove(coachOverlay);
+			coachOverlay = null;
+			coachOverlayAdded = false;
+		}
 	}
 
 	private void onTriggersFired(List<TriggerFire> fires)

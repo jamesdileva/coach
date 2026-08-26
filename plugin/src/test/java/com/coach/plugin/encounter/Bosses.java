@@ -8,13 +8,13 @@ import java.util.List;
 /**
  * Shared boss fixtures for encounter engine tests.
  */
-final class Bosses
+public final class Bosses
 {
 	private Bosses()
 	{
 	}
 
-	static BossDefinition threePhase()
+	public static BossDefinition threePhase()
 	{
 		BossDefinition boss = new BossDefinition();
 		boss.bossId = "b";
