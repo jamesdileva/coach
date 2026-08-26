@@ -271,4 +271,17 @@ public interface CoachConfig extends Config
 	{
 		return 100;
 	}
+
+	@ConfigItem(
+		keyName = "debugTab",
+		name = "Debug Tab",
+		description = "Which debug view to show (requires Debug Mode)",
+		position = 40
+	)
+	default DebugTab debugTab()
+	{
+		return DebugTab.EVENTS;
+	}
+
+	enum DebugTab { EVENTS, TRIGGERS, STATE, TIMELINE }
 }

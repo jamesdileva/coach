@@ -5,6 +5,11 @@ import com.coach.plugin.config.CalloutGate;
 import com.coach.plugin.coaching.CoachStateManager;
 import com.coach.plugin.coaching.CoachingEngine;
 import com.coach.plugin.config.CoachConfig;
+import com.coach.plugin.debug.DebugOverlayV2;
+import com.coach.plugin.debug.EventTimeline;
+import com.coach.plugin.debug.LogExporter;
+import com.coach.plugin.debug.StateInspector;
+import com.coach.plugin.debug.TriggerHistory;
 import com.coach.plugin.encounter.EncounterEngine;
 import com.coach.plugin.events.EventBus;
 import com.coach.plugin.events.EventType;
@@ -16,7 +21,6 @@ import com.coach.plugin.logging.FileLogWriter;
 import com.coach.plugin.logging.LogBuffer;
 import com.coach.plugin.logging.TriggerLogger;
 import com.coach.plugin.overlay.CoachOverlay;
-import com.coach.plugin.overlay.DebugOverlay;
 import com.coach.plugin.trigger.TriggerEngine;
 import com.coach.plugin.trigger.TriggerFire;
 import com.coach.plugin.trigger.TriggerRegistry;
@@ -90,10 +94,19 @@ public class CoachPlugin extends Plugin
 	private CoachOverlay coachOverlay;
 	private boolean coachOverlayAdded;
 
-	private DebugOverlay debugOverlay;
+	private DebugOverlayV2 debugOverlayV2;
 	private boolean debugOverlayAdded;
 	private EventBus.Listener debugListener;
 	private com.coach.plugin.accessibility.AccessibilityManager accessibilityManager;
+
+	// debug tool cores (Sprint 21)
+	private final TriggerHistory triggerHistory = new TriggerHistory();
+	private final EventTimeline eventTimeline = new EventTimeline();
+	private final StateInspector stateInspector = new StateInspector();
+	private final java.util.Map<EventType, Integer> pendingEventCounts =
+		new java.util.EnumMap<>(EventType.class);
+	private int triggersThisTick;
+	private int calloutsThisTick;
 
 	@Override
 	protected void startUp() throws Exception
@@ -282,6 +295,21 @@ public class CoachPlugin extends Plugin
 			coachOverlayManager.setPredictions(
 				predictionEngine.predict(encounterEngine.getActiveSessions(), tick));
 		}
+		if (config.debugMode())
+		{
+			stateInspector.update(
+				coachStateManager.getPlayer(),
+				encounterEngine != null ? encounterEngine.getActiveSessions() : List.of());
+			if (!pendingEventCounts.isEmpty())
+			{
+				java.util.Map<String, Integer> counts = new java.util.LinkedHashMap<>();
+				pendingEventCounts.forEach((type, count) -> counts.put(type.name(), count));
+				eventTimeline.recordTick(tick, counts, triggersThisTick, calloutsThisTick);
+			}
+			triggersThisTick = 0;
+			calloutsThisTick = 0;
+			pendingEventCounts.clear();
+		}
 	}
 
 	private void updateOverlayState(int tick)
@@ -350,6 +378,8 @@ public class CoachPlugin extends Plugin
 		{
 			calloutLogger.calloutDelivered(delivery.getTick(),
 				callout.calloutId, delivery.toString());
+			calloutsThisTick++;
+			eventTimeline.recordTick(delivery.getTick(), null, 0, 1);
 		}
 	}
 
@@ -412,6 +442,12 @@ public class CoachPlugin extends Plugin
 			for (TriggerFire fire : fires)
 			{
 				triggerLogger.triggerFired(fire.getTick(), fire.getContextId(), fire.getDescription());
+				triggerHistory.record(fire);
+			}
+			triggersThisTick += fires.size();
+			if (!fires.isEmpty())
+			{
+				eventTimeline.recordTick(fires.get(0).getTick(), null, fires.size(), 0);
 			}
 		}
 		if (encounterEngine != null)
@@ -444,6 +480,10 @@ public class CoachPlugin extends Plugin
 	{
 		if (coachEventBus != null)
 		{
+			if (config.debugMode())
+			{
+				pendingEventCounts.merge(type, 1, Integer::sum);
+			}
 			coachEventBus.post(new GameEvent(type, client.getTickCount(), payload));
 		}
 	}
@@ -464,11 +504,9 @@ public class CoachPlugin extends Plugin
 
 		if (!debugOverlayAdded)
 		{
-			debugOverlay = new DebugOverlay(logBuffer,
-				encounterEngine != null
-					? encounterEngine::getPackSummaryLines
-					: java.util.List::of);
-			overlayManager.add(debugOverlay);
+			debugOverlayV2 = new DebugOverlayV2(logBuffer, triggerHistory,
+				eventTimeline, stateInspector, config);
+			overlayManager.add(debugOverlayV2);
 			debugOverlayAdded = true;
 		}
 	}
@@ -480,15 +518,40 @@ public class CoachPlugin extends Plugin
 			coachEventBus.unsubscribe(debugListener);
 			debugListener = null;
 		}
+		exportDebugBundle();
 		logBuffer.setFileWriter(null);
 
-		if (debugOverlayAdded && debugOverlay != null)
+		if (debugOverlayAdded && debugOverlayV2 != null)
 		{
-			overlayManager.remove(debugOverlay);
-			debugOverlay = null;
+			overlayManager.remove(debugOverlayV2);
+			debugOverlayV2 = null;
 			debugOverlayAdded = false;
 		}
 		logBuffer.clear();
+		triggerHistory.clear();
+		eventTimeline.clear();
+	}
+
+	/**
+	 * Auto-export a debug bundle whenever debug mode is switched off, so the
+	 * data from the session is preserved for analysis (roadmap Sprint 21).
+	 */
+	private void exportDebugBundle()
+	{
+		try
+		{
+			if (triggerHistory.size() == 0 && eventTimeline.format(1).get(0).startsWith("(timeline"))
+			{
+				return; // nothing collected this session
+			}
+			new LogExporter(RuneLite.RUNELITE_DIR.toPath()
+				.resolve("coach").resolve("debug_logs"))
+				.export(stateInspector, triggerHistory, eventTimeline, logBuffer);
+		}
+		catch (Exception e)
+		{
+			log.warn("[coach] debug export skipped: {}", e.getMessage());
+		}
 	}
 
 	@Provides

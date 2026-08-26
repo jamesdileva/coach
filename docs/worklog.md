@@ -4,6 +4,49 @@ Running log of sprints: what was done, key decisions, deviations from the docs.
 
 ---
 
+## Sprint 21 — Debug Tools v2 (2026-08-26)
+
+**Objective:** Tabbed debug overlay with live state inspection, trigger
+history, per-tick event timeline, and JSON log export.
+
+### Done
+
+- **`TriggerHistory`** — 200-entry ring of trigger fires, newest-first,
+  filterable by boss/context/description substring.
+- **`EventTimeline`** — per-tick aggregation: event counts by type + trigger
+  and callout totals; merges late-arriving meta (fires/callouts land after the
+  tick's events) into the existing tick entry; 120-tick ring.
+- **`StateInspector`** — live player snapshot + active encounter sessions
+  (boss/phase/phaseTick), formatted for overlay and export.
+- **`LogExporter`** — writes a pretty-printed JSON bundle (state, trigger
+  history, timeline, log lines) to `coach/debug_logs/coach-debug-export-<ts>.json`;
+  never throws. Wired to **auto-export when Debug Mode is switched off**, so
+  session data survives for analysis.
+- **`DebugOverlayV2`** replaces the Sprint 3 overlay: header + tab view driven
+  by a new `debugTab` config dropdown (Events / Triggers / State / Timeline).
+  Old DebugOverlay removed.
+- Plugin feeds all cores only while Debug Mode is on (zero overhead otherwise);
+  event counts accumulate in post(), trigger/callout deltas merge into the
+  timeline at their delivery points.
+
+### Verified
+
+- Tests: **177/177 pass** (+7 DebugToolsTest: history cap/filter/order,
+  timeline aggregation/merge/ring, state formatting, exporter JSON validity
+  parsed back through Gson).
+
+### Decisions
+
+- Tabs via a config dropdown instead of Swing tabs or hotkeys — keeps the
+  overlay single-surface and avoids KeyManager plumbing; hotkey cycling can
+  come later if wanted.
+- Auto-export on debug-off chosen over a UI button (no Swing panel yet): the
+  moment you stop debugging, the session bundle is already on disk.
+- Timeline stores counts, not raw events — compact enough to cover long fights
+  in 120 entries while staying readable.
+
+---
+
 ## Sprint 20 — Accessibility Features (2026-08-26)
 
 **Objective:** Audio-only mode, visual-only mode, essential-only filter,
