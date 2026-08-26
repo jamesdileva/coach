@@ -88,6 +88,10 @@ public class TriggerRegistry
 	{
 		int threshold = requireInt(def.hpThreshold, "hpThreshold");
 		boolean below = !"above".equalsIgnoreCase(def.hpDirection);
+		if (def.npcIds != null && !def.npcIds.isEmpty())
+		{
+			return new HpTriggerEvaluator(client, new java.util.HashSet<>(def.npcIds), below, threshold);
+		}
 		return new HpTriggerEvaluator(client, requireInt(def.npcId, "npcId"), below, threshold);
 	}
 

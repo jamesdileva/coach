@@ -4,6 +4,50 @@ Running log of sprints: what was done, key decisions, deviations from the docs.
 
 ---
 
+## Sprint 14 — Theatre of Blood: Sotetseg (2026-08-26)
+
+**Objective:** First ToB encounter pack. Deliberately scoped to what can be
+detected honestly.
+
+### Done
+
+- `encounter-packs/sotetseg.pack/` + packaged `tob_sotetseg_1.0.0.zip`:
+  - Encounter start guidance (Pray Magic, spread for the ball) on spawn of
+    either scaling variant (npcIds [8337, 8388] — ids confirmed via RuneLite
+    ToB damage-multiplier data)
+  - Maze warnings at HP < 67% / < 34% (`hp` triggers, wiki-verified 66.6%/33.3%
+    shadow-realm thresholds), critical priority with TTS "Follow the red path!"
+- Engine improvement: `HpTriggerEvaluator` now accepts multi-NPC id sets
+  (registry maps `npcIds`); needed to cover Sotetseg's party-size variants.
+- 2 TTS voice lines; TobSotetsegPackTest guards the real zip.
+
+### Verified
+
+- Tests: **132/132 pass** (+2 TobSotetsegPackTest).
+
+### Decisions
+
+- **Scope honesty over roadmap checkbox-ticking**: the roadmap's mechanic list
+  ("crab rave, green orbs, red orbs, lightning, web bombs") doesn't correspond
+  to Sotetseg at all — those are other ToB rooms' mechanics. Actual Sotetseg
+  mechanics per wiki: splitting projectiles, big red ball every 10 attacks,
+  shadow-realm mazes at 66.6%/33.3%.
+- Shipped only HP-threshold + spawn triggers because Sotetseg's animation and
+  projectile ids have no reliable public source; naive pray-callouts would
+  mislead given his prayer-disabling split projectiles. Attack/ball triggers
+  are README checklist items pending verified ids or a chat-message string.
+- Roadmap called Sotetseg the "first boss"; he's the fourth room. Pack follows
+  reality, not the doc.
+
+### Manual testing (pending, user)
+
+1. Load zip; confirm `[LOADED]` in debug overlay at Sotetseg.
+2. Verify maze callouts fire near the actual maze teleports.
+3. Grab the highlighted ball-notification message text in-game so we can add
+   a shout trigger for the 188-damage ball.
+
+---
+
 ## Sprint 13 — Inferno Implementation (2026-08-26)
 
 **Objective:** The beast: all 69 waves + basic Zuk, wave-transition detection,

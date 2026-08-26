@@ -17,15 +17,21 @@ import net.runelite.api.NPC;
 public class HpTriggerEvaluator implements TriggerEvaluator
 {
 	private final Client client;
-	private final int npcId;
+	private final java.util.Set<Integer> npcIds;
 	private final boolean below;      // true = fire when hp drops to/below threshold
 	private final int thresholdPercent;
 	private final EdgeDetector edge = new EdgeDetector();
 
 	public HpTriggerEvaluator(Client client, int npcId, boolean below, int thresholdPercent)
 	{
+		this(client, java.util.Set.of(npcId), below, thresholdPercent);
+	}
+
+	public HpTriggerEvaluator(Client client, java.util.Set<Integer> npcIds, boolean below,
+		int thresholdPercent)
+	{
 		this.client = client;
-		this.npcId = npcId;
+		this.npcIds = npcIds;
 		this.below = below;
 		this.thresholdPercent = thresholdPercent;
 	}
@@ -39,7 +45,7 @@ public class HpTriggerEvaluator implements TriggerEvaluator
 	@Override
 	public boolean matches(GameEvent event)
 	{
-		NPC npc = findNpc(npcId);
+		NPC npc = findNpc();
 		if (npc == null)
 		{
 			edge.reset(); // boss gone: re-arm so a respawn re-triggers cleanly
@@ -62,14 +68,25 @@ public class HpTriggerEvaluator implements TriggerEvaluator
 		return (int) Math.round(ratio * 100.0 / scale);
 	}
 
-	private NPC findNpc(int id)
+	private NPC findNpc()
 	{
-		return GameStateBridge.findNpc(client, id);
+		if (client == null || npcIds.isEmpty())
+		{
+			return null;
+		}
+		for (NPC candidate : client.getTopLevelWorldView().npcs())
+		{
+			if (npcIds.contains(candidate.getId()))
+			{
+				return candidate;
+			}
+		}
+		return null;
 	}
 
 	@Override
 	public String describe()
 	{
-		return "npc " + npcId + " hp " + (below ? "<=" : ">=") + thresholdPercent + "%";
+		return "npc " + npcIds + " hp " + (below ? "<=" : ">=") + thresholdPercent + "%";
 	}
 }

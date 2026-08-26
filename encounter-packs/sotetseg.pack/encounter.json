@@ -1,0 +1,75 @@
+{
+  "schemaVersion": "1.0",
+  "metadata": {
+    "packId": "tob_sotetseg",
+    "name": "Theatre of Blood — Sotetseg",
+    "description": "Sotetseg v1: encounter start prayer guidance and shadow-realm maze warnings driven by HP thresholds (66.6% / 33.3%). Attack-animation and big-ball triggers require verified animation ids — see README checklist.",
+    "author": "Project Coach",
+    "version": "1.0.0",
+    "gameVersion": "230"
+  },
+  "bosses": [
+    {
+      "bossId": "sotetseg",
+      "name": "Sotetseg",
+      "npcId": 8337,
+      "description": "Fourth ToB encounter. Attacks with magic projectiles that split into grey (ranged) and red (magic); large red ball after every 10 projectiles; shadow-realm maze at 66.6% and 33.3% HP.",
+      "phases": [
+        {
+          "phaseId": "sote_main",
+          "name": "Sotetseg",
+          "entryTrigger": {
+            "triggerId": "sote_spawn",
+            "type": "npc_spawn",
+            "npcIds": [8337, 8388]
+          },
+          "exitTriggers": [],
+          "mechanics": [
+            {
+              "mechanicId": "sote_start",
+              "name": "Encounter start guidance",
+              "triggers": [{ "triggerId": "spawn", "type": "npc_spawn", "npcIds": [8337, 8388] }],
+              "callouts": [{
+                "calloutId": "sote_start_callout",
+                "text": "Sotetseg! Pray Magic, spread out for the ball",
+                "audioFile": "sote_start.ogg",
+                "category": "critical", "priority": 85,
+                "audioOffset": -1, "visualOffset": 0,
+                "visual": { "type": "prayer_icon", "color": "#7B1FA2", "durationTicks": 6 }
+              }],
+              "cooldown": 100
+            },
+            {
+              "mechanicId": "maze_one",
+              "name": "Shadow realm maze #1",
+              "triggers": [{ "triggerId": "maze1_hp", "type": "hp", "npcIds": [8337, 8388], "hpThreshold": 67, "hpDirection": "below" }],
+              "callouts": [{
+                "calloutId": "maze_one_callout",
+                "text": "Maze incoming! Follow the red path!",
+                "audioFile": "maze.ogg",
+                "category": "critical", "priority": 95,
+                "audioOffset": -1, "visualOffset": 0,
+                "visual": { "type": "text", "color": "#FF0000", "durationTicks": 6 }
+              }],
+              "cooldown": 50
+            },
+            {
+              "mechanicId": "maze_two",
+              "name": "Shadow realm maze #2",
+              "triggers": [{ "triggerId": "maze2_hp", "type": "hp", "npcIds": [8337, 8388], "hpThreshold": 34, "hpDirection": "below" }],
+              "callouts": [{
+                "calloutId": "maze_two_callout",
+                "text": "Second maze incoming!",
+                "audioFile": "maze.ogg",
+                "category": "critical", "priority": 95,
+                "audioOffset": -1, "visualOffset": 0,
+                "visual": { "type": "text", "color": "#FF0000", "durationTicks": 6 }
+              }],
+              "cooldown": 50
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
