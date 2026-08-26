@@ -14,10 +14,15 @@ class OverlayManagerTest
 
 	private static CalloutDefinition callout(String text, Integer duration)
 	{
+		return callout(text, duration, "critical");
+	}
+
+	private static CalloutDefinition callout(String text, Integer duration, String category)
+	{
 		CalloutDefinition callout = new CalloutDefinition();
 		callout.calloutId = "c1";
 		callout.text = text;
-		callout.category = "critical";
+		callout.category = category;
 		if (duration != null)
 		{
 			callout.visual = new VisualDefinition();
@@ -67,5 +72,26 @@ class OverlayManagerTest
 		assertEquals(1, manager.getPredictions().size());
 		manager.setPredictions(null);
 		assertTrue(manager.getPredictions().isEmpty());
+	}
+
+	@Test
+	void quietHoursSuppressNonCriticalAfterCritical()
+	{
+		manager.addVisual("boss", callout("CRITICAL", null, "critical"), 100);
+		manager.noteCriticalDelivered(100);
+		assertEquals(1, manager.getActiveVisuals().size(), "critical itself shows");
+
+		manager.addVisual("boss", callout("info chatter", null, "info"), 101);
+		assertTrue(manager.getActiveVisuals().stream()
+			.noneMatch(v -> v.text.equals("info chatter")), "suppressed during quiet hours");
+
+		manager.addVisual("boss", callout("more critical", null, "critical"), 102);
+		assertTrue(manager.getActiveVisuals().stream()
+			.anyMatch(v -> v.text.equals("more critical")), "criticals always show");
+
+		manager.prune(200);
+		manager.addVisual("boss", callout("post-quiet info", null, "info"), 201);
+		assertTrue(manager.getActiveVisuals().stream()
+			.anyMatch(v -> v.text.equals("post-quiet info")), "quiet hours expire");
 	}
 }

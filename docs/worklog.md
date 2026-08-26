@@ -4,6 +4,58 @@ Running log of sprints: what was done, key decisions, deviations from the docs.
 
 ---
 
+## Sprint 18 — Overlay Improvements (2026-08-26)
+
+**Objective:** Dedicated overlay types with per-overlay config toggles and
+quiet-hours suppression.
+
+### Done
+
+- **Six sub-renderers** (`overlay/` package), each pure + headless-testable,
+  returning `OverlayLine` data that `CoachOverlay` composes:
+  - `PrayerIndicatorRenderer` — flashing large `[PRAY]` line from
+    prayer_icon visuals
+  - `SafeTileRenderer` — flashing `[MOVE]` advisories from safe_tile visuals
+  - `CountdownRenderer` — big "mechanic in Nt!" for predictions ≤5 ticks
+    (red at ≤2)
+  - `TimelineRenderer` — boss/phase progress bar (▰▱ segments)
+  - `StatusIndicatorRenderer` — HP% line colour-coded by threshold
+  - `MiniHudRenderer` — one compact persistent summary line
+- `OverlayManager`: quiet hours after critical callouts (4 ticks; non-critical
+  visuals suppressed, criticals always through), plus live state slots fed by
+  the plugin: player HP%, phase progress, current boss/phase labels.
+- `CoachOverlay` rewritten as a composer honouring five new config toggles
+  (Prayer Indicator / Countdowns / Phase Timeline / Status Indicator /
+  Mini HUD), all real-time.
+- Plugin plumbing: per-tick player HP%, phase index progress, boss/phase
+  labels; critical deliveries trigger quiet hours.
+
+### Verified
+
+- Tests: **155/155 pass** (+8: OverlayRendererTest ×7 covering every renderer,
+  OverlayManager quiet-hours test).
+
+### Decisions
+
+- Sub-renderers return data, not draw calls: full renderer logic is testable
+  without a graphics context; only CoachOverlay touches Graphics2D.
+- Prayer/safe-tile overlays are text-first with flashing colour — colour is a
+  secondary cue (colourblind-safe by default per §8.5).
+- True tile-space safe-tile highlighting needs scene projection (client
+  spatial work); v1 renders advisories instead. Tracked in README-style
+  limitation note here rather than shipping half of it.
+- Countdown uses prediction data (honest ETAs) rather than guessing timings.
+- Quiet hours: criticals bypass suppression entirely; window fixed at 4 ticks.
+
+### Deviations from docs
+
+- Roadmap's `CoachConfigV2` skipped: single config group extended instead
+  (same call made in Sprint 17).
+- "All 9 overlay types render correctly" — 8 exist (debug overlay counts as
+  the 9th); true safe-TILE rendering deferred pending spatial features.
+
+---
+
 ## Sprint 17 — Settings Overhaul + Profile Groundwork (2026-08-26)
 
 **Objective:** Full settings gate: per-category callout toggles, per-boss

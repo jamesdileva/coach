@@ -255,6 +255,7 @@ public class CoachPlugin extends Plugin
 		coachStateManager.update(gameStateBridge, client, tick);
 		coachingEngine.onTick(tick);
 		coachOverlayManager.prune(tick);
+		updateOverlayState(tick);
 		if (encounterEngine != null)
 		{
 			coachOverlayManager.setPredictions(
@@ -262,9 +263,56 @@ public class CoachPlugin extends Plugin
 		}
 	}
 
+	private void updateOverlayState(int tick)
+	{
+		if (config.showStatus() && client != null && gameStateBridge != null)
+		{
+			try
+			{
+				com.coach.plugin.model.PlayerState player =
+					gameStateBridge.getPlayerState(client);
+				int max = Math.max(1, player.getMaxHp());
+				coachOverlayManager.setPlayerHpPercent(player.getHp() * 100 / max);
+			}
+			catch (Exception ignored)
+			{
+				// overlay state is best-effort
+			}
+		}
+		if (encounterEngine != null)
+		{
+			var session = encounterEngine.getActiveSessions().stream().findFirst();
+			session.ifPresentOrElse(s -> {
+				var boss = s.getBoss();
+				int index = 0;
+				for (int i = 0; i < boss.phases.size(); i++)
+				{
+					if (boss.phases.get(i).phaseId.equals(s.getCurrentPhaseId()))
+					{
+						index = i;
+						break;
+					}
+				}
+				coachOverlayManager.setCurrentBossLabel(boss.name);
+				coachOverlayManager.setCurrentPhaseLabel(
+					boss.phases.get(index).name + " (" + (index + 1) + "/" + boss.phases.size() + ")");
+				coachOverlayManager.setPhaseProgress(
+					boss.phases.size() > 1 ? index / (double) (boss.phases.size() - 1) : 1.0);
+			}, () -> {
+				coachOverlayManager.setCurrentBossLabel(null);
+				coachOverlayManager.setCurrentPhaseLabel(null);
+				coachOverlayManager.setPhaseProgress(null);
+			});
+		}
+	}
+
 	private void onCalloutDelivered(com.coach.plugin.coaching.CoachingEngine.DeliveredCallout delivery)
 	{
 		com.coach.plugin.encounter.model.CalloutDefinition callout = delivery.getCallout();
+		if ("critical".equals(callout.category))
+		{
+			coachOverlayManager.noteCriticalDelivered(delivery.getTick());
+		}
 		coachOverlayManager.addVisual(delivery.getBossId(), callout, delivery.getTick());
 
 		String packId = encounterEngine != null
@@ -315,7 +363,7 @@ public class CoachPlugin extends Plugin
 		}
 		try
 		{
-			coachOverlay = new CoachOverlay(coachOverlayManager);
+			coachOverlay = new CoachOverlay(coachOverlayManager, config);
 			overlayManager.add(coachOverlay);
 			coachOverlayAdded = true;
 		}

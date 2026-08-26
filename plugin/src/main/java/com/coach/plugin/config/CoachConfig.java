@@ -139,4 +139,59 @@ public interface CoachConfig extends Config
 	{
 		return "{}";
 	}
+
+	@ConfigItem(
+		keyName = "showPrayerIndicator",
+		name = "Prayer Indicator",
+		description = "Large flashing prayer guidance overlay",
+		position = 20
+	)
+	default boolean showPrayerIndicator()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "showCountdown",
+		name = "Countdowns",
+		description = "Countdown to the next predicted mechanic (5 ticks or fewer)",
+		position = 21
+	)
+	default boolean showCountdown()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "showTimeline",
+		name = "Phase Timeline",
+		description = "Boss phase progress bar",
+		position = 22
+	)
+	default boolean showTimeline()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "showStatus",
+		name = "Status Indicator",
+		description = "Show your HP percentage in the coach panel",
+		position = 23
+	)
+	default boolean showStatus()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "showMiniHud",
+		name = "Mini HUD",
+		description = "Compact persistent encounter summary line",
+		position = 24
+	)
+	default boolean showMiniHud()
+	{
+		return true;
+	}
 }
