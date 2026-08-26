@@ -1,0 +1,13 @@
+{
+  "description": "Declarative migration steps for older encounter pack versions. EncounterLoader applies each chain sequentially until the pack reaches the current schema version. Supported ops: rename (from,to), copy (from,to), set (path,value), remove (path).",
+  "migrations": [
+    {
+      "from": "0.9",
+      "to": "1.0",
+      "detect": { "path": "encounters", "comment": "legacy packs without schemaVersion: presence of 'encounters' marks a 0.9 layout" },
+      "steps": [
+        { "op": "rename", "from": "encounters", "to": "bosses", "comment": "0.9 called bosses 'encounters'" }
+      ]
+    }
+  ]
+}

@@ -1,27 +1,28 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Project Coach Encounter Pack Schema",
-  "description": "Reference copy of schema v1. The plugin enforces these rules at load time via SchemaValidator; the AI knowledge pipeline uses this document as the authoring contract.",
+  "description": "FINAL schema v1.0 — the authoring contract for encounter packs. The plugin enforces these rules at load time via SchemaValidator; the AI knowledge pipeline uses this document as its generation target. Every field below is documented.",
   "type": "object",
   "required": ["schemaVersion", "metadata", "bosses"],
   "properties": {
-    "schemaVersion": { "const": "1.0" },
+    "schemaVersion": { "const": "1.0", "description": "Pack format version. Only '1.0' is accepted; older known versions are migrated automatically." },
     "metadata": {
       "type": "object",
       "required": ["packId", "name", "version", "gameVersion"],
       "properties": {
-        "packId": { "type": "string" },
-        "name": { "type": "string" },
-        "description": { "type": "string" },
-        "author": { "type": "string" },
-        "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
-        "gameVersion": { "type": "string" }
+        "packId": { "type": "string", "description": "Unique pack identifier; used as the key for audio files inside the pack." },
+        "name": { "type": "string", "description": "Human-readable pack name shown in logs/debug UI." },
+        "description": { "type": "string", "description": "Optional free-text description of pack coverage." },
+        "author": { "type": "string", "description": "Pack author or maintainer." },
+        "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$", "description": "Pack semantic version (independent of plugin version)." },
+        "gameVersion": { "type": "string", "description": "OSRS game version this pack was verified against." }
       }
     },
     "bosses": {
       "type": "array",
       "minItems": 1,
-      "items": { "$ref": "#/definitions/boss" }
+      "items": { "$ref": "#/definitions/boss" },
+      "description": "Boss definitions contained in this pack."
     }
   },
   "definitions": {
@@ -29,18 +30,20 @@
       "type": "object",
       "required": ["bossId", "name", "npcId", "phases"],
       "properties": {
-        "bossId": { "type": "string" },
-        "name": { "type": "string" },
-        "npcId": { "type": "integer" },
+        "bossId": { "type": "string", "description": "Unique boss id within the pack (referenced by trigger fires)." },
+        "name": { "type": "string", "description": "Display name, e.g. 'Nex'." },
+        "npcId": { "type": "integer", "description": "RuneScape NPC id that identifies a live instance of this boss." },
         "description": { "type": "string" },
         "phases": {
           "type": "array",
           "minItems": 1,
-          "items": { "$ref": "#/definitions/phase" }
+          "items": { "$ref": "#/definitions/phase" },
+          "description": "Ordered phases; exit triggers advance to the next phase in list order."
         },
-        "mechanics": { "type": "array", "items": { "$ref": "#/definitions/mechanic" } },
+        "mechanics": { "type": "array", "items": { "$ref": "#/definitions/mechanic" }, "description": "Shared mechanics available across phases." },
         "recovery": {
           "type": "object",
+          "description": "Reset behaviour for edge cases (reserved; enforced from Sprint 7 semantics).",
           "properties": {
             "onPlayerDeath": { "enum": ["reset", "pause", "ignore"] },
             "onBossDespawn": { "enum": ["reset", "pause", "ignore"] },
@@ -53,75 +56,101 @@
       "type": "object",
       "required": ["phaseId", "name", "entryTrigger"],
       "properties": {
-        "phaseId": { "type": "string" },
-        "name": { "type": "string" },
-        "entryTrigger": { "$ref": "#/definitions/trigger" },
-        "exitTriggers": { "type": "array", "items": { "$ref": "#/definitions/trigger" } },
+        "phaseId": { "type": "string", "description": "Unique within boss." },
+        "name": { "type": "string", "description": "Display name, e.g. 'Smoke phase'." },
+        "entryTrigger": { "$ref": "#/definitions/trigger", "description": "What starts this phase when no session is active." },
+        "exitTriggers": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/trigger" },
+          "description": "Any match advances to the next phase in list order."
+        },
         "mechanics": { "type": "array", "items": { "$ref": "#/definitions/mechanic" } }
       }
     },
     "mechanic": {
       "type": "object",
-      "required": ["mechanicId", "name", "triggers", "callouts"],
+      "required": ["mechanicId", "name", "triggers"],
       "properties": {
-        "mechanicId": { "type": "string" },
-        "name": { "type": "string" },
+        "mechanicId": { "type": "string", "description": "Unique within boss scope." },
+        "name": { "type": "string", "description": "Display name used in predictions and logs." },
         "triggers": {
           "type": "array",
           "minItems": 1,
-          "items": { "$ref": "#/definitions/trigger" }
+          "items": { "$ref": "#/definitions/trigger" },
+          "description": "One or more triggers; any match activates the mechanic (conditions permitting)."
         },
-        "callouts": { "type": "array", "items": { "$ref": "#/definitions/callout" } },
-        "cooldown": { "type": "integer", "minimum": 0 },
-        "interruptible": { "type": "boolean" }
+        "callouts": { "type": "array", "items": { "$ref": "#/definitions/callout" }, "description": "Callouts emitted on activation." },
+        "conditions": { "type": "array", "items": { "$ref": "#/definitions/condition" }, "description": "All must hold at activation time or the mechanic is skipped." },
+        "cooldown": { "type": "integer", "minimum": 0, "description": "Ticks before this mechanic can activate again." },
+        "interruptible": { "type": "boolean", "description": "Reserved for priority interruption (post-MVP)." }
       }
     },
     "trigger": {
       "type": "object",
       "required": ["type"],
       "properties": {
-        "triggerId": { "type": "string" },
+        "triggerId": { "type": "string", "description": "Optional unique id within the mechanic for diagnostics." },
         "type": {
           "enum": ["animation", "projectile", "graphic", "npc_spawn", "npc_despawn",
-                   "hp", "tick_timer", "player_state", "location", "custom", "composite"]
+                   "hp", "tick_timer", "player_state", "location", "custom", "composite"],
+          "description": "Detection kind. 'custom' requires ConditionEvaluator support (Sprint 7+)."
         },
-        "npcId": { "type": "integer" },
-        "animationId": { "type": "integer" },
-        "projectId": { "type": "integer" },
-        "srcNpcId": { "type": "integer", "description": "projectile: optional source NPC filter" },
-        "graphicId": { "type": "integer" },
-        "hpThreshold": { "type": "integer" },
-        "hpDirection": { "enum": ["below", "above"] },
-        "tickMod": { "type": "integer", "minimum": 1 },
-        "tickOffset": { "type": "integer" },
-        "minX": { "type": "integer" },
-        "maxX": { "type": "integer" },
-        "minY": { "type": "integer" },
-        "maxY": { "type": "integer" },
-        "logic": { "enum": ["AND", "OR"] },
-        "children": { "type": "array", "items": { "$ref": "#/definitions/trigger" } }
+        "npcId": { "type": "integer", "description": "animation/graphic: filter to this NPC. npc_spawn/npc_despawn/hp: which NPC." },
+        "animationId": { "type": "integer", "description": "animation/player_state: animation id to match." },
+        "projectId": { "type": "integer", "description": "projectile: projectile id to match." },
+        "srcNpcId": { "type": "integer", "description": "projectile: optional source NPC filter." },
+        "graphicId": { "type": "integer", "description": "graphic: spotanim / graphics object id." },
+        "hpThreshold": { "type": "integer", "description": "hp: percent threshold; player_state: absolute HP value." },
+        "hpDirection": { "enum": ["below", "above"], "description": "Which way counts as satisfied (edge-detected: fires once at crossing)." },
+        "tickMod": { "type": "integer", "minimum": 1, "description": "tick_timer: fire every N ticks." },
+        "tickOffset": { "type": "integer", "description": "tick_timer: optional phase offset." },
+        "logic": { "enum": ["AND", "OR"], "description": "composite: how children combine against the same event." },
+        "children": { "type": "array", "items": { "$ref": "#/definitions/trigger" }, "description": "composite: child triggers." },
+        "minX": { "type": "integer" }, "maxX": { "type": "integer" },
+        "minY": { "type": "integer" }, "maxY": { "type": "integer" },
+        "regionBoundsDescription": { "const": "location: inclusive rectangular world bounds" }
       }
     },
     "callout": {
       "type": "object",
       "required": ["calloutId", "text", "category"],
       "properties": {
-        "calloutId": { "type": "string" },
-        "text": { "type": "string" },
-        "audioFile": { "type": "string" },
-        "category": { "enum": ["critical", "warning", "info", "transition"] },
-        "priority": { "type": "integer", "minimum": 1, "maximum": 100 },
-        "audioOffset": { "type": "integer", "minimum": -5, "maximum": 10 },
-        "visualOffset": { "type": "integer", "minimum": -5, "maximum": 10 },
+        "calloutId": { "type": "string", "description": "Unique within mechanic; cooldown-suppression key." },
+        "text": { "type": "string", "description": "Visual overlay text AND the TTS source text (rule 11)." },
+        "audioFile": { "type": "string", "description": ".ogg/.wav filename under audio/ in the pack zip; must exist (checked at load)." },
+        "category": { "enum": ["critical", "warning", "info", "transition"], "description": "Priority default + colour mapping." },
+        "priority": { "type": "integer", "minimum": 1, "maximum": 100, "description": "Explicit delivery order override." },
+        "audioOffset": { "type": "integer", "minimum": -5, "maximum": 10, "description": "Ticks relative to activation; negative = before." },
+        "visualOffset": { "type": "integer", "minimum": -5, "maximum": 10, "description": "Ticks relative to activation; negative = before." },
         "visual": {
           "type": "object",
           "properties": {
             "type": { "enum": ["prayer_icon", "countdown", "text", "safe_tile", "status_bar", "timeline", "mini_hud"] },
             "color": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
             "opacity": { "type": "number", "minimum": 0, "maximum": 1 },
-            "durationTicks": { "type": "integer", "minimum": 1 }
+            "durationTicks": { "type": "integer", "minimum": 1, "description": "How long the visual stays on screen." }
           }
         }
+      }
+    },
+    "condition": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "enum": ["npc_hp_below", "npc_hp_above", "player_hp_below",
+                   "player_hp_above", "tick_mod", "player_in_region",
+                   "prayer_active", "prayer_inactive", "inventory_contains", "custom"],
+          "description": "Unsupported types fail closed with a warning."
+        },
+        "npcId": { "type": "integer", "description": "npc_hp_* conditions: which NPC." },
+        "threshold": { "type": "integer", "description": "*_hp_* conditions: percent (NPC) or absolute (player)." },
+        "mod": { "type": "integer", "minimum": 1, "description": "tick_mod: phase-tick modulus." },
+        "prayer": { "type": "string" },
+        "itemId": { "type": "integer" },
+        "expression": { "type": "string" },
+        "minX": { "type": "integer" }, "maxX": { "type": "integer" },
+        "minY": { "type": "integer" }, "maxY": { "type": "integer" }
       }
     }
   }

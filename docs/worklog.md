@@ -4,6 +4,56 @@ Running log of sprints: what was done, key decisions, deviations from the docs.
 
 ---
 
+## Sprint 10 — JSON Schema Formalization (2026-08-26)
+
+**Objective:** Finalize schema v1.0, add the migration framework, audio
+reference checking, and a consolidated validation suite. Phase 3 begins.
+
+### Done
+
+- `schemas/encounter_schema_v1.json` finalized: every field documented,
+  conditions/recovery/composite/region fields included, matches what the
+  plugin actually enforces.
+- `schemas/migration_v0_to_v1.json` + `SchemaMigrations`: **data-driven
+  migration framework** — declarative steps (rename/copy/set/remove) loaded
+  from the resource, applied sequentially until current version. Legacy packs
+  missing schemaVersion can be detected by layout (`detect.path`). Unknown
+  versions rejected with "no migration path" message.
+- Loader pipeline formalized: raw JSON → migrate → Gson parse → rule
+  validation → **audio file existence check** (rule 8: referenced callout
+  audio must exist in the pack zip's audio/).
+- **Bug found & fixed**: SchemaValidator kept its error list as instance state
+  across validate() calls — violations from one pack leaked into the next
+  pack's error messages when loading multiple zips. Now reset per invocation.
+- Committed zip fixtures under `src/test/resources/test_packs/`:
+  valid_pack.zip (with real silent WAV), invalid_missing_fields.zip,
+  invalid_bad_trigger_type.zip, legacy_v09_pack.zip (migrates on load).
+- `SchemaValidationTest` — consolidated suite: fixture-based + rule-by-rule
+  edge cases (future versions, dup callouts, composite children/logic,
+  negative cooldown, priority range, condition validation, stripped audio).
+
+### Verified
+
+- Tests: **108/108 pass** (+15 net: SchemaValidationTest ×14, minus overlap).
+
+### Decisions
+
+- Migrations are **declarative JSON**, not code — pack authors and the AI
+  pipeline can read exactly what changed between versions; new ops are trivial
+  to add. Reaching the target version is implicit in the chain (no explicit
+  set-schemaVersion step needed).
+- Audio existence is enforced at load time per rule 8; string-only parsing
+  (tests) skips it since there's no zip context.
+
+### Deviations from docs
+
+- Roadmap's `tests/java/...` + `tests/resources/...` layout adapted to Gradle
+  standard `src/test/java` + `src/test/resources`.
+- Roadmap's `migration_v0_to_v1.json` implied code-side migrations; implemented
+  as a data file + small engine instead (see decision above).
+
+---
+
 ## Sprint 9 — Prediction + Audio/Visual Dispatch (2026-08-26)
 
 **Objective:** Close the coaching loop: predicted mechanics displayed, callouts

@@ -35,10 +35,14 @@ public final class SchemaValidator
 	private static final int MIN_TICK_OFFSET = -5;
 	private static final int MAX_TICK_OFFSET = 10;
 
-	private final List<String> errors = new ArrayList<>();
+	private List<String> errors = new ArrayList<>();
 
+	/**
+	 * Validate a pack. Stateless across calls: each invocation starts fresh.
+	 */
 	public List<String> validate(EncounterPack pack)
 	{
+		errors = new ArrayList<>();
 		if (pack.schemaVersion == null)
 		{
 			errors.add("missing required field: schemaVersion");
