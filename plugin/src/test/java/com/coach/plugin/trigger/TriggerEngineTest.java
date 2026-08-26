@@ -42,7 +42,7 @@ class TriggerEngineTest
 	@BeforeEach
 	void setUp() throws PackLoadException
 	{
-		engine = new TriggerEngine();
+		engine = new TriggerEngine(new TriggerRegistry(null));
 		EncounterPack pack = loader.parseJson(PACK_JSON, "test.zip");
 		engine.rebuild(List.of(pack));
 	}

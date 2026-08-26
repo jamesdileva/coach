@@ -79,9 +79,9 @@ class CoreTriggerEvaluatorTest
 		net.runelite.api.events.ProjectileMoved moved = new net.runelite.api.events.ProjectileMoved();
 		moved.setProjectile(projectile);
 
-		assertTrue(new ProjectileTriggerEvaluator(2955)
+		assertTrue(new ProjectileTriggerEvaluator(2955, null)
 			.matches(event(EventType.PROJECTILE_MOVED, moved)));
-		assertFalse(new ProjectileTriggerEvaluator(2001)
+		assertFalse(new ProjectileTriggerEvaluator(2001, null)
 			.matches(event(EventType.PROJECTILE_MOVED, moved)));
 	}
 
@@ -120,7 +120,7 @@ class CoreTriggerEvaluatorTest
 	{
 		assertTrue(new AnimationTriggerEvaluator(1, 1).interestedIn()
 			.contains(EventType.ANIMATION_CHANGED));
-		assertTrue(new ProjectileTriggerEvaluator(1).interestedIn()
+		assertTrue(new ProjectileTriggerEvaluator(1, null).interestedIn()
 			.contains(EventType.PROJECTILE_MOVED));
 		assertTrue(new GraphicTriggerEvaluator(1, 1).interestedIn()
 			.containsAll(java.util.Set.of(EventType.GRAPHIC_CHANGED, EventType.GRAPHICS_OBJECT_CREATED)));

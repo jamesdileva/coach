@@ -88,10 +88,16 @@
         "npcId": { "type": "integer" },
         "animationId": { "type": "integer" },
         "projectId": { "type": "integer" },
+        "srcNpcId": { "type": "integer", "description": "projectile: optional source NPC filter" },
         "graphicId": { "type": "integer" },
         "hpThreshold": { "type": "integer" },
         "hpDirection": { "enum": ["below", "above"] },
         "tickMod": { "type": "integer", "minimum": 1 },
+        "tickOffset": { "type": "integer" },
+        "minX": { "type": "integer" },
+        "maxX": { "type": "integer" },
+        "minY": { "type": "integer" },
+        "maxY": { "type": "integer" },
         "logic": { "enum": ["AND", "OR"] },
         "children": { "type": "array", "items": { "$ref": "#/definitions/trigger" } }
       }

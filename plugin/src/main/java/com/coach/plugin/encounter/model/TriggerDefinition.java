@@ -15,12 +15,20 @@ public class TriggerDefinition
 	public Integer npcId;
 	public Integer animationId;
 	public Integer projectId;
+	public Integer srcNpcId;      // projectile: optional source NPC filter
 	public Integer graphicId;
 	public Integer hpThreshold;
 	public String hpDirection;   // "below" | "above"
 	public Integer tickMod;
+	public Integer tickOffset;
 	public List<TriggerDefinition> children; // composite only
 	public String logic;                        // composite: "AND" | "OR"
+
+	// location trigger region (inclusive bounds)
+	public Integer minX;
+	public Integer maxX;
+	public Integer minY;
+	public Integer maxY;
 
 	// runtime: set by the loader to the owning mechanic/phase for diagnostics
 	public transient String contextId;

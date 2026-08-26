@@ -4,6 +4,55 @@ Running log of sprints: what was done, key decisions, deviations from the docs.
 
 ---
 
+## Sprint 6 — Trigger Engine (Advanced Triggers) (2026-08-26)
+
+**Objective:** All remaining trigger types: npc_spawn/despawn, hp, tick_timer,
+player_state, location, composite AND/OR. (Roadmap Sprint 6.)
+
+### Done
+
+- `NpcSpawnTriggerEvaluator` — spawn + despawn variants (boss entry detection).
+- `TickTimerTriggerEvaluator` — `(tick − offset) % mod == 0`, offset optional.
+- `HpTriggerEvaluator` — NPC health % via live client lookup
+  (`getTopLevelWorldView().npcs()`), **edge-detected** so it fires once at the
+  crossing, not every tick beyond; re-arms when the boss despawns.
+- `PlayerStateTriggerEvaluator` — two modes: player animation
+  (AnimationChanged where actor is the Player), or player HP below/above
+  threshold (edge-detected on StatChanged HITPOINTS).
+- `LocationTriggerEvaluator` — rectangular world region, fires on ENTRY only.
+- `CompositeTriggerEvaluator` — AND/OR over children against the same event;
+  interestedIn = union of children's interests.
+- `ProjectileTriggerEvaluator` upgraded with optional `srcNpcId` — verified
+  `Projectile.getSourceActor()` exists in the API, so no deferment needed.
+- `EdgeDetector` helper shared by hp/player-hp/location.
+- Schema v1 json + TriggerDefinition gained srcNpcId/tickOffset/region fields.
+
+### Verified
+
+- Tests: **57/57 pass** (+12: AdvancedTriggerEvaluatorTest ×9,
+  CompositeTriggerTest ×3; existing tests updated for registry constructor).
+
+### Decisions
+
+- **HP triggers are evaluated per-tick against live client state** rather than
+  an event, because RuneLite has no NPC HP event — this required giving
+  TriggerRegistry a Client reference (nullable in tests). This is a deliberate
+  softening of "triggers are stateless": edge state lives inside evaluators.
+- Composite AND requires children observing the same event type (cross-event
+  combos like "spawned AND hp<50%" are mechanic *conditions* → Sprint 7's
+  ConditionEvaluator). Documented on the class.
+- Location/hp evaluators need the client; registry skips them with a warning
+  when no client is available (unit-test path).
+
+### Deviations from docs
+
+- `CustomRuleTriggerEvaluator` NOT created: custom rules are condition
+  expressions, which belong to Sprint 7's ConditionEvaluator. The 'custom'
+  type is schema-valid but logs "not supported yet" until then. Roadmap listed
+  the file this sprint; deferring avoids dead code.
+
+---
+
 ## Sprint 5 — Trigger Engine (Core Triggers) (2026-08-26)
 
 **Objective:** Animation, Projectile and Graphic triggers evaluate against

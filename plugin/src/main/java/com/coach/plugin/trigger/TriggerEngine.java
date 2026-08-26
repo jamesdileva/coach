@@ -47,10 +47,15 @@ public class TriggerEngine implements EventBus.Listener
 		}
 	}
 
-	private final TriggerRegistry registry = new TriggerRegistry();
+	private final TriggerRegistry registry;
 	private final List<BoundTrigger> triggers = new ArrayList<>();
 	private final List<FireListener> fireListeners = new ArrayList<>();
 	private volatile List<TriggerFire> lastFires = Collections.emptyList();
+
+	public TriggerEngine(TriggerRegistry registry)
+	{
+		this.registry = registry;
+	}
 
 	public void addFireListener(FireListener listener)
 	{

@@ -14,6 +14,7 @@ import com.coach.plugin.logging.TriggerLogger;
 import com.coach.plugin.overlay.DebugOverlay;
 import com.coach.plugin.trigger.TriggerEngine;
 import com.coach.plugin.trigger.TriggerFire;
+import com.coach.plugin.trigger.TriggerRegistry;
 import com.google.inject.Provides;
 import java.util.List;
 import java.nio.file.Paths;
@@ -84,7 +85,7 @@ public class CoachPlugin extends Plugin
 	{
 		runeLiteEventBus.register(this);
 		encounterEngine = new EncounterEngine();
-		triggerEngine = new TriggerEngine();
+		triggerEngine = new TriggerEngine(new TriggerRegistry(client));
 		triggerEngine.addFireListener(this::onTriggersFired);
 		coachEventBus.subscribe(triggerEngine);
 		reloadPacks("startup");

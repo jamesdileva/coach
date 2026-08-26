@@ -1,28 +1,43 @@
 package com.coach.plugin.trigger;
 
 import com.coach.plugin.encounter.model.TriggerDefinition;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
+import net.runelite.api.Client;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Maps trigger type strings from encounter JSON to evaluator factories.
- * Unknown types produce a warning and no evaluator — never a crash (§8.4).
+ * Unknown or not-yet-supported types produce a warning and no evaluator —
+ * never a crash (§8.4).
  */
 public class TriggerRegistry
 {
 	private static final Logger log = LoggerFactory.getLogger(TriggerRegistry.class);
 
+	private final Client client; // nullable in tests; needed by hp/location evaluators
 	private final Map<String, Function<TriggerDefinition, TriggerEvaluator>> builders = new HashMap<>();
 
-	public TriggerRegistry()
+	public TriggerRegistry(Client client)
 	{
+		this.client = client;
+
 		builders.put("animation", def -> new AnimationTriggerEvaluator(def.npcId, requireInt(def.animationId, "animationId")));
-		builders.put("projectile", def -> new ProjectileTriggerEvaluator(requireInt(def.projectId, "projectId")));
+		builders.put("projectile", def -> new ProjectileTriggerEvaluator(requireInt(def.projectId, "projectId"), def.srcNpcId));
 		builders.put("graphic", def -> new GraphicTriggerEvaluator(def.npcId, requireInt(def.graphicId, "graphicId")));
+		builders.put("npc_spawn", def -> new NpcSpawnTriggerEvaluator(def.npcId, true));
+		builders.put("npc_despawn", def -> new NpcSpawnTriggerEvaluator(def.npcId, false));
+		builders.put("hp", this::buildHp);
+		builders.put("tick_timer", this::buildTickTimer);
+		builders.put("player_state", this::buildPlayerState);
+		builders.put("location", this::buildLocation);
+		builders.put("composite", this::buildComposite);
+		// 'custom' deliberately unregistered until ConditionEvaluator lands (Sprint 7)
 	}
 
 	/**
@@ -37,7 +52,9 @@ public class TriggerRegistry
 		Function<TriggerDefinition, TriggerEvaluator> builder = builders.get(definition.type);
 		if (builder == null)
 		{
-			log.warn("[coach] trigger type '{}' not supported yet by TriggerEngine", definition.type);
+			log.warn("[coach] trigger type '{}' not supported yet by TriggerEngine"
+				+ ("custom".equals(definition.type) ? " (arrives with ConditionEvaluator)" : ""),
+				definition.type);
 			return Optional.empty();
 		}
 		try
@@ -49,6 +66,61 @@ public class TriggerRegistry
 			log.warn("[coach] trigger type '{}' missing field {}: {}", definition.type, e.field, e.getMessage());
 			return Optional.empty();
 		}
+	}
+
+	private TriggerEvaluator buildHp(TriggerDefinition def)
+	{
+		int threshold = requireInt(def.hpThreshold, "hpThreshold");
+		boolean below = !"above".equalsIgnoreCase(def.hpDirection);
+		return new HpTriggerEvaluator(client, requireInt(def.npcId, "npcId"), below, threshold);
+	}
+
+	private TriggerEvaluator buildTickTimer(TriggerDefinition def)
+	{
+		return new TickTimerTriggerEvaluator(
+			requireInt(def.tickMod, "tickMod"),
+			def.tickOffset != null ? def.tickOffset : 0);
+	}
+
+	private TriggerEvaluator buildPlayerState(TriggerDefinition def)
+	{
+		if (def.animationId != null)
+		{
+			return new PlayerStateTriggerEvaluator(def.animationId, null, true);
+		}
+		if (def.hpThreshold != null)
+		{
+			boolean below = !"above".equalsIgnoreCase(def.hpDirection);
+			return new PlayerStateTriggerEvaluator(null, def.hpThreshold, below);
+		}
+		throw new MissingFieldException("animationId or hpThreshold");
+	}
+
+	private TriggerEvaluator buildLocation(TriggerDefinition def)
+	{
+		if (client == null)
+		{
+			log.warn("[coach] location trigger requires client access — skipping");
+			return null;
+		}
+		return new LocationTriggerEvaluator(client,
+			requireInt(def.minX, "minX"), requireInt(def.maxX, "maxX"),
+			requireInt(def.minY, "minY"), requireInt(def.maxY, "maxY"));
+	}
+
+	private TriggerEvaluator buildComposite(TriggerDefinition def)
+	{
+		if (def.children == null || def.children.isEmpty())
+		{
+			throw new MissingFieldException("children");
+		}
+		List<TriggerEvaluator> children = new ArrayList<>(def.children.size());
+		for (TriggerDefinition child : def.children)
+		{
+			children.add(create(child)
+				.orElseThrow(() -> new MissingFieldException("valid child trigger")));
+		}
+		return new CompositeTriggerEvaluator(CompositeTriggerEvaluator.parseLogic(def.logic), children);
 	}
 
 	private static int requireInt(Integer value, String field)
