@@ -93,12 +93,14 @@ public class CoachPlugin extends Plugin
 	private DebugOverlay debugOverlay;
 	private boolean debugOverlayAdded;
 	private EventBus.Listener debugListener;
+	private com.coach.plugin.accessibility.AccessibilityManager accessibilityManager;
 
 	@Override
 	protected void startUp() throws Exception
 	{
 		runeLiteEventBus.register(this);
 		coachEventBus = new EventBus();
+		accessibilityManager = new com.coach.plugin.accessibility.AccessibilityManager(config);
 		encounterEngine = new EncounterEngine(client);
 		coachingEngine = new CoachingEngine();
 		triggerEngine = new TriggerEngine(new TriggerRegistry(client));
@@ -110,8 +112,7 @@ public class CoachPlugin extends Plugin
 		coachingEngine.setEnabledFilter(new CalloutGate(config));
 		coachingEngine.addListener(this::onCalloutDelivered);
 		registerCoachOverlay();
-		audioEngine.setMuted(config.muted());
-		audioEngine.setMasterVolume(config.masterVolume());
+		applyAudioAccessibility();
 		reloadPacks("startup");
 		log.info("Project Coach started (debug={})", config.debugMode());
 
@@ -232,9 +233,9 @@ public class CoachPlugin extends Plugin
 			}
 			return;
 		}
-		if ("muted".equals(event.getKey()))
+		if ("muted".equals(event.getKey()) || "accessibilityMode".equals(event.getKey()))
 		{
-			audioEngine.setMuted(config.muted());
+			applyAudioAccessibility();
 		}
 		else if ("masterVolume".equals(event.getKey()))
 		{
@@ -252,6 +253,14 @@ public class CoachPlugin extends Plugin
 		{
 			audioEngine.setCategoryVolume("info", config.infoVolume());
 		}
+	}
+
+	private void applyAudioAccessibility()
+	{
+		// visual-only mode silences everything; muted works independently
+		audioEngine.setMuted(config.muted()
+			|| accessibilityManager.getMode()
+				== com.coach.plugin.accessibility.AccessibilityManager.Mode.VISUAL_ONLY);
 	}
 
 	// ---- Internal bus ----
@@ -376,7 +385,7 @@ public class CoachPlugin extends Plugin
 		}
 		try
 		{
-			coachOverlay = new CoachOverlay(coachOverlayManager, config);
+			coachOverlay = new CoachOverlay(coachOverlayManager, config, accessibilityManager);
 			overlayManager.add(coachOverlay);
 			coachOverlayAdded = true;
 		}
@@ -488,3 +497,4 @@ public class CoachPlugin extends Plugin
 		return configManager.getConfig(CoachConfig.class);
 	}
 }
+

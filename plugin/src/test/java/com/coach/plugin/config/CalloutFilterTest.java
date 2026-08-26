@@ -20,7 +20,7 @@ class CalloutFilterTest
 	private static boolean test(String category, String disabledCsv)
 	{
 		return CalloutFilter.isEnabled(
-			true, disabledCsv,
+			true, false, disabledCsv,
 			true, true, true, true,
 			"nex", callout(category));
 	}
@@ -35,13 +35,24 @@ class CalloutFilterTest
 	}
 
 	@Test
+	void essentialOnlyPassesCriticalOnly()
+	{
+		var critical = callout("critical");
+		var warning = callout("warning");
+
+		assertTrue(CalloutFilter.isEnabled(true, true, "", true, true, true, true, "nex", critical));
+		assertFalse(CalloutFilter.isEnabled(true, true, "", true, true, true, true, "nex", warning));
+		assertFalse(CalloutFilter.isEnabled(true, true, "", true, true, true, true, "nex", callout("info")));
+	}
+
+	@Test
 	void categoryToggleBlocksItsCategoryOnly()
 	{
-		assertFalse(CalloutFilter.isEnabled(true, "", false, true, true, true, "nex", callout("critical")));
-		assertTrue(CalloutFilter.isEnabled(true, "", false, true, true, true, "nex", callout("warning")));
+		assertFalse(CalloutFilter.isEnabled(true, false, "", false, true, true, true, "nex", callout("critical")));
+		assertTrue(CalloutFilter.isEnabled(true, false, "", false, true, true, true, "nex", callout("warning")));
 
-		assertTrue(CalloutFilter.isEnabled(true, "", true, false, true, true, "nex", callout("critical")));
-		assertFalse(CalloutFilter.isEnabled(true, "", true, false, true, true, "nex", callout("warning")));
+		assertTrue(CalloutFilter.isEnabled(true, false, "", true, false, true, true, "nex", callout("critical")));
+		assertFalse(CalloutFilter.isEnabled(true, false, "", true, false, true, true, "nex", callout("warning")));
 	}
 
 	@Test
@@ -55,13 +66,14 @@ class CalloutFilterTest
 	@Test
 	void masterKillSwitchBlocksEverything()
 	{
-		assertFalse(CalloutFilter.isEnabled(false, "", true, true, true, true, "nex", callout("critical")));
+		assertFalse(CalloutFilter.isEnabled(false, false, "", true, true, true, true, "nex", callout("critical")));
 	}
 
 	@Test
 	void nullCategoryFallsBackToInfoToggle()
 	{
-		assertFalse(CalloutFilter.isEnabled(true, "", true, true, false, true, "nex", callout(null)));
-		assertTrue(CalloutFilter.isEnabled(true, "", true, true, true, true, "nex", callout(null)));
+		assertFalse(CalloutFilter.isEnabled(true, false, "", true, true, false, true, "nex", callout(null)));
+		assertTrue(CalloutFilter.isEnabled(true, false, "", true, true, true, true, "nex", callout(null)));
 	}
 }
+

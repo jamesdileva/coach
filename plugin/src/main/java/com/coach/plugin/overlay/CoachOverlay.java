@@ -1,7 +1,10 @@
 package com.coach.plugin.overlay;
 
+import com.coach.plugin.accessibility.ColorPalette;
+import com.coach.plugin.accessibility.TextScaler;
 import com.coach.plugin.config.CoachConfig;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,19 +19,22 @@ import net.runelite.client.ui.overlay.components.PanelComponent;
 /**
  * Main coach panel: composes the sub-renderers (prayer indicator, safe-tile
  * advisories, countdowns, callout text lines, timeline, status, mini HUD)
- * honouring per-overlay config toggles.
+ * honouring per-overlay config toggles and accessibility settings.
  */
 public class CoachOverlay extends Overlay
 {
 	private final OverlayManager overlayManager;
 	private final CoachConfig config;
+	private final com.coach.plugin.accessibility.AccessibilityManager accessibility;
 	private final PanelComponent panel = new PanelComponent();
 
 	@Inject
-	public CoachOverlay(OverlayManager overlayManager, CoachConfig config)
+	public CoachOverlay(OverlayManager overlayManager, CoachConfig config,
+		com.coach.plugin.accessibility.AccessibilityManager accessibility)
 	{
 		this.overlayManager = overlayManager;
 		this.config = config;
+		this.accessibility = accessibility;
 		setPosition(OverlayPosition.TOP_CENTER);
 		setPriority(OverlayPriority.HIGH);
 		panel.setPreferredSize(new Dimension(240, 0));
@@ -37,6 +43,11 @@ public class CoachOverlay extends Overlay
 	@Override
 	public Dimension render(Graphics2D graphics)
 	{
+		if (!accessibility.isVisualEnabled())
+		{
+			return null; // audio-only mode: hide every visual
+		}
+
 		int tick = tickFromExpiry();
 		List<OverlayLine> lines = compose(tick);
 		if (lines.isEmpty())
@@ -48,9 +59,11 @@ public class CoachOverlay extends Overlay
 		int width = 0;
 		for (OverlayLine line : lines)
 		{
-			graphics.setFont(line.size == OverlayLine.Size.LARGE
+			Font font = line.size == OverlayLine.Size.LARGE
 				? FontManager.getRunescapeBoldFont()
-				: FontManager.getRunescapeSmallFont());
+				: FontManager.getRunescapeSmallFont();
+			font = TextScaler.scale(font, config.textScale());
+			graphics.setFont(font);
 			width = Math.max(width, graphics.getFontMetrics().stringWidth(line.text));
 
 			panel.getChildren().add(LineComponent.builder()
@@ -79,6 +92,7 @@ public class CoachOverlay extends Overlay
 		add(lines, SafeTileRenderer.render(visuals, tick));
 
 		// regular callout texts (everything not rendered by a dedicated overlay)
+		boolean hc = config.highContrast();
 		for (OverlayManager.ActiveVisual visual : visuals)
 		{
 			String type = visual.visualType;
@@ -87,7 +101,7 @@ public class CoachOverlay extends Overlay
 				continue;
 			}
 			lines.add(new OverlayLine(visual.text,
-				colorFor(visual.category), OverlayLine.Size.SMALL));
+				ColorPalette.colorFor(visual.category, hc), OverlayLine.Size.SMALL));
 		}
 
 		if (config.showStatus())
@@ -133,20 +147,5 @@ public class CoachOverlay extends Overlay
 			min = Math.min(min, visual.expireTick);
 		}
 		return min == Integer.MAX_VALUE ? (int) (System.currentTimeMillis() / 600) : min;
-	}
-
-	private static java.awt.Color colorFor(String category)
-	{
-		if (category == null)
-		{
-			return java.awt.Color.WHITE;
-		}
-		switch (category)
-		{
-			case "critical":   return java.awt.Color.RED;
-			case "warning":    return java.awt.Color.ORANGE;
-			case "transition": return java.awt.Color.CYAN;
-			default:           return java.awt.Color.WHITE; // info
-		}
 	}
 }

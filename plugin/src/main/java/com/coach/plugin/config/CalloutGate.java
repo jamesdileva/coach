@@ -23,6 +23,7 @@ public class CalloutGate implements BiPredicate<String, CalloutDefinition>
 	{
 		return CalloutFilter.isEnabled(
 			config.enabled(),
+			config.essentialOnly(),
 			config.disabledBosses(),
 			config.criticalCallouts(),
 			config.warningCallouts(),

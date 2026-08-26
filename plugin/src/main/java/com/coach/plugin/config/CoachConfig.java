@@ -227,4 +227,48 @@ public interface CoachConfig extends Config
 	{
 		return true;
 	}
+
+	@ConfigItem(
+		keyName = "accessibilityMode",
+		name = "Accessibility Mode",
+		description = "Both = normal. Audio-only hides all visuals. Visual-only silences all audio",
+		position = 30
+	)
+	default AccessibilityMode accessibilityMode()
+	{
+		return AccessibilityMode.BOTH;
+	}
+
+	@ConfigItem(
+		keyName = "essentialOnly",
+		name = "Essential Only",
+		description = "Only critical callouts (silence warnings, info, transitions)",
+		position = 31
+	)
+	default boolean essentialOnly()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+		keyName = "highContrast",
+		name = "High Contrast Palette",
+		description = "WCAG AA-compliant overlay colours (4.5:1+ on dark backgrounds)",
+		position = 32
+	)
+	default boolean highContrast()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+		keyName = "textScale",
+		name = "Text Scale (%)",
+		description = "Overlay text scaling in percent (50-200)",
+		position = 33
+	)
+	default int textScale()
+	{
+		return 100;
+	}
 }

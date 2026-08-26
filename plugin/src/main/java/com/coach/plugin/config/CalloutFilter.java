@@ -20,6 +20,7 @@ public final class CalloutFilter
 
 	public static boolean isEnabled(
 		boolean pluginEnabled,
+		boolean essentialOnly,
 		String disabledBossesCsv,
 		boolean critical, boolean warning, boolean info, boolean transition,
 		String bossId, CalloutDefinition callout)
@@ -28,15 +29,15 @@ public final class CalloutFilter
 		{
 			return false;
 		}
+		if (essentialOnly && !"critical".equals(callout.category))
+		{
+			return false;
+		}
 		if (!categoryEnabled(callout.category, critical, warning, info, transition))
 		{
 			return false;
 		}
-		if (!disabledBosses(disabledBossesCsv).contains(normalizeBossId(bossId)))
-		{
-			return true;
-		}
-		return false;
+		return !disabledBosses(disabledBossesCsv).contains(normalizeBossId(bossId));
 	}
 
 	static boolean categoryEnabled(String category,

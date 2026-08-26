@@ -4,6 +4,53 @@ Running log of sprints: what was done, key decisions, deviations from the docs.
 
 ---
 
+## Sprint 20 — Accessibility Features (2026-08-26)
+
+**Objective:** Audio-only mode, visual-only mode, essential-only filter,
+high-contrast WCAG AA palette, and overlay text scaling.
+
+### Done
+
+- **`AccessibilityMode` config enum**: Both / Audio-only / Visual-only.
+  - Audio-only: `CoachOverlay.render` returns null (every visual hidden)
+  - Visual-only: `applyAudioAccessibility()` silences the audio engine
+  - Live-reactive via ConfigChanged; composes correctly with the mute toggle
+- **Essential Only toggle**: `CalloutFilter` passes criticals only — wired
+  through `CalloutGate`, so it gates both visuals and audio at the source.
+- **`ColorPalette`**: default + high-contrast palettes; includes a WCAG 2.x
+  relative-luminance contrast-ratio function, unit-tested to assert every
+  palette entry ≥ 4.5:1 against the dark panel background. Hue choices avoid
+  red/green-only distinctions (luminance always differs too).
+- **`TextScaler`**: clamps 50–200%, applied to every overlay font (large and
+  small) in CoachOverlay.
+- `AccessibilityManager`: single live-config resolver for mode/audio/visual
+  questions used by plugin + overlay.
+- Tests: palette WCAG assertions (incl. sanity checks white=21:1, black=1:1),
+  scaler clamp/scale cases, essential-only gate cases.
+
+### Verified
+
+- Tests: **170/170 pass** (+9).
+
+### Decisions
+
+- Essential-only implemented **inside the callout gate**, not as an overlay
+  hack — silenced callouts never schedule audio or visuals at all (rule 5
+  preserved per-callout).
+- High-contrast changes text colours only, not layout/size (independent of
+  text scaling — they compose).
+- Screen-reader "tooltips" from the roadmap deferred: RuneLite overlays are
+  canvas-drawn with no accessible widget tree; nothing meaningful to expose.
+
+### Deviations from docs
+
+- Roadmap's `CoachConfigV2` again skipped (single config group, as before).
+- Roadmap wanted `accessibility_tags` added to pack schema; unnecessary —
+  categories already drive mode behaviour (audio-only still speaks criticals,
+  visual-only still shows them).
+
+---
+
 ## Sprint 19 — Audio Improvements (2026-08-26)
 
 **Objective:** Priority-based audio: higher categories interrupt, same/lower
