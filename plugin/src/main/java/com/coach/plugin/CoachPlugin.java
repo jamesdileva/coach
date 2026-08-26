@@ -12,7 +12,11 @@ import com.coach.plugin.logging.FileLogWriter;
 import com.coach.plugin.logging.LogBuffer;
 import com.coach.plugin.logging.TriggerLogger;
 import com.coach.plugin.overlay.DebugOverlay;
+import com.coach.plugin.trigger.TriggerEngine;
+import com.coach.plugin.trigger.TriggerFire;
 import com.google.inject.Provides;
+import java.util.List;
+import java.nio.file.Paths;
 import java.nio.file.Path;
 import javax.inject.Inject;
 import net.runelite.api.Client;
@@ -69,6 +73,7 @@ public class CoachPlugin extends Plugin
 	private final TriggerLogger triggerLogger = new TriggerLogger(logBuffer);
 	private final CalloutLogger calloutLogger = new CalloutLogger(logBuffer);
 	private EncounterEngine encounterEngine;
+	private TriggerEngine triggerEngine;
 
 	private DebugOverlay debugOverlay;
 	private boolean debugOverlayAdded;
@@ -79,6 +84,9 @@ public class CoachPlugin extends Plugin
 	{
 		runeLiteEventBus.register(this);
 		encounterEngine = new EncounterEngine();
+		triggerEngine = new TriggerEngine();
+		triggerEngine.addFireListener(this::onTriggersFired);
+		coachEventBus.subscribe(triggerEngine);
 		reloadPacks("startup");
 		log.info("Project Coach started (debug={})", config.debugMode());
 
@@ -92,7 +100,9 @@ public class CoachPlugin extends Plugin
 	protected void shutDown() throws Exception
 	{
 		disableDebugging();
+		coachEventBus.unsubscribe(triggerEngine);
 		runeLiteEventBus.unregister(this);
+		triggerEngine = null;
 		encounterEngine = null;
 		log.info("Project Coach shut down");
 	}
@@ -199,8 +209,24 @@ public class CoachPlugin extends Plugin
 		{
 			return;
 		}
-		int count = encounterEngine.loadPacks(java.nio.file.Paths.get(config.packDirectory()));
+		int count = encounterEngine.loadPacks(Paths.get(config.packDirectory()));
+		if (triggerEngine != null)
+		{
+			triggerEngine.rebuild(encounterEngine.getPacks());
+		}
 		log.info("[coach] packs reloaded ({}): {} pack(s) loaded", reason, count);
+	}
+
+	private void onTriggersFired(List<TriggerFire> fires)
+	{
+		if (!config.debugMode())
+		{
+			return;
+		}
+		for (TriggerFire fire : fires)
+		{
+			triggerLogger.triggerFired(fire.getTick(), fire.getContextId(), fire.getDescription());
+		}
 	}
 
 	EventBus getCoachEventBus()

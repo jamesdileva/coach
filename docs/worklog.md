@@ -4,6 +4,53 @@ Running log of sprints: what was done, key decisions, deviations from the docs.
 
 ---
 
+## Sprint 5 — Trigger Engine (Core Triggers) (2026-08-26)
+
+**Objective:** Animation, Projectile and Graphic triggers evaluate against
+batched game events; fires flow out for downstream engines. (Roadmap Sprint 5.)
+
+### Done
+
+- `trigger/TriggerEvaluator` — stateless matcher interface with an
+  `interestedIn()` event-type filter so the engine skips irrelevant events.
+- `AnimationTriggerEvaluator` — NPC + animation id match (null npcId = any NPC).
+- `ProjectileTriggerEvaluator` — projectile id match via ProjectileMoved.
+- `GraphicTriggerEvaluator` — matches GraphicChanged (actor spotanim) OR
+  GraphicsObjectCreated (AoE/tile effect); optional npc filter.
+- `TriggerRegistry` — type string → evaluator factory; unknown types or missing
+  numeric fields → warning + skip, never crash (§8.4).
+- `TriggerEngine` — rebuilt from loaded packs on load/reload; evaluates each
+  tick batch; produces `TriggerFire` (tick, bossId, contextId, description);
+  one fire per evaluator per event occurrence; fire listeners notified.
+- Phase entry/exit trigger definitions are registered too (evaluated where an
+  evaluator exists — e.g. npc_spawn waits for Sprint 6).
+- `CoachPlugin`: TriggerEngine permanently subscribed to the internal bus
+  (coaching must run even when debug mode is off); fires feed TriggerLogger
+  only in debug mode.
+
+### Verified
+
+- Tests: **45/45 pass** (31 prior + CoreTriggerEvaluatorTest ×9 +
+  TriggerEngineTest ×5: match/no-match/no-dup/rebuild/listeners).
+
+### Decisions
+
+- **'graphic' covers both manifestations**: many boss mechanics appear as
+  tile-level GraphicsObjects rather than actor spotanims; one trigger type
+  matching both keeps packs simple. Filterable by npcId for the actor case.
+- Mechanic context ids get a `#index` suffix when a mechanic defines multiple
+  triggers (`shadow_smash#0`) — disambiguates fires for Sprint 7+.
+- Projectile source-NPC matching deferred to Sprint 6 (needs live client NPC
+  positions to compare against projectile origin tiles).
+
+### Deviations from docs
+
+- Implementation guide's `TriggerEvaluator.evaluate(event, EncounterState)`
+  signature trimmed to `matches(GameEvent)` until EncounterState exists
+  (Sprint 7); guide's example also casts payloads that don't exist as written.
+
+---
+
 ## Sprint 4 — Encounter Engine (JSON Loader) (2026-08-25)
 
 **Objective:** Load encounter packs from the user's pack directory with

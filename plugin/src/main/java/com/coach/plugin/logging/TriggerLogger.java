@@ -13,9 +13,9 @@ public class TriggerLogger
 		this.sink = sink;
 	}
 
-	public void triggerFired(int tick, String triggerId, String mechanicId)
+	public void triggerFired(int tick, String contextId, String detail)
 	{
-		sink.log("t" + tick + " TRIGGER_FIRED trigger=" + triggerId + " mechanic=" + mechanicId);
+		sink.log("t" + tick + " TRIGGER_FIRED ctx=" + contextId + " " + detail);
 	}
 
 	public void triggerEvaluated(int tick, String triggerId, boolean matched)
