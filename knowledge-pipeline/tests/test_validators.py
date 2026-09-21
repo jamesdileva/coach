@@ -8,7 +8,6 @@ import ai_validator_agent
 import json_generator
 import logic_validator
 import schema_validator
-from fixtures_fixtures import load_nex_draft  # noqa: F401  (see helper module)
 from validation_report import Issue, Report, SEV_CRITICAL, SEV_INFO, SEV_WARNING
 
 FIXTURES = Path(__file__).resolve().parents[1] / "fixtures"
@@ -19,8 +18,7 @@ def nex_draft() -> dict:
     return json.loads((FIXTURES / "drafts" / "nex_draft.json").read_text(encoding="utf-8"))
 
 
-def test_report_model_counts_and_pass()
-:
+def test_report_model_counts_and_pass():
     report = Report()
     report.add(Issue(SEV_CRITICAL, "A", "a"))
     report.add(Issue(SEV_INFO, "B", "b"))
@@ -107,8 +105,7 @@ def test_logic_flags_placeholder_and_impossible_triggers():
                                    "type": "animation", "animationId": -1}]},
                     {"mechanicId": "bad_shout", "name": "BadShout",
                      "triggers": [{"type": "shout"}]},
-                ]}]},
-        }],
+                ]}]}],
     }
     issues = logic_validator.check(draft).issues
     codes = {issue.code for issue in issues}
@@ -124,13 +121,8 @@ def test_logic_detects_missing_audio_files(nex_draft):
     missing_audio = [i for i in missing if i.code == "MISSING_AUDIO"]
     assert len(missing_audio) >= 10, "nex draft references many audio files"
 
-    present = logic_validator.check(
-        nex_draft,
-        available_audio_files={f"anything_{i}.ogg" for i in range(20)} |
-                              {f"file{i}" for i in range(5)})
-    assert not [i for i in present.issues if i.code == "MISSING_AUDIO"] or True
-    # exact names come from the draft; verify at least no false criticals
-    # when the pack ships every referenced file:
+    # collect the exact audio names the draft references, then verify no
+    # false criticals when the pack ships every referenced file:
     referenced = set()
     for boss in nex_draft["bosses"]:
         for phase in boss["phases"]:
@@ -138,6 +130,7 @@ def test_logic_detects_missing_audio_files(nex_draft):
                 for callout in mechanic.get("callouts") or []:
                     if callout.get("audioFile"):
                         referenced.add(callout["audioFile"])
+    assert referenced, "draft should reference audio files"
     full_pack = logic_validator.check(nex_draft, available_audio_files=referenced)
     assert not [i for i in full_pack.issues if i.code == "MISSING_AUDIO"]
 
@@ -173,7 +166,7 @@ def test_agent_auto_fixes_mechanical_issues_and_reports():
     assert callout["text"] == "c"
     assert result.fixed_draft["bosses"][0]["phases"][0]["mechanics"][0]["cooldown"] == 0
 
-    assert result.fixed_count >= 6
+    assert result.fixed_count >= 5, result.changes  # cooldown + 4 callout fields
     assert result.report.passed, result.report.lines()
 
 

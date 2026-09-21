@@ -53,6 +53,7 @@
         {
          "calloutId": "call_smoke_phase_start",
          "text": "Smoke phase starting!",
+         "audioFile": "call_smoke_phase_start.ogg",
          "category": "transition",
          "priority": 55,
          "audioOffset": -2,
@@ -81,6 +82,7 @@
         {
          "calloutId": "call_choke",
          "text": "Choke! Nex will shout Let the virus flow through you!",
+         "audioFile": "call_choke.ogg",
          "category": "critical",
          "priority": 90,
          "audioOffset": -2,
@@ -108,6 +110,7 @@
         {
          "calloutId": "call_drag",
          "text": "Drag!",
+         "audioFile": "call_drag.ogg",
          "category": "warning",
          "priority": 65,
          "audioOffset": 0,
@@ -136,6 +139,7 @@
         {
          "calloutId": "call_smoke_dash",
          "text": "Smoke Dash! Nex will shout There is...",
+         "audioFile": "call_smoke_dash.ogg",
          "category": "critical",
          "priority": 90,
          "audioOffset": -2,
@@ -190,6 +194,7 @@
         {
          "calloutId": "call_shadow_phase_start",
          "text": "Shadow phase starting!",
+         "audioFile": "call_shadow_phase_start.ogg",
          "category": "transition",
          "priority": 55,
          "audioOffset": -2,
@@ -218,6 +223,7 @@
         {
          "calloutId": "call_shadow_smash",
          "text": "Shadow Smash! Nex will shout Fear the shadow!",
+         "audioFile": "call_shadow_smash.ogg",
          "category": "critical",
          "priority": 90,
          "audioOffset": -2,
@@ -246,6 +252,7 @@
         {
          "calloutId": "call_embrace_darkness",
          "text": "Embrace Darkness! Nex will shout Embrace darkness!",
+         "audioFile": "call_embrace_darkness.ogg",
          "category": "critical",
          "priority": 90,
          "audioOffset": -2,
@@ -300,6 +307,7 @@
         {
          "calloutId": "call_blood_phase_start",
          "text": "Blood phase starting!",
+         "audioFile": "call_blood_phase_start.ogg",
          "category": "transition",
          "priority": 55,
          "audioOffset": -2,
@@ -328,6 +336,7 @@
         {
          "calloutId": "call_blood_siphon",
          "text": "Blood Siphon! Nex will shout A siphon will solve this!",
+         "audioFile": "call_blood_siphon.ogg",
          "category": "critical",
          "priority": 90,
          "audioOffset": -2,
@@ -356,6 +365,7 @@
         {
          "calloutId": "call_blood_sacrifice",
          "text": "Blood Sacrifice! Nex will shout I demand a blood sacrifice!",
+         "audioFile": "call_blood_sacrifice.ogg",
          "category": "critical",
          "priority": 90,
          "audioOffset": -2,
@@ -410,6 +420,7 @@
         {
          "calloutId": "call_ice_phase_start",
          "text": "Ice phase starting!",
+         "audioFile": "call_ice_phase_start.ogg",
          "category": "transition",
          "priority": 55,
          "audioOffset": -2,
@@ -438,6 +449,7 @@
         {
          "calloutId": "call_containment",
          "text": "Containment! Nex will shout Contain this!",
+         "audioFile": "call_containment.ogg",
          "category": "critical",
          "priority": 90,
          "audioOffset": -2,
@@ -466,6 +478,7 @@
         {
          "calloutId": "call_ice_prison",
          "text": "Ice Prison! Nex will shout Die now, in a prison of ice!",
+         "audioFile": "call_ice_prison.ogg",
          "category": "critical",
          "priority": 90,
          "audioOffset": -2,
@@ -512,6 +525,7 @@
         {
          "calloutId": "call_zaros_phase_start",
          "text": "Zaros phase starting!",
+         "audioFile": "call_zaros_phase_start.ogg",
          "category": "transition",
          "priority": 55,
          "audioOffset": -2,
@@ -539,6 +553,7 @@
         {
          "calloutId": "call_turmoil",
          "text": "Turmoil!",
+         "audioFile": "call_turmoil.ogg",
          "category": "warning",
          "priority": 65,
          "audioOffset": 0,
@@ -566,6 +581,7 @@
         {
          "calloutId": "call_soul_split",
          "text": "Soul Split!",
+         "audioFile": "call_soul_split.ogg",
          "category": "warning",
          "priority": 65,
          "audioOffset": 0,
@@ -593,6 +609,7 @@
         {
          "calloutId": "call_deflect_melee",
          "text": "Deflect Melee!",
+         "audioFile": "call_deflect_melee.ogg",
          "category": "warning",
          "priority": 65,
          "audioOffset": 0,
@@ -621,6 +638,7 @@
         {
          "calloutId": "call_wrath",
          "text": "Wrath! An overhead prayer in which Nex shouts Taste my wrath!",
+         "audioFile": "call_wrath.ogg",
          "category": "critical",
          "priority": 90,
          "audioOffset": -2,

@@ -20,11 +20,11 @@ from __future__ import annotations
 
 import copy
 from dataclasses import dataclass, field
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 import logic_validator
 import schema_validator
-from validation_report import Report, SEV_INFO
+from validation_report import Issue, Report
 
 
 @dataclass
@@ -61,20 +61,26 @@ class AiValidatorAgent:
         # pass 2: apply safe fixes, recording what changed
         self._auto_fix(working, changes)
 
-        # pass 3: re-validate; issues that disappeared are marked fixed
+        # pass 3: re-validate; issues from pass 1 whose (code, path,
+        # message) no longer appear were resolved by an auto-fix and are
+        # re-added as fixed history entries
         final_report = self._collect(working)
-        for code in {issue.code for issue in report.issues}:
-            remaining = sum(1 for issue in final_report.issues
-                            if issue.code == code and issue.status == "open")
-            originally = sum(1 for issue in report.issues
-                             if issue.code == code)
-            still_open = originally - (
-                sum(1 for issue in final_report.issues if issue.code == code))
-            if still_open > 0:
-                continue
-            fixed_now = final_report.mark_fixed(code)
-            if fixed_now:
-                changes.append(f"resolved {code} x{fixed_now}")
+        from collections import Counter
+        from validation_report import STATUS_FIXED
+
+        def signature(issue):
+            return (issue.severity, issue.code, issue.path, issue.message)
+
+        remaining = Counter(
+            signature(i) for i in final_report.issues)
+        for issue in report.issues:
+            sig = signature(issue)
+            if remaining.get(sig, 0) > 0:
+                remaining[sig] -= 1  # still open: stays as-is
+            else:
+                fixed_copy = Issue(issue.severity, issue.code,
+                                   issue.message, issue.path, STATUS_FIXED)
+                final_report.add(fixed_copy)
 
         return AgentResult(final_report, working, changes)
 

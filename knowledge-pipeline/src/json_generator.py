@@ -107,6 +107,7 @@ def build_draft_from_boss_payload(payload: Dict[str, Any],
                 "callouts": [{
                     "calloutId": f"call_{mech_slug}",
                     "text": _imperative(mechanic),
+                    "audioFile": f"call_{mech_slug}.ogg",
                     "category": "critical" if is_action_required else "warning",
                     "priority": 90 if is_action_required else 65,
                     "audioOffset": -2 if is_action_required else 0,
@@ -169,6 +170,7 @@ def _phase_start_mechanic(phase: Dict[str, Any], npc_ids: List[int]) -> Dict[str
         "callouts": [{
             "calloutId": f"call_{phase_slug}_start",
             "text": f"{phase['title']} starting!",
+            "audioFile": f"call_{phase_slug}_start.ogg",
             "category": "transition",
             "priority": 55,
             "audioOffset": -2,

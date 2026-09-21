@@ -4,6 +4,50 @@ Running log of sprints: what was done, key decisions, deviations from the docs.
 
 ---
 
+## Sprint 25 — Validation Tools + AI Validator Agent (2026-08-26)
+
+**Objective:** Automated validation for generated drafts: schema checks,
+logic checks, and a semi-autonomous agent that fixes what's safe and reports
+the rest for humans.
+
+### Done
+
+- **`validation_report.py`** — shared Issue/Report model: critical/warning/
+  info severities, open/fixed statuses, counts, `passed` (no open criticals),
+  JSON serialisation, human-readable lines.
+- **`schema_validator.py`** — full schema v1.0 mirror of the plugin's
+  load-time rules (unique ids, trigger whitelist, categories, offset/priority
+  ranges, cooldowns, required fields) with stable per-rule issue codes.
+- **`logic_validator.py`** — semantic checks structure can't catch:
+  sequential-chain phase reachability, PENDING_REVIEW markers (info),
+  impossible triggers (placeholder ids, missing per-type fields), audio files
+  referenced but absent from the pack, plus an npc-id cross-reference helper.
+- **`ai_validator_agent.py`** — three-pass agent: collect issues → apply only
+  SAFE auto-fixes (offset/priority clamps, category fallback, cooldowns,
+  missing text) with a change log → re-validate and mark resolved issues
+  fixed. Unknown trigger types, duplicate ids, unreachable phases, placeholder
+  ids, and PENDING_REVIEW markers are deliberately NEVER auto-fixed — guessing
+  game data is how bad packs get published.
+- pytest 24/24 (8 new: report model, schema clean/dirty, reachability,
+  placeholders, missing audio with no-false-positive check, agent auto-fix
+  end-to-end incl. `passed`, pending-review left open).
+
+### Decisions
+
+- Auto-fix allowlist is deliberately narrow and mechanical. Everything that
+  needs game knowledge stays open for humans (rules 7/8).
+- No `jsonschema` library dependency (roadmap suggested it): hand-rolled
+  mirrors keep parity with the plugin's actual loader rules instead of the
+  reference schema doc, and add zero dependencies.
+- Unknown `custom`-type trigger bodies are still out of scope until Sprint 7's
+  conditions mature in packs.
+
+### Deviations from docs
+
+- None beyond the jsonschema note above; file layout matches the roadmap.
+
+---
+
 ## Sprint 24 — Draft Schema Generation (2026-08-26)
 
 **Objective:** Turn extracted wiki data into schema v1.0 draft encounter JSON.

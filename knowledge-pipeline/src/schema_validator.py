@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Set
 
-from validation_report import Issue, Report, SEV_CRITICAL
+from validation_report import Issue, Report, SEV_CRITICAL, SEV_WARNING
 
 SCHEMA_VERSION = "1.0"
 KNOWN_TRIGGER_TYPES = {
