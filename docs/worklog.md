@@ -4,6 +4,51 @@ Running log of sprints: what was done, key decisions, deviations from the docs.
 
 ---
 
+## Sprint 28 — Packaging System + End-to-End Pipeline (2026-09-20)
+
+**Objective:** One CLI that runs wiki → draft → validate → review → audio →
+pack, with progress, error handling, and changelogs.
+
+### Done
+
+- **`src/pipeline.py`** — staged orchestrator with exit codes (0 ok /
+  1 stage failure / 2 awaiting review):
+  1 fetch (cached, force-refresh flag) → 2 parse → 3 generate →
+  4 validate (agent auto-fixes; open criticals fail the run) →
+  5 review gate (`--review` decision stamped, or stop with artifacts kept) →
+  6 audio → 7 pack + changelog. `--resume <dir>` continues after the
+  Sprint 26 UI step; semver enforced; per-stage try/except keeps partial
+  artifacts and prints actionable errors; console + file logging.
+- **`src/changelog_generator.py`** — version diffs (added/removed phases,
+  mechanics, callout text changes) or an initial-release summary with
+  structure counts + pending-verification tally.
+- **`knowledge-pipeline/README.md`** — full usage guide: stages, review
+  workflow, exit codes, supported bosses, enforced rules.
+- Run version now lands in `draft.json` metadata too (was zip-manifest-only).
+
+### Verified
+
+- **pytest 53/53 pass** (+8 pipeline tests, all offline via cache pre-seeding
+  and injected synthesis: full run, stop-then-resume, resume-without-decision
+  failure, bad-version rejection, TTS-failure graceful abort with artifacts
+  kept, CLI entrypoint, changelog initial + diff).
+- **Live Nex demo run** to a scratch dir: fresh wiki fetch (273 KB + 178 KB)
+  → 5 phases / 13→18 mechanics (wiki drift vs fixtures, expected) →
+  validation passed (4 info PENDING_REVIEW) → review recorded → 18 real TTS
+  files → `pack.zip` (410 KB, 20 entries) + changelog. Full chain green.
+
+### Decisions
+
+- Human review is a real gate, not a flag: the CLI refuses to vocalise or
+  package without a decision unless explicitly overridden, and resume is a
+  first-class path rather than re-running stages.
+- No `requests`-style retries with backoff: fetch failures abort with the
+  HTTP error surfaced; wiki fetching is infrequent and human-supervised.
+- Version override (`--version`) rewrites draft metadata so the shipped
+  `draft.json`, manifest, and changelog always agree.
+
+---
+
 ## Sprint 27 — Audio Generation + Pack Builder (2026-09-20)
 
 **Objective:** TTS over approved callout text, `.ogg` packaging, and a final
