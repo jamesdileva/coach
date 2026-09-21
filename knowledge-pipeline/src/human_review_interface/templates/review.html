@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Coach draft review — {{ metadata.get('packId', '?') }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header>
+  <h1>Review: {{ metadata.get('name', metadata.get('packId', '?')) }}</h1>
+  <p class="meta">
+    packId <code>{{ metadata.get('packId') }}</code> ·
+    version <code>{{ metadata.get('version') }}</code> ·
+    schema <code>{{ metadata.get('schemaVersion', '1.0') }}</code>
+    {% if metadata.get('review_status') %}
+      · <strong class="status-{{ metadata['review_status'] }}">review: {{ metadata['review_status'] }}</strong>
+    {% else %}
+      · <strong class="status-none">review: pending</strong>
+    {% endif %}
+    · <a href="{{ url_for('diff') }}">agent diff</a>
+  </p>
+</header>
+
+<section>
+  <h2>Validation report</h2>
+  <pre class="report">{% for line in report_lines %}{{ line }}
+{% endfor %}</pre>
+  {% if changes %}
+  <h3>Agent auto-fixes</h3>
+  <ul>
+    {% for change in changes %}<li>{{ change }}</li>{% endfor %}
+  </ul>
+  {% endif %}
+</section>
+
+<section>
+  <h2>Encounter</h2>
+  {% for boss in bosses %}
+  <details open>
+    <summary><strong>{{ boss.get('name', boss.get('bossId')) }}</strong>
+      <code>{{ boss.get('bossId') }}</code> npc {{ boss.get('npcId') }}</summary>
+    {% for phase in boss.get('phases', []) %}
+    <details open>
+      <summary>{{ phase.get('name', phase.get('phaseId')) }}
+        <code>{{ phase.get('phaseId') }}</code></summary>
+      <ul>
+      {% for mechanic in phase.get('mechanics', []) %}
+        <li>
+          <details>
+            <summary><strong>{{ mechanic.get('name', mechanic.get('mechanicId')) }}</strong>
+              <code>{{ mechanic.get('mechanicId') }}</code></summary>
+            <p class="triggers">triggers:
+            {% for trigger in mechanic.get('triggers', []) %}<code>{{ trigger.get('type') }}</code> {% endfor %}
+            </p>
+            <ul>
+            {% for callout in mechanic.get('callouts', []) %}
+              <li><em>{{ callout.get('text') }}</em>
+                <code>{{ callout.get('category') }}</code></li>
+            {% endfor %}
+            </ul>
+          </details>
+        </li>
+      {% endfor %}
+      </ul>
+    </details>
+    {% endfor %}
+  </details>
+  {% endfor %}
+</section>
+
+<section>
+  <h2>Decision</h2>
+  <form method="post" action="{{ url_for('review_action') }}">
+    <label for="notes">Reviewer notes</label>
+    <textarea id="notes" name="notes" rows="3">{{ metadata.get('review_notes', '') }}</textarea>
+    <div class="actions">
+      {% for status in statuses %}
+      <button type="submit" name="action" value="{{ status }}">{{ status.replace('_', ' ') }}</button>
+      {% endfor %}
+    </div>
+  </form>
+</section>
+</body>
+</html>

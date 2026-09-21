@@ -19,8 +19,25 @@ is exactly how bad packs get published.
 from __future__ import annotations
 
 import copy
+import time
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
+
+REVIEW_STATUSES = ("approved", "needs_work", "rejected")
+
+
+def apply_review(draft: Dict[str, Any], status: str, notes: str = "") -> Dict[str, Any]:
+    """Stamp a human review decision into pack metadata (mutates and returns
+    the draft). Raises ValueError on unknown statuses — the approval workflow
+    is enforced, never free-form."""
+    if status not in REVIEW_STATUSES:
+        raise ValueError(
+            f"review status must be one of {list(REVIEW_STATUSES)}, got {status!r}")
+    metadata = draft.setdefault("metadata", {})
+    metadata["review_status"] = status
+    metadata["review_notes"] = notes or ""
+    metadata["reviewed_at"] = time.strftime("%Y-%m-%dT%H:%M:%S")
+    return draft
 
 import logic_validator
 import schema_validator

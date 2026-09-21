@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Agent diff — Coach draft review</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header>
+  <h1>AI draft vs agent-fixed draft</h1>
+  <p class="meta"><a href="{{ url_for('review') }}">back to review</a></p>
+</header>
+<section>
+  {% if changes %}
+  <h2>Auto-fix change log</h2>
+  <ul>
+    {% for change in changes %}<li>{{ change }}</li>{% endfor %}
+  </ul>
+  {% endif %}
+  {% if has_changes %}
+  <pre class="diff">{{ diff_text }}</pre>
+  {% else %}
+  <p>The agent made no changes to the draft — every issue needs a human.</p>
+  {% endif %}
+</section>
+</body>
+</html>

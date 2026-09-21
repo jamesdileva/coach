@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass, field, asdict
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 SEV_CRITICAL = "critical"
 SEV_WARNING = "warning"
@@ -32,6 +32,7 @@ class Issue:
 @dataclass
 class Report:
     issues: List[Issue] = field(default_factory=list)
+    review: Optional[Dict[str, Any]] = None
 
     def add(self, issue: Issue) -> None:
         self.issues.append(issue)
@@ -80,10 +81,13 @@ class Report:
         }
 
     def to_json(self) -> str:
-        return json.dumps({
+        payload: Dict[str, Any] = {
             "summary": self.summary(),
             "issues": [i.to_dict() for i in self.issues],
-        }, indent=1)
+        }
+        if self.review is not None:
+            payload["review"] = self.review
+        return json.dumps(payload, indent=1)
 
     def lines(self) -> List[str]:
         lines = []

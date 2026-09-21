@@ -4,6 +4,52 @@ Running log of sprints: what was done, key decisions, deviations from the docs.
 
 ---
 
+## Sprint 26 — Human Review Interface (2026-09-20)
+
+**Objective:** Web UI for inspecting drafts, approving/rejecting with notes,
+and tracking review status.
+
+### Done
+
+- **`src/human_review_interface/`** — local-only Flask app:
+  - `GET /review`: pack metadata + review status, collapsible
+    boss → phase → mechanic sections (`<details>`, no JS), validation report
+    with agent auto-fix log, decision form (approve / needs work / reject +
+    free-text notes)
+  - `POST /review`: stamps `review_status`/`review_notes`/`reviewed_at` into
+    draft metadata, saves the draft, writes the validation report JSON;
+    unknown actions rejected with 400 (approval workflow enforced)
+  - `GET /diff`: unified diff of AI draft vs agent-fixed draft + change log
+  - `GET /api/status`: machine-readable pass/review state
+  - Startup runs the Sprint 25 agent once; app factory `create_app()`
+    keeps everything testable
+- **`ai_validator_agent.apply_review()`** — review-status API; ValueError on
+  unknown statuses.
+- **`Report.review`** — optional review block included in report JSON.
+- `review` extra in pyproject (`flask>=3`).
+
+### Verified
+
+- **pytest 34/34 pass** (+10 review-interface tests via Flask test client:
+  rendering, redirects, all three decisions incl. metadata/report persistence,
+  invalid-action 400, diff with forced auto-fix, api status transitions,
+  unknown-status rejection).
+- **Live boot on :8080**: server started, `GET /review` 200 (10 KB, Smoke
+  phase + report rendered), `GET /diff` 200, `GET /api/status` passed=True,
+  `POST needs_work` → 302 with `review_status`/`review_notes` persisted to
+  the draft file.
+
+### Decisions
+
+- Flask over FastAPI: single small dependency, no ASGI server needed for a
+  localhost reviewer tool.
+- No JavaScript: `<details>` elements give collapsible sections for free and
+  keep the UI trivially auditable.
+- Report JSON is written alongside the review so audio generation (Sprint 27)
+  can gate on `approved` status.
+
+---
+
 ## Sprint 25 — Validation Tools + AI Validator Agent (2026-08-26)
 
 **Objective:** Automated validation for generated drafts: schema checks,
