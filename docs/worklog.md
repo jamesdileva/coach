@@ -4,6 +4,55 @@ Running log of sprints: what was done, key decisions, deviations from the docs.
 
 ---
 
+## Sprint 27 — Audio Generation + Pack Builder (2026-09-20)
+
+**Objective:** TTS over approved callout text, `.ogg` packaging, and a final
+distributable pack zip.
+
+### Done
+
+- **`src/audio_config.yaml`** — engine choice (edge default, kokoro stubbed),
+  speech rate, per-category voices, ffmpeg ogg settings, 500KB cap, and the
+  require-approved-review flag.
+- **`src/audio_generator.py`** — collects every callout's text/category/file
+  across all bosses; **refuses unapproved drafts** (`ReviewGateError`) unless
+  explicitly overridden; synthesizes via injectable provider (edge-tts default)
+  → ffmpeg mono Vorbis `.ogg`; skips existing files unless asked; rejects
+  empty text and over-limit files.
+- **`src/pack_builder.py`** — validates schema + logic, verifies every
+  referenced audio file exists in the audio dir (fails loudly otherwise),
+  writes `encounter.json` + `audio/` + `manifest.json` (files, sizes, SHA-256,
+  review status) into the pack zip. Never ships half a pack.
+- **`fixtures/dist/nex_1.0.0.zip`** (410 KB, 19 files) — built live from the
+  Nex draft: 18 real edge-tts voice lines (`en-US-GuyNeural`, +15% rate),
+  all 15–36 KB, review-stamped `approved` to demonstrate the gate.
+- `pipeline` extra in pyproject (`edge-tts`, `pyyaml`; ffmpeg on PATH).
+
+### Verified
+
+- **pytest 45/45 pass** (+11 audio/pack tests with fake synthesiser, so no
+  network in CI: config/collection, review gate refusal + override, manifest
+  contents, empty-text and oversize rejection, missing-audio and invalid-draft
+  build refusal, and a committed-dist test asserting the real zip validates
+  clean with zero MISSING_AUDIO, verified manifest checksums, every file
+  under the size limit).
+- Live build exercised the real TTS + ffmpeg path end to end.
+
+### Decisions
+
+- On portable/win-unpacked: that concept is for executable apps
+  (integration.md §2 launcher layouts), not data packs — an encounter zip is
+  already OS-portable by design. Instead the builder emits manifest +
+  checksums for distribution integrity, which is the actual need here.
+- Draft callouts now carry `audioFile` (calloutId-based), making drafts
+  pack-complete and the missing-audio check meaningful.
+- Kokoro stays a stub with a clear error: fully offline TTS is desirable but
+  unwired; edge is the working default and the provider seam keeps it swappable.
+- No `pydub`/`gTTS`/`soundfile` (roadmap suggested them): ffmpeg direct
+  invocation covers conversion with one fewer moving part.
+
+---
+
 ## Sprint 26 — Human Review Interface (2026-09-20)
 
 **Objective:** Web UI for inspecting drafts, approving/rejecting with notes,

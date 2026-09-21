@@ -11,6 +11,7 @@ dependencies = [
 [project.optional-dependencies]
 dev = ["pytest>=8"]
 review = ["flask>=3"]
+pipeline = ["edge-tts>=6", "pyyaml>=6"]  # audio generation (ffmpeg must be on PATH)
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

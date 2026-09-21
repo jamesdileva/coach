@@ -1,0 +1,25 @@
+# Audio generation config (roadmap Sprint 27).
+# Engine: "edge" (Microsoft Edge TTS, needs network at pack-build time only)
+#         or "kokoro" (fully offline; requires the kokoro package + model).
+# The plugin itself never generates audio — this runs on dev machines only.
+engine: edge
+
+# Speech rate adjustment, e.g. "+15%" (faster, more urgent) or "-10%".
+rate: "+15%"
+
+# Voice per callout category. Edge voices; see `edge-tts --list-voices`.
+voices:
+  critical: en-US-GuyNeural
+  warning: en-US-GuyNeural
+  info: en-US-AriaNeural
+  transition: en-US-AriaNeural
+
+# Ogg/Vorbis output via ffmpeg (must be on PATH).
+ogg:
+  sample_rate: 44100
+  channels: 1
+  quality: 4          # -qscale:a 0..10, higher = better
+  max_bytes: 512000   # acceptance: every file < 500KB
+
+# Only drafts stamped approved in review may generate audio by default.
+require_approved_review: true
