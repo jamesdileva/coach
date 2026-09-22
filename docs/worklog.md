@@ -4,6 +4,64 @@ Running log of sprints: what was done, key decisions, deviations from the docs.
 
 ---
 
+## Sprint 29 — Performance Optimization (2026-09-21)
+
+**Objective:** Tick budget instrumentation, trigger short-circuit, headless
+replay harness — keep a synthetic fight tick well under 600ms.
+
+### Done
+
+- **`performance/Profiler.java`** — per-tick component scopes
+  (EVENTS/TRIGGERS/ENCOUNTER/COACHING/OVERLAY/AUDIO) with §12 budgets;
+  `beginTick`/`endTick`/`start`/`stop`/`addSampleNanos`/`formatLines`.
+  Un-stopped scopes are force-closed at `endTick`; start/stop are no-ops when
+  idle or not open.
+- **`performance/MemoryMonitor.java`** — baseline/used/growth sampling with
+  `formatLines` for the overlay.
+- **`performance/TickReplayHarness.java`** — headless EventBus → TriggerEngine
+  → EncounterEngine → CoachingEngine pipeline in main scope (Sprint 30b
+  reuses it). Synthetic NPC/animation/projectile schedule + VARBIT noise;
+  wall-time and memory growth per replay. RuneLite event classes
+  (`NpcSpawned`/`AnimationChanged`/`ProjectileMoved`) are constructed
+  directly — they are not interfaces, so JDK dynamic proxies only wrap
+  `NPC`/`Projectile`.
+- **TriggerEngine type-bucket short-circuit** — `EnumMap` index built at
+  `add()`/`rebuild()`; `BoundTrigger` caches `interestedIn()`; on a batch,
+  only evaluators whose interest covers the event type run `matches()`.
+  `getMatchesCallsLastBatch()` exposes the count for tests.
+- **Profiler wiring** — EventBus (EVENTS around batch assembly only),
+  TriggerEngine (TRIGGERS around eval loop only), EncounterEngine
+  (ENCOUNTER in `onTriggersFired`/`onTickBatch`), AudioEngine (AUDIO around
+  `play` body), CoachPlugin (`beginTick`/`endTick`, COACHING + OVERLAY around
+  coaching tick). `EncounterEngine.setPacks()` added for the harness.
+- **`DebugOverlayV2` PROFILING tab** — per-component ms vs budget + memory
+  line; `CoachConfig.DebugTab.PROFILING` added.
+- Tests: `ProfilerTest`, `MemoryMonitorTest`, `TickReplayHarnessTest`,
+  `TriggerEngineShortCircuitTest` (VARBIT → zero matcher evaluations;
+  animation event → only the animation bucket).
+
+### Verified
+
+- **Gradle build green: 207/207 Java tests** (177 prior + 30 new).
+
+### Decisions / deviations
+
+- Roadmap names `DebugOverlay.java`; actual file is `DebugOverlayV2.java` —
+  used the real file.
+- EventLogger/LogBuffer already ring buffers (verify-only); AudioEngine
+  already pre-buffers (measure-only) — no changes needed there.
+- `performance/` files landed in `src/main` (not test) so Sprint 30b's
+  replay CLI can call `TickReplayHarness` without test-classpath hacks.
+- Loose budget in tests: synthetic worst tick asserted `< 600ms` only;
+  §12 per-component numbers are profiler named thresholds, not test
+  assertions (CI timing noise).
+- RuneLite event POJOs cannot be proxied; harness constructs them for real
+  and proxies only the `NPC`/`Projectile` interfaces.
+- Audio <50ms stopwatch acceptance left for the user's live in-game check
+  around Sprint 30.
+
+---
+
 ## Sprint 28 — Packaging System + End-to-End Pipeline (2026-09-20)
 
 **Objective:** One CLI that runs wiki → draft → validate → review → audio →
