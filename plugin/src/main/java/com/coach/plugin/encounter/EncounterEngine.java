@@ -8,6 +8,7 @@ import com.coach.plugin.encounter.model.PhaseDefinition;
 import com.coach.plugin.events.EventBus;
 import com.coach.plugin.events.EventType;
 import com.coach.plugin.events.GameEvent;
+import com.coach.plugin.performance.Profiler;
 import com.coach.plugin.trigger.TriggerFire;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -55,10 +56,26 @@ public class EncounterEngine implements EventBus.Listener
 	private volatile List<EncounterPack> packs = Collections.emptyList();
 	private volatile List<PackStatus> packStatuses = Collections.emptyList();
 	private final Map<Integer, ActiveEncounter> sessions = new HashMap<>(); // npcId -> session
+	private Profiler profiler;
 
 	public EncounterEngine(Client client)
 	{
 		this.conditionEvaluator = new ConditionEvaluator(client);
+	}
+
+	public void setProfiler(Profiler profiler)
+	{
+		this.profiler = profiler;
+	}
+
+	/**
+	 * Replace packs directly (replay harness / tests); bypasses zip scanning.
+	 */
+	public synchronized void setPacks(List<EncounterPack> packs)
+	{
+		this.packs = packs != null
+			? Collections.unmodifiableList(new ArrayList<>(packs))
+			: Collections.emptyList();
 	}
 
 	public void addActivationListener(ActivationListener listener)
@@ -197,6 +214,10 @@ public class EncounterEngine implements EventBus.Listener
 	 */
 	public void onTriggersFired(List<TriggerFire> fires)
 	{
+		if (profiler != null)
+		{
+			profiler.start(Profiler.Component.ENCOUNTER);
+		}
 		Set<String> processedBosses = new HashSet<>();
 		for (TriggerFire fire : fires)
 		{
@@ -213,6 +234,10 @@ public class EncounterEngine implements EventBus.Listener
 			{
 				handleFires(boss, boss.npcId, fire.getTick(), fires);
 			}
+		}
+		if (profiler != null)
+		{
+			profiler.stop(Profiler.Component.ENCOUNTER);
 		}
 	}
 
@@ -305,6 +330,10 @@ public class EncounterEngine implements EventBus.Listener
 	@Override
 	public void onTickBatch(int tick, List<GameEvent> events)
 	{
+		if (profiler != null)
+		{
+			profiler.start(Profiler.Component.ENCOUNTER);
+		}
 		Set<Integer> tracked;
 		synchronized (this)
 		{
@@ -321,6 +350,10 @@ public class EncounterEngine implements EventBus.Listener
 			{
 				resetSessions(event.getType() == EventType.PLAYER_STATS_CHANGED ? "player death" : "boss despawn");
 			}
+		}
+		if (profiler != null)
+		{
+			profiler.stop(Profiler.Component.ENCOUNTER);
 		}
 	}
 

@@ -22,6 +22,8 @@ import com.coach.plugin.logging.FileLogWriter;
 import com.coach.plugin.logging.LogBuffer;
 import com.coach.plugin.logging.TriggerLogger;
 import com.coach.plugin.overlay.CoachOverlay;
+import com.coach.plugin.performance.MemoryMonitor;
+import com.coach.plugin.performance.Profiler;
 import com.coach.plugin.trigger.TriggerEngine;
 import com.coach.plugin.trigger.TriggerFire;
 import com.coach.plugin.trigger.TriggerRegistry;
@@ -103,6 +105,8 @@ public class CoachPlugin extends Plugin
 	private boolean debugOverlayAdded;
 	private EventBus.Listener debugListener;
 	private com.coach.plugin.accessibility.AccessibilityManager accessibilityManager;
+	private final Profiler profiler = new Profiler();
+	private final MemoryMonitor memoryMonitor = new MemoryMonitor();
 
 	// debug tool cores (Sprint 21)
 	private final TriggerHistory triggerHistory = new TriggerHistory();
@@ -118,12 +122,17 @@ public class CoachPlugin extends Plugin
 	{
 		runeLiteEventBus.register(this);
 		coachEventBus = new EventBus();
+		coachEventBus.setProfiler(profiler);
 		accessibilityManager = new com.coach.plugin.accessibility.AccessibilityManager(config);
 		profileManager.ensureDefaultProfiles();
+		memoryMonitor.reset();
 		encounterEngine = new EncounterEngine(client);
+		encounterEngine.setProfiler(profiler);
 		coachingEngine = new CoachingEngine();
 		triggerEngine = new TriggerEngine(new TriggerRegistry(client));
+		triggerEngine.setProfiler(profiler);
 		triggerEngine.addFireListener(this::onTriggersFired);
+		audioEngine.setProfiler(profiler);
 		coachEventBus.subscribe(triggerEngine);
 		coachEventBus.subscribe(encounterEngine);
 		coachEventBus.subscribe(this::onCoachingTick);
@@ -162,7 +171,14 @@ public class CoachPlugin extends Plugin
 	{
 		if (coachEventBus != null)
 		{
-			coachEventBus.post(new GameEvent(EventType.TICK, client.getTickCount(), null));
+			int tickNumber = client.getTickCount();
+			profiler.beginTick(tickNumber);
+			coachEventBus.post(new GameEvent(EventType.TICK, tickNumber, null));
+			profiler.endTick();
+			if (tickNumber % 50 == 0)
+			{
+				memoryMonitor.sample();
+			}
 		}
 	}
 
@@ -292,8 +308,11 @@ public class CoachPlugin extends Plugin
 	private void onCoachingTick(int tick, List<GameEvent> events)
 	{
 		// runs after trigger + encounter engines (subscription order)
+		profiler.start(Profiler.Component.COACHING);
 		coachStateManager.update(gameStateBridge, client, tick);
 		coachingEngine.onTick(tick);
+		profiler.stop(Profiler.Component.COACHING);
+		profiler.start(Profiler.Component.OVERLAY);
 		coachOverlayManager.prune(tick);
 		updateOverlayState(tick);
 		if (encounterEngine != null)
@@ -301,6 +320,7 @@ public class CoachPlugin extends Plugin
 			coachOverlayManager.setPredictions(
 				predictionEngine.predict(encounterEngine.getActiveSessions(), tick));
 		}
+		profiler.stop(Profiler.Component.OVERLAY);
 		if (config.debugMode())
 		{
 			stateInspector.update(
@@ -511,7 +531,7 @@ public class CoachPlugin extends Plugin
 		if (!debugOverlayAdded)
 		{
 			debugOverlayV2 = new DebugOverlayV2(logBuffer, triggerHistory,
-				eventTimeline, stateInspector, config);
+				eventTimeline, stateInspector, config, profiler, memoryMonitor);
 			overlayManager.add(debugOverlayV2);
 			debugOverlayAdded = true;
 		}

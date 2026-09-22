@@ -1,5 +1,6 @@
 package com.coach.plugin.events;
 
+import com.coach.plugin.performance.Profiler;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,6 +27,12 @@ public class EventBus
 
 	private final Deque<GameEvent> buffer = new ArrayDeque<>();
 	private final List<Listener> listeners = new ArrayList<>();
+	private Profiler profiler;
+
+	public void setProfiler(Profiler profiler)
+	{
+		this.profiler = profiler;
+	}
 
 	public void subscribe(Listener listener)
 	{
@@ -57,12 +64,19 @@ public class EventBus
 
 	private void flush(int tick, GameEvent tickEvent)
 	{
+		if (profiler != null)
+		{
+			profiler.start(Profiler.Component.EVENTS);
+		}
 		List<GameEvent> batch = new ArrayList<>(buffer.size() + 1);
 		batch.addAll(buffer);
 		buffer.clear();
 		batch.add(tickEvent);
-
 		List<GameEvent> immutableBatch = Collections.unmodifiableList(batch);
+		if (profiler != null)
+		{
+			profiler.stop(Profiler.Component.EVENTS);
+		}
 		for (Listener listener : listeners)
 		{
 			listener.onTickBatch(tick, immutableBatch);

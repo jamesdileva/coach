@@ -8,9 +8,13 @@ import com.coach.plugin.encounter.model.TriggerDefinition;
 import com.coach.plugin.events.EventBus;
 import com.coach.plugin.events.EventType;
 import com.coach.plugin.events.GameEvent;
+import com.coach.plugin.performance.Profiler;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,23 +42,43 @@ public class TriggerEngine implements EventBus.Listener
 		final String bossId;
 		final String contextId;
 		final TriggerEvaluator evaluator;
+		final Set<EventType> interest;
 
 		BoundTrigger(String bossId, String contextId, TriggerEvaluator evaluator)
 		{
 			this.bossId = bossId;
 			this.contextId = contextId;
 			this.evaluator = evaluator;
+			Set<EventType> interested = evaluator.interestedIn();
+			this.interest = interested == null || interested.isEmpty()
+				? Set.of()
+				: Set.copyOf(interested);
 		}
 	}
 
 	private final TriggerRegistry registry;
 	private final List<BoundTrigger> triggers = new ArrayList<>();
+	private final Map<EventType, List<BoundTrigger>> byType =
+		new EnumMap<>(EventType.class);
 	private final List<FireListener> fireListeners = new ArrayList<>();
 	private volatile List<TriggerFire> lastFires = Collections.emptyList();
+	private Profiler profiler;
+	private int matchesCallsLastBatch;
 
 	public TriggerEngine(TriggerRegistry registry)
 	{
 		this.registry = registry;
+	}
+
+	public void setProfiler(Profiler profiler)
+	{
+		this.profiler = profiler;
+	}
+
+	/** Evaluators whose matches() ran in the most recent batch (tests/debug). */
+	public int getMatchesCallsLastBatch()
+	{
+		return matchesCallsLastBatch;
 	}
 
 	public void addFireListener(FireListener listener)
@@ -73,6 +97,7 @@ public class TriggerEngine implements EventBus.Listener
 	public synchronized void rebuild(List<EncounterPack> packs)
 	{
 		triggers.clear();
+		byType.clear();
 		int skipped = 0;
 		for (EncounterPack pack : packs)
 		{
@@ -136,7 +161,12 @@ public class TriggerEngine implements EventBus.Listener
 		}
 		return registry.create(definition)
 			.map(evaluator -> {
-				triggers.add(new BoundTrigger(bossId, contextId, evaluator));
+				BoundTrigger bound = new BoundTrigger(bossId, contextId, evaluator);
+				triggers.add(bound);
+				for (EventType type : bound.interest)
+				{
+					byType.computeIfAbsent(type, t -> new ArrayList<>()).add(bound);
+				}
 				return 1;
 			})
 			.orElse(0);
@@ -146,16 +176,23 @@ public class TriggerEngine implements EventBus.Listener
 	public void onTickBatch(int tick, List<GameEvent> events)
 	{
 		List<TriggerFire> fires = new ArrayList<>();
+		matchesCallsLastBatch = 0;
+		if (profiler != null)
+		{
+			profiler.start(Profiler.Component.TRIGGERS);
+		}
 		synchronized (this)
 		{
 			for (GameEvent event : events)
 			{
-				for (BoundTrigger bound : triggers)
+				List<BoundTrigger> bucket = byType.get(event.getType());
+				if (bucket == null || bucket.isEmpty())
 				{
-					if (!bound.evaluator.interestedIn().contains(event.getType()))
-					{
-						continue;
-					}
+					continue;
+				}
+				for (BoundTrigger bound : bucket)
+				{
+					matchesCallsLastBatch++;
 					if (bound.evaluator.matches(event))
 					{
 						fires.add(new TriggerFire(tick, bound.bossId, bound.contextId,
@@ -163,6 +200,10 @@ public class TriggerEngine implements EventBus.Listener
 					}
 				}
 			}
+		}
+		if (profiler != null)
+		{
+			profiler.stop(Profiler.Component.TRIGGERS);
 		}
 		lastFires = Collections.unmodifiableList(fires);
 		if (!fires.isEmpty())

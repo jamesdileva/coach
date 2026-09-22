@@ -1,5 +1,6 @@
 package com.coach.plugin.audio;
 
+import com.coach.plugin.performance.Profiler;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -50,8 +51,14 @@ public class AudioEngine
 
 	private volatile boolean muted;
 	private volatile int masterVolume = 70;
+	private Profiler profiler;
 	private final Map<AudioCategory, Integer> categoryVolumes =
 		new EnumMap<>(AudioCategory.class);
+
+	public void setProfiler(Profiler profiler)
+	{
+		this.profiler = profiler;
+	}
 
 	public AudioEngine()
 	{
@@ -134,26 +141,40 @@ public class AudioEngine
 	 */
 	public boolean play(String packId, String audioFile, String calloutCategory)
 	{
-		if (muted || audioFile == null)
+		if (profiler != null)
 		{
-			return false;
+			profiler.start(Profiler.Component.AUDIO);
 		}
-		byte[] data = cache.get(packId + "/" + audioFile);
-		if (data == null)
+		try
 		{
-			log.debug("[coach] audio file not in pack: {}/{}", packId, audioFile);
-			return false;
+			if (muted || audioFile == null)
+			{
+				return false;
+			}
+			byte[] data = cache.get(packId + "/" + audioFile);
+			if (data == null)
+			{
+				log.debug("[coach] audio file not in pack: {}/{}", packId, audioFile);
+				return false;
+			}
+
+			AudioCategory category = new AudioPriorityResolver().resolve(calloutCategory);
+			float gainDb = effectiveGain(category);
+			byte[] clipData = data.clone();
+
+			boolean started = interruptManager.submit(category, () ->
+				playbackPool.execute(() -> startClip(clipData, gainDb)));
+			log.debug("[coach] audio {}: {} ({})", audioFile,
+				started ? "playing" : "queued", category);
+			return true;
 		}
-
-		AudioCategory category = new AudioPriorityResolver().resolve(calloutCategory);
-		float gainDb = effectiveGain(category);
-		byte[] clipData = data.clone();
-
-		boolean started = interruptManager.submit(category, () ->
-			playbackPool.execute(() -> startClip(clipData, gainDb)));
-		log.debug("[coach] audio {}: {} ({})", audioFile,
-			started ? "playing" : "queued", category);
-		return true;
+		finally
+		{
+			if (profiler != null)
+			{
+				profiler.stop(Profiler.Component.AUDIO);
+			}
+		}
 	}
 
 	private void startClip(byte[] data, float gainDb)

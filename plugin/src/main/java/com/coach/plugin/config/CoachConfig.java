@@ -294,5 +294,5 @@ public interface CoachConfig extends Config
 		return DebugTab.EVENTS;
 	}
 
-	enum DebugTab { EVENTS, TRIGGERS, STATE, TIMELINE }
+	enum DebugTab { EVENTS, TRIGGERS, STATE, TIMELINE, PROFILING }
 }

@@ -2,6 +2,8 @@ package com.coach.plugin.debug;
 
 import com.coach.plugin.config.CoachConfig;
 import com.coach.plugin.logging.LogBuffer;
+import com.coach.plugin.performance.MemoryMonitor;
+import com.coach.plugin.performance.Profiler;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
@@ -28,17 +30,22 @@ public class DebugOverlayV2 extends Overlay
 	private final EventTimeline eventTimeline;
 	private final StateInspector stateInspector;
 	private final CoachConfig config;
+	private final Profiler profiler;
+	private final MemoryMonitor memoryMonitor;
 	private final PanelComponent panel = new PanelComponent();
 
 	@Inject
 	public DebugOverlayV2(LogBuffer logBuffer, TriggerHistory triggerHistory,
-		EventTimeline eventTimeline, StateInspector stateInspector, CoachConfig config)
+		EventTimeline eventTimeline, StateInspector stateInspector, CoachConfig config,
+		Profiler profiler, MemoryMonitor memoryMonitor)
 	{
 		this.logBuffer = logBuffer;
 		this.triggerHistory = triggerHistory;
 		this.eventTimeline = eventTimeline;
 		this.stateInspector = stateInspector;
 		this.config = config;
+		this.profiler = profiler;
+		this.memoryMonitor = memoryMonitor;
 		setPosition(OverlayPosition.TOP_LEFT);
 		setPriority(OverlayPriority.LOW);
 	}
@@ -91,6 +98,29 @@ public class DebugOverlayV2 extends Overlay
 			case TIMELINE:
 				lines.addAll(eventTimeline.format(MAX_LINES));
 				break;
+			case PROFILING:
+			{
+				var breakdown = profiler.getLast();
+				if (breakdown == null)
+				{
+					lines.add("(no tick profiled yet)");
+				}
+				else
+				{
+					lines.add(String.format("t%d total %dms / %dms budget",
+						breakdown.getTick(), breakdown.getTotalMillis(),
+						Profiler.TOTAL_BUDGET_MS));
+					for (Profiler.Component component : Profiler.Component.values())
+					{
+						long budgetMs = component.budgetNanos / 1_000_000L;
+						lines.add(String.format("  %-9s %3dms / %3dms%s",
+							component.name(), breakdown.getMillis(component), budgetMs,
+							breakdown.isOverBudget(component) ? " OVER" : ""));
+					}
+				}
+				lines.add(memoryMonitor.formatLines());
+				break;
+			}
 			case EVENTS:
 			default:
 			{
