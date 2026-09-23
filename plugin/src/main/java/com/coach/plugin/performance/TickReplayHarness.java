@@ -25,7 +25,7 @@ import java.util.List;
  * EventBus → TriggerEngine → EncounterEngine → CoachingEngine pipeline with
  * synthetic NPC/projectile/animation events, and measures wall time + memory
  * growth. No RuneLite client required; NPC and Projectile payloads are
- * JDK dynamic proxies.
+ * JDK dynamic proxies; ChatMessage is a real RuneLite event class.
  */
 public class TickReplayHarness
 {
@@ -131,6 +131,13 @@ public class TickReplayHarness
 	private long activations;
 	private long callouts;
 
+	private final List<CoachingEngine.DeliveredCallout> delivered = new ArrayList<>();
+	private final List<OverlayManager.ActiveVisual> visuals = new ArrayList<>();
+
+	/** Optional audio sink wired by tests / CLI (packId, file). */
+	private java.util.function.BiConsumer<String, String> audioSink;
+	private String packId = "pack";
+
 	public TickReplayHarness(List<EncounterPack> packs) throws PackLoadException
 	{
 		this(packs, new TriggerRegistry(null));
@@ -145,6 +152,11 @@ public class TickReplayHarness
 		triggerEngine.setProfiler(profiler);
 		bus.setProfiler(profiler);
 
+		if (packs != null && !packs.isEmpty() && packs.get(0).metadata != null)
+		{
+			packId = packs.get(0).metadata.packId;
+		}
+
 		triggerEngine.addFireListener(fires -> {
 			this.fires += fires.size();
 			encounterEngine.onTriggersFired(fires);
@@ -153,7 +165,19 @@ public class TickReplayHarness
 			this.activations++;
 			coachingEngine.onActivation(activation);
 		});
-		coachingEngine.addListener(delivery -> this.callouts++);
+		coachingEngine.addListener(delivery -> {
+			this.callouts++;
+			delivered.add(delivery);
+			overlayManager.addVisual(delivery.getBossId(), delivery.getCallout(),
+				delivery.getTick());
+			visuals.clear();
+			visuals.addAll(overlayManager.getActiveVisuals());
+			String audioFile = delivery.getCallout().audioFile;
+			if (audioFile != null && audioSink != null)
+			{
+				audioSink.accept(packId, audioFile);
+			}
+		});
 
 		bus.subscribe(triggerEngine);
 		bus.subscribe(encounterEngine);
@@ -170,6 +194,32 @@ public class TickReplayHarness
 
 		triggerEngine.rebuild(packs);
 		memoryMonitor.reset();
+	}
+
+	/** Observe delivered callouts (tick + calloutId) from tests/CLI. */
+	public List<CoachingEngine.DeliveredCallout> getDelivered()
+	{
+		return List.copyOf(delivered);
+	}
+
+	/** Live visual overlay state after the last tick. */
+	public List<OverlayManager.ActiveVisual> getVisuals()
+	{
+		return overlayManager.getActiveVisuals();
+	}
+
+	public OverlayManager getOverlayManager()
+	{
+		return overlayManager;
+	}
+
+	/**
+	 * Wire audio playback: called once per delivered callout that has an
+	 * audioFile. Tests can count invocations; the CLI can call AudioEngine.
+	 */
+	public void setAudioSink(java.util.function.BiConsumer<String, String> sink)
+	{
+		this.audioSink = sink;
 	}
 
 	/** Parse one or more encounter.json files into packs. */
@@ -207,9 +257,7 @@ public class TickReplayHarness
 	 */
 	public Result replay(int tickCount, int noiseEventsPerTick)
 	{
-		fires = 0;
-		activations = 0;
-		callouts = 0;
+		resetRunState();
 		ComponentTotals components = new ComponentTotals();
 		long worstTick = 0L;
 		memoryMonitor.reset();
@@ -243,6 +291,136 @@ public class TickReplayHarness
 
 		return new Result(tickCount, memoryMonitor.getGrowthBytes(),
 			fires, activations, callouts, worstTick, components);
+	}
+
+	/**
+	 * Replay a scripted fight: posts each script event on its tick, then a
+	 * TICK flush. Runs ticks 1..script.getEndTick().
+	 */
+	public Result replayScript(FightScript script)
+	{
+		resetRunState();
+		ComponentTotals components = new ComponentTotals();
+		long worstTick = 0L;
+		memoryMonitor.reset();
+
+		List<FightScript.ScriptEvent> events = script.getEvents();
+		int eventIndex = 0;
+		int tickCount = script.getEndTick();
+
+		for (int tick = 1; tick <= tickCount; tick++)
+		{
+			long start = System.nanoTime();
+
+			profiler.beginTick(tick);
+			while (eventIndex < events.size()
+				&& events.get(eventIndex).getTick() <= tick)
+			{
+				FightScript.ScriptEvent se = events.get(eventIndex++);
+				if (se.getTick() < tick)
+				{
+					continue;
+				}
+				GameEvent gameEvent = toGameEvent(se, tick);
+				if (gameEvent != null)
+				{
+					bus.post(gameEvent);
+				}
+			}
+			bus.post(new GameEvent(EventType.TICK, tick, null));
+			Profiler.TickBreakdown breakdown = profiler.endTick();
+			components.observe(breakdown);
+
+			long elapsed = System.nanoTime() - start;
+			if (elapsed > worstTick)
+			{
+				worstTick = elapsed;
+			}
+
+			if (tick % 50 == 0)
+			{
+				memoryMonitor.sample();
+			}
+		}
+		memoryMonitor.sample();
+
+		return new Result(tickCount, memoryMonitor.getGrowthBytes(),
+			fires, activations, callouts, worstTick, components);
+	}
+
+	private void resetRunState()
+	{
+		fires = 0;
+		activations = 0;
+		callouts = 0;
+		delivered.clear();
+		visuals.clear();
+	}
+
+	private static GameEvent toGameEvent(FightScript.ScriptEvent se, int tick)
+	{
+		String type = se.getType();
+		switch (type)
+		{
+			case "npc_spawn":
+				return new GameEvent(EventType.NPC_SPAWNED, tick,
+					npcSpawnedPayload(se.getNpcId()));
+			case "npc_despawn":
+				return new GameEvent(EventType.NPC_DESPAWNED, tick,
+					new net.runelite.api.events.NpcDespawned(
+						(net.runelite.api.NPC) npc(se.getNpcId(), -1)));
+			case "animation":
+				return new GameEvent(EventType.ANIMATION_CHANGED, tick,
+					animationPayload(se.getNpcId(),
+						se.getAnimationId() != null ? se.getAnimationId() : -1));
+			case "projectile":
+				return new GameEvent(EventType.PROJECTILE_MOVED, tick,
+					projectilePayload(se.getProjectileId() != null ? se.getProjectileId() : 0));
+			case "shout":
+				return new GameEvent(EventType.CHAT_MESSAGE, tick,
+					shoutPayload(se.getText() != null ? se.getText() : ""));
+			case "graphic":
+				net.runelite.api.events.GraphicChanged gc =
+					new net.runelite.api.events.GraphicChanged();
+				gc.setActor((net.runelite.api.Actor) graphicActor(se.getNpcId(),
+					se.getGraphicId() != null ? se.getGraphicId() : -1));
+				return new GameEvent(EventType.GRAPHIC_CHANGED, tick, gc);
+			case "hp":
+				// hp evaluators poll Client state on TICK; no payload needed
+				return null;
+			case "tick":
+			default:
+				return null;
+		}
+	}
+
+	private static Object shoutPayload(String text)
+	{
+		net.runelite.api.events.ChatMessage message =
+			new net.runelite.api.events.ChatMessage();
+		message.setName("Nex");
+		message.setMessage(text);
+		return message;
+	}
+
+	private static Object graphicActor(int npcId, int graphicId)
+	{
+		return Proxy.newProxyInstance(
+			TickReplayHarness.class.getClassLoader(),
+			new Class<?>[]{net.runelite.api.Actor.class},
+			(proxy, method, args) -> {
+				switch (method.getName())
+				{
+					case "getId":
+						return npcId;
+					case "getGraphic":
+						return graphicId;
+					case "getName":
+						return "synthetic-boss";
+					default:
+						return defaultValue(method.getReturnType());
+				}
+			});
 	}
 
 	public Profiler getProfiler()

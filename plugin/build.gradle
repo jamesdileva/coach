@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'jacoco'
 }
 
 group = 'com.coach'
@@ -23,12 +24,36 @@ dependencies {
     testImplementation 'org.mockito:mockito-core:4.11.0'
 }
 
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = true
+        html.required = true
+    }
+}
+
+jacocoTestCoverageVerification {
+    dependsOn jacocoTestReport
+    violationRules {
+        rule {
+            limit {
+                counter = 'LINE'
+                value = 'COVEREDRATIO'
+                minimum = 0.80
+            }
+        }
+    }
+}
+
 test {
     useJUnitPlatform()
+    finalizedBy jacocoTestReport
     testLogging {
         events 'passed', 'skipped', 'failed'
     }
 }
+
+check.dependsOn jacocoTestCoverageVerification
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11

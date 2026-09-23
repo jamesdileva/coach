@@ -4,6 +4,71 @@ Running log of sprints: what was done, key decisions, deviations from the docs.
 
 ---
 
+## Sprint 30 — Comprehensive Testing (2026-09-22)
+
+**Objective:** Full test suites: unit + integration + boss simulations +
+replay, with JaCoCo ≥80% LINE enforced on `check`.
+
+### Done
+
+- **JaCoCo 0.8.x gate** in `plugin/build.gradle` — XML+HTML reports;
+  `jacocoTestCoverageVerification` requires LINE COVEREDRATIO ≥ 0.80 and is
+  wired into `check` (build fails under the gate).
+- **FightScript replay format (main scope)** — `performance/FightScript.java`
+  + `FightScriptLoader.java` (Gson) with tick-sorted events
+  (`npc_spawn`/`animation`/`projectile`/`graphic`/`shout`/`hp`);
+  `TickReplayHarness.replayScript(FightScript)` added for headless replay.
+- **Sim fixtures** — `src/test/resources/simulations/nex_full_fight.json`
+  (smoke-phase headless) and `inferno_full_run.json` (all 69 waves → Zuk).
+- **Integration + simulation tests** — `EndToEndTest`
+  (event → trigger → encounter → coaching → visual+audio),
+  `NexSimulationTest`, `InfernoSimulationTest` (assumeTrue pack guard,
+  exact-tick callout assertions).
+- **`EncounterEngine` bug fix** — `handleFires` now calls
+  `checkMechanics(session, tick, fires)` in the phase-entry branch before
+  `return`; entry-tick mechanics (e.g. `smoke_start_pray`) were skipped.
+- **Gap-fill unit tests** (coverage from 0.7416 → ≥0.80):
+  `LoggersTest`, `EventLoggerTest`, `CalloutGateAndFilterTest`,
+  `AccessibilityManagerTest`, `TextScalerAndPaletteTest`,
+  `CoachStateManagerTest`, `OverlayManagerTest`, `ProfileTest`,
+  `DebugHistoryTest`, `FightScriptLoaderTest`,
+  `TriggerRegistryAndEdgeTest`.
+- **Small production fixes uncovered by tests:**
+  - `EventTimeline.recordTick` merges per-type counts (was `putAll` overwrite).
+  - `TriggerHistory.Entry.matches` lowercases the query (case-insensitive).
+  - `EventLogger.summarize` returns `actor=null` on null actor (was NPE →
+    payload class name).
+  - `CompositeTriggerEvaluator.parseLogic` rejects unknown logic
+    (`AND`/`OR`/null only); `TriggerRegistry.create` no longer NPEs on a
+    null builder result (location without client → empty Optional) and
+    catches `IllegalArgumentException` from bad composite logic.
+  - `FightScript.fromJson` wraps Gson `JsonSyntaxException` as
+    `IllegalArgumentException`.
+
+### Verified
+
+- **`gradlew --no-daemon check` green: 269/269 Java tests**, JaCoCo
+  LINE **2325/2898 = 0.8023 ≥ 0.80**. Python pipeline still 53/53.
+
+### Decisions / deviations
+
+- Roadmap paths `tests/java/...` wrong → actual
+  `plugin/src/test/java/com/coach/plugin/...`; sim resources under
+  `plugin/src/test/resources/simulations/`.
+- FightScript uses Gson (project already had it via RuneLite) not org.json.
+- No coverage exclusions used — gate met with real tests only.
+- Nex sim stays smoke-phase headless (HP phase exits need live Client);
+  asserts `smoke_start_pray`, `choke_callout`, `dash_callout`, bossId `nex`.
+- Final RuneLite event classes (`GameEvent` is ours; `NpcSpawned`,
+  `NpcDespawned`, `GraphicsObjectCreated`, `StatChanged`,
+  `ItemContainerChanged`) constructed with real constructors — Mockito
+  cannot mock final classes without inline mock-maker.
+- Live in-game verification deferred to the user around Sprint 30.
+- Sprint 30b backlog unchanged: replay-simulator CLI as Sentinel smoke
+  target (Tier-0 shim via root `package.json` + `tools\*.cmd`).
+
+---
+
 ## Sprint 29 — Performance Optimization (2026-09-21)
 
 **Objective:** Tick budget instrumentation, trigger short-circuit, headless

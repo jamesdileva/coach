@@ -254,6 +254,7 @@ public class EncounterEngine implements EventBus.Listener
 				sessions.put(npcId, session);
 				log.info("[coach] encounter started: {} ({}) entered phase {} at t{}",
 					boss.name, boss.bossId, entering.get(), tick);
+				checkMechanics(session, tick, fires);
 			}
 			return;
 		}

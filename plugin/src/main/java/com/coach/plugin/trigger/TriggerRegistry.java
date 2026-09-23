@@ -61,11 +61,12 @@ public class TriggerRegistry
 		}
 		try
 		{
-			return Optional.of(builder.apply(definition));
+			TriggerEvaluator evaluator = builder.apply(definition);
+			return evaluator != null ? Optional.of(evaluator) : Optional.empty();
 		}
-		catch (MissingFieldException e)
+		catch (MissingFieldException | IllegalArgumentException e)
 		{
-			log.warn("[coach] trigger type '{}' missing field {}: {}", definition.type, e.field, e.getMessage());
+			log.warn("[coach] trigger type '{}' could not be built: {}", definition.type, e.getMessage());
 			return Optional.empty();
 		}
 	}
@@ -140,7 +141,16 @@ public class TriggerRegistry
 			children.add(create(child)
 				.orElseThrow(() -> new MissingFieldException("valid child trigger")));
 		}
-		return new CompositeTriggerEvaluator(CompositeTriggerEvaluator.parseLogic(def.logic), children);
+		boolean and;
+		try
+		{
+			and = CompositeTriggerEvaluator.parseLogic(def.logic);
+		}
+		catch (IllegalArgumentException e)
+		{
+			throw new MissingFieldException("logic");
+		}
+		return new CompositeTriggerEvaluator(and, children);
 	}
 
 	private static int requireInt(Integer value, String field)

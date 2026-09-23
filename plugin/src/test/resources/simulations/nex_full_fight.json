@@ -1,0 +1,18 @@
+{
+  "endTick": 120,
+  "events": [
+    {"tick": 1, "type": "npc_spawn", "npcId": 11278},
+    {"tick": 10, "type": "shout", "text": "Let the virus flow through you"},
+    {"tick": 20, "type": "shout", "text": "There is no escape"},
+    {"tick": 30, "type": "shout", "text": "Darken my shadow"},
+    {"tick": 40, "type": "shout", "text": "Fear the shadow"},
+    {"tick": 50, "type": "shout", "text": "Embrace darkness"},
+    {"tick": 60, "type": "shout", "text": "Flood my lungs with blood"},
+    {"tick": 70, "type": "shout", "text": "A siphon will solve this"},
+    {"tick": 80, "type": "shout", "text": "I demand a blood sacrifice"},
+    {"tick": 90, "type": "shout", "text": "Infuse my children with the power of ice"},
+    {"tick": 100, "type": "shout", "text": "Contain this"},
+    {"tick": 110, "type": "shout", "text": "Imbue them with a prison of ice"},
+    {"tick": 115, "type": "npc_despawn", "npcId": 11278}
+  ]
+}

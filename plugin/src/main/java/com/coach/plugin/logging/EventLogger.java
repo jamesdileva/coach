@@ -59,12 +59,12 @@ public class EventLogger implements EventBus.Listener
 				case ANIMATION_CHANGED:
 				{
 					Actor actor = ((AnimationChanged) payload).getActor();
-					return actorDesc(actor) + " anim=" + actor.getAnimation();
+					return actor == null ? "actor=null" : actorDesc(actor) + " anim=" + actor.getAnimation();
 				}
 				case GRAPHIC_CHANGED:
 				{
 					Actor actor = ((GraphicChanged) payload).getActor();
-					return actorDesc(actor) + " graphic=" + actor.getGraphic();
+					return actor == null ? "actor=null" : actorDesc(actor) + " graphic=" + actor.getGraphic();
 				}
 				case GRAPHICS_OBJECT_CREATED:
 				{

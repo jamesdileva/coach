@@ -33,10 +33,14 @@ public class TriggerHistory
 
 		public boolean matches(String query)
 		{
-			return query == null || query.isEmpty()
-				|| contextId.toLowerCase().contains(query)
-				|| bossId.toLowerCase().contains(query)
-				|| description.toLowerCase().contains(query);
+			if (query == null || query.isEmpty())
+			{
+				return true;
+			}
+			String q = query.toLowerCase();
+			return contextId.toLowerCase().contains(q)
+				|| bossId.toLowerCase().contains(q)
+				|| description.toLowerCase().contains(q);
 		}
 	}
 

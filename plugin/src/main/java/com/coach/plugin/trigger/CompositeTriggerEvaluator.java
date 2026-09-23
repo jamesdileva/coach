@@ -83,6 +83,19 @@ public class CompositeTriggerEvaluator implements TriggerEvaluator
 
 	static boolean parseLogic(String logic)
 	{
-		return "AND".equalsIgnoreCase(String.valueOf(logic).toUpperCase(Locale.ROOT));
+		if (logic == null)
+		{
+			return false; // omitted logic defaults to OR (historical behaviour)
+		}
+		String value = logic.toUpperCase(Locale.ROOT);
+		if ("AND".equals(value))
+		{
+			return true;
+		}
+		if ("OR".equals(value))
+		{
+			return false;
+		}
+		throw new IllegalArgumentException("unknown composite logic: " + logic);
 	}
 }

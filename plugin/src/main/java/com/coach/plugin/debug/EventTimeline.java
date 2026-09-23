@@ -56,7 +56,10 @@ public class EventTimeline
 		}
 		if (eventCounts != null)
 		{
-			existing.eventCounts.putAll(eventCounts);
+			for (Map.Entry<String, Integer> e : eventCounts.entrySet())
+			{
+				existing.eventCounts.merge(e.getKey(), e.getValue(), Integer::sum);
+			}
 		}
 		existing.triggers += triggersFired;
 		existing.callouts += calloutsDelivered;
