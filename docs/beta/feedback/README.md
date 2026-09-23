@@ -27,6 +27,6 @@ Discord after testers report.
 ## Process
 
 1. Collect GitHub Issues labeled `beta` / `bug` / `pack`
-2. Note pack verification results (≥3 packs — see [`../BETA_GUIDE.md`](../BETA_GUIDE.md) §3)
+2. Note pack verification results (≥3 packs — see [`../../BETA_GUIDE.md`](../../BETA_GUIDE.md) §3)
 3. Write a summary from `TEMPLATE.md`
 4. Triage criticals → fix before Sprint 34 release notes
