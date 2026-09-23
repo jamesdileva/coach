@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'com.coach'
-version = '0.1.0-SNAPSHOT'
+version = '1.0.0'
 
 repositories {
     mavenLocal()
@@ -14,6 +14,16 @@ repositories {
 
 def runeLiteVersion = 'latest.release'
 
+configurations {
+    proguard
+    // Resolvable view of compileOnly for ProGuard -libraryjars
+    proguardLibs {
+        canBeResolved = true
+        canBeConsumed = false
+        extendsFrom compileOnly
+    }
+}
+
 dependencies {
     compileOnly group: 'net.runelite', name: 'client', version: runeLiteVersion
 
@@ -22,6 +32,8 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testImplementation 'org.mockito:mockito-core:4.11.0'
+
+    proguard 'com.guardsquare:proguard-base:7.4.2'
 }
 
 jacocoTestReport {
@@ -65,10 +77,210 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 jar {
+    archiveBaseName = 'coach'
+    archiveVersion = project.version
     manifest {
         attributes(
             'Implementation-Title': 'Coach',
             'Implementation-Version': project.version
         )
     }
+}
+
+// --- Release pipeline (Sprint 32) -----------------------------------------
+// Usage (from plugin/):
+//   gradlew buildRelease
+// Optional signing:
+//   gradlew buildRelease -Pcoach.keystore=/path/to/coach.jks -Pcoach.keyAlias=coach
+//   (env fallbacks: COACH_KEYSTORE, COACH_KEY_ALIAS, COACH_KEY_PASS)
+//
+// RuneLite hub builds from source with build=gradle; signed/obfuscated jars
+// are optional for local distribution, not required for hub PR.
+
+def releaseDir = layout.buildDirectory.dir('release')
+def maxReleaseBytes = 5L * 1024 * 1024
+
+// Resolve RuneLite client jar (compileOnly) for ProGuard libraryjars
+def runeliteLibraryJars = {
+    configurations.proguardLibs.resolve().collect { ['-libraryjars', it.absolutePath] }.flatten()
+}
+
+tasks.register('proguardRelease', JavaExec) {
+    group = 'release'
+    description = 'ProGuard shrink/optimize the release jar into build/proguard/'
+    dependsOn jar
+    classpath = configurations.proguard
+    mainClass = 'proguard.ProGuard'
+
+    def inJar = tasks.jar.archiveFile.get().asFile
+    def outDir = layout.buildDirectory.dir('proguard').get().asFile
+    def outJar = new File(outDir, "coach-${project.version}.jar")
+
+    doFirst {
+        outDir.mkdirs()
+        def jhome = System.getenv('JAVA_HOME') ?: System.getProperty('java.home')
+        def jmods = new File(jhome, 'jmods')
+        def libArgs = []
+        if (jmods.directory) {
+            ['java.base', 'java.desktop', 'java.logging', 'java.xml'].each { m ->
+                libArgs += ['-libraryjars', new File(jmods, "${m}.jmod").absolutePath + '(!**.jar;!module-info.class)']
+            }
+        } else {
+            libArgs += ['-libraryjars', new File(jhome, 'lib/rt.jar').absolutePath]
+        }
+        libArgs += runeliteLibraryJars()
+        args = [
+            '-injars', inJar.absolutePath,
+            '-outjars', outJar.absolutePath
+        ] + libArgs + [
+            '-dontwarn', 'net.runelite.**',
+            '-dontwarn', 'com.google.**',
+            '-dontwarn', 'org.slf4j.**',
+            '-dontwarn', 'okhttp3.**',
+            '-dontwarn', 'okio.**',
+            '-dontwarn', 'javax.annotation.**',
+            '-dontwarn', 'com.sun.**',
+            // RuneLite discovers the entry point by class name from properties
+            '-keep', 'public class com.coach.plugin.CoachPlugin { *; }',
+            // Descriptor types referenced from entry-point method signatures
+            // (ProGuard warns otherwise; runtime reflection needs them intact)
+            '-keep', 'class com.coach.plugin.coaching.CoachingEngine$DeliveredCallout { *; }',
+            '-keep', 'class com.coach.plugin.events.EventType { *; }',
+            '-keep', 'class com.coach.plugin.encounter.ActiveEncounter { *; }',
+            '-keep', 'class com.coach.plugin.events.GameEvent { *; }',
+            '-keep', 'class com.coach.plugin.trigger.TriggerFire { *; }',
+            // All plugin classes retained (no obfuscation); members may shrink
+            // except those kept below (reflection / Gson / config / enums)
+            '-keep', 'class com.coach.plugin.**',
+            // Annotations used by RuneLite reflection (@PluginDescriptor, @Subscribe, @ConfigItem…)
+            '-keepattributes', 'Signature,InnerClasses,EnclosingMethod,RuntimeVisibleAnnotations,RuntimeVisibleParameterAnnotations,AnnotationDefault,*Annotation*',
+            // RuneLite annotation entry points (libraryjars = runelite client)
+            '-keepclassmembers', 'class * { @net.runelite.client.eventbus.Subscribe *; }',
+            '-keepclassmembers', 'class * { @net.runelite.client.config.ConfigItem *; }',
+            '-keep', '@net.runelite.client.plugins.PluginDescriptor class * { *; }',
+            '-keep', 'public interface com.coach.plugin.config.CoachConfig { *; }',
+            '-keep', 'public class com.coach.plugin.config.** { public protected *; }',
+            // Gson field-name binding for encounter.model.*
+            '-keepnames', 'class com.coach.plugin.encounter.model.**',
+            '-keepclassmembers', 'class com.coach.plugin.encounter.model.** { <fields>; }',
+            // Enums used in switch/config UI
+            '-keepclassmembers', 'enum com.coach.plugin.** { public static **[] values(); public static ** valueOf(java.lang.String); }',
+            // Shrink/optimize but do not obfuscate package/class names (hub review friendliness)
+            '-dontobfuscate',
+            '-optimizationpasses', '3',
+            '-allowaccessmodification',
+            '-target', '11'
+        ]
+    }
+    outputs.file(outJar)
+}
+
+tasks.register('signRelease', Exec) {
+    group = 'release'
+    description = 'Optionally jarsign the release jar when a keystore is configured'
+    dependsOn proguardRelease
+    onlyIf {
+        def ks = project.findProperty('coach.keystore') ?: System.getenv('COACH_KEYSTORE')
+        ks != null && !ks.toString().trim().isEmpty()
+    }
+    def outJar = layout.buildDirectory.file("proguard/coach-${project.version}.jar").get().asFile
+    doFirst {
+        def ks = (project.findProperty('coach.keystore') ?: System.getenv('COACH_KEYSTORE')).toString()
+        def alias = (project.findProperty('coach.keyAlias') ?: System.getenv('COACH_KEY_ALIAS') ?: 'coach').toString()
+        def storePass = (project.findProperty('coach.keyPass') ?: System.getenv('COACH_KEY_PASS') ?: '').toString()
+        def keyPass = (project.findProperty('coach.keyPass') ?: System.getenv('COACH_KEY_PASS') ?: storePass).toString()
+        if (!new File(ks).exists()) {
+            throw new GradleException("Keystore not found: ${ks}")
+        }
+        def jdk = System.getenv('JAVA_HOME') ?: System.getProperty('java.home')
+        def jarsigner = new File(jdk, 'bin/jarsigner.exe').exists()
+            ? new File(jdk, 'bin/jarsigner.exe').absolutePath
+            : new File(jdk, 'bin/jarsigner').absolutePath
+        executable = jarsigner
+        args = [
+            '-keystore', ks,
+            '-storepass', storePass,
+            '-keypass', keyPass,
+            outJar.absolutePath,
+            alias
+        ]
+    }
+}
+
+tasks.register('packageRelease', Copy) {
+    group = 'release'
+    description = 'Assemble build/release hub package (jar + properties + submission stub)'
+    dependsOn proguardRelease
+    mustRunAfter signRelease
+    from(tasks.jar.archiveFile)
+    from('src/main/resources/runelite-plugin.properties')
+    into(releaseDir)
+    doLast {
+        def dir = releaseDir.get().asFile
+        def jarName = "coach-${project.version}.jar"
+        def plain = new File(dir, jarName)
+        def proguarded = layout.buildDirectory.file("proguard/${jarName}").get().asFile
+        if (proguarded.exists()) {
+            ant.copy(file: proguarded, tofile: plain, overwrite: true)
+        }
+        def commit = 'TODO_COMMIT_SHA'
+        try {
+            def p = new ProcessBuilder('git', 'rev-parse', 'HEAD')
+                .directory(rootProject.projectDir)
+                .redirectErrorStream(true)
+                .start()
+            commit = p.inputStream.text.trim()
+        } catch (Exception ignored) {
+        }
+        def repo = 'https://github.com/jamesdileva/coach.git'
+        new File(dir, 'hub-plugin.txt').text =
+            "repository=${repo}\ncommit=${commit}\n"
+        new File(dir, 'RELEASE_INFO.txt').text =
+            "name=Coach\nversion=${project.version}\njar=${jarName}\n" +
+            "maxBytes=${maxReleaseBytes}\nactualBytes=${plain.length()}\n" +
+            "signed=${(project.findProperty('coach.keystore') ?: System.getenv('COACH_KEYSTORE')) != null}\n"
+    }
+}
+
+tasks.register('verifyRelease') {
+    group = 'release'
+    description = 'Assert release jar exists, carries runelite-plugin.properties, and is under 5 MB'
+    dependsOn packageRelease
+    doLast {
+        def dir = releaseDir.get().asFile
+        def jarName = "coach-${project.version}.jar"
+        def jar = new File(dir, jarName)
+        if (!jar.exists()) {
+            throw new GradleException("Missing release jar: ${jar}")
+        }
+        if (jar.length() > maxReleaseBytes) {
+            throw new GradleException("Release jar too large: ${jar.length()} > ${maxReleaseBytes}")
+        }
+        def props = new File(dir, 'runelite-plugin.properties')
+        if (!props.exists() || !props.text.contains('plugins=com.coach.plugin.CoachPlugin')) {
+            throw new GradleException('runelite-plugin.properties missing or invalid in release package')
+        }
+        def uri = java.net.URI.create("jar:${jar.toURI()}")
+        def fs = java.nio.file.FileSystems.newFileSystem(uri, [:])
+        try {
+            ['com/coach/plugin/CoachPlugin.class',
+             'runelite-plugin.properties',
+             'schemas/encounter_schema_v1.json'].each { entry ->
+                def path = fs.getPath('/' + entry)
+                if (path == null || !java.nio.file.Files.exists(path)) {
+                    throw new GradleException("Release jar missing entry: ${entry}")
+                }
+            }
+        } finally {
+            fs.close()
+        }
+        logger.lifecycle("Release OK: ${jar.name} (${jar.length()} bytes, limit ${maxReleaseBytes})")
+    }
+}
+
+tasks.register('buildRelease') {
+    group = 'release'
+    description = 'Full release: tests+coverage gate, ProGuard, optional sign, package, size check'
+    dependsOn check, signRelease, packageRelease, verifyRelease
+    // Order: check → proguard → sign (no-op without keystore) → package → verify
 }

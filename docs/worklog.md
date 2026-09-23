@@ -4,6 +4,85 @@ Running log of sprints: what was done, key decisions, deviations from the docs.
 
 ---
 
+## Sprint 32 — Release Preparation (2026-09-22)
+
+**Objective:** First release build: version bump, changelog, JAR
+optimization/signing, RuneLite hub submission prep, `v1.0.0` tag.
+
+### Done
+
+- **Version `1.0.0`** — `plugin/build.gradle` (`version = '1.0.0'`,
+  `archiveBaseName = 'coach'`) → `coach-1.0.0.jar`.
+- **`runelite-plugin.properties` hub metadata** — added `displayName`,
+  `author`, `support`, `build=gradle` (hub builds from source; keeps
+  existing `plugins` / `name` / `description` / `tags`).
+- **Release pipeline in `plugin/build.gradle`:**
+  - `proguardRelease` — ProGuard 7.4.2 (`com.guardsquare:proguard-base`),
+    shrink/optimize, **`-dontobfuscate`** (hub review friendliness),
+    `-target 11`, RuneLite + jmods as `-libraryjars` via resolvable
+    `proguardLibs` (extends `compileOnly`).
+  - Keep rules: `CoachPlugin` full keep; `@PluginDescriptor` class;
+    `@net.runelite.client.eventbus.Subscribe` / `@ConfigItem` members;
+    `CoachConfig` + `config.**` public members; `encounter.model` field
+    names for Gson; descriptor types (`DeliveredCallout`, `EventType`,
+    `ActiveEncounter`, `GameEvent`, `TriggerFire`); all `com.coach.plugin.**`
+    class names retained (no package rename).
+  - `signRelease` — **optional** jarsign when
+    `-Pcoach.keystore=` / `COACH_KEYSTORE` (+ alias/pass env) is set;
+    **SKIPPED** without a keystore (no secrets in repo).
+  - `packageRelease` — assembles `plugin/build/release/`:
+    `coach-1.0.0.jar`, `runelite-plugin.properties`, `hub-plugin.txt`
+    (`repository=` + `commit=`), `RELEASE_INFO.txt`.
+  - `verifyRelease` — asserts jar ≤ **5 MB**, properties present, jar
+    contains `CoachPlugin.class`, `runelite-plugin.properties`,
+    `schemas/encounter_schema_v1.json`.
+  - `buildRelease` — `check` → proguard → sign → package → verify.
+- **`release/run.sh`** (roadmap) **and** `release/run.ps1` (Windows
+  primary on this machine).
+- **`CHANGELOG.md` v1.0.0** — features by area (plugin/packs/pipeline/
+  docs/release), constitution notes, known issues (ogg playback, unimplemented
+  conditions, pack id verification, hub PR manual, signing optional).
+- **README** — changelog + `buildRelease` quick start + status → v1.0.0.
+- **Schema** — already final `encounter_schema_v1.json` `"1.0"`; no bump
+  needed (roadmap “version bump to 1.0” already satisfied).
+
+### Verified
+
+- **`gradlew --no-daemon buildRelease` green:**
+  - `check` 269/269, JaCoCo LINE ≥ 0.80
+  - plain jar **195 509** B → ProGuard **167 542** B (unused members /
+    debug-info stripped; all **126** plugin classes retained)
+  - `verifyRelease`: `coach-1.0.0.jar (167542 bytes, limit 5242880)`
+  - `signRelease SKIPPED` (expected — no keystore configured)
+  - release dir contains jar + properties + hub stubs; entry point +
+    schema resource present in jar
+- ProGuard “unknown class `…event.Subscribe`” fixed by using actual FQCN
+  **`net.runelite.client.eventbus.Subscribe`**.
+
+### Decisions / deviations
+
+- **RuneLite hub does not require a signed JAR** — PR is
+  `plugins/<name>` with `repository=` + `commit=`; hub rebuilds with
+  `build=gradle`. Signing remains optional local distribution only.
+- **No JAR signing key in repo** (rule: never commit secrets). Manual
+  test “verify signature” only runs if the user supplies a keystore.
+- ProGuard uses **`-dontobfuscate`** so hub/AI reviewers can read code;
+  shrink/optimize still runs (≈14% smaller jar). Full `-keep … { *; }` on
+  every member would defeat shrink — annotation keeps used instead after
+  descriptor-class warnings.
+- Roadmap `Files Modified: build.gradle` is **`plugin/build.gradle`**
+  (this repo’s Gradle root for the plugin).
+- Roadmap “JSON Schema Changes: version bump to 1.0” — already final;
+  no file change.
+- **Hub PR itself is not automated** in this sprint (manual fork/PR to
+  `runelite/plugin-hub`); stub text lives in
+  `plugin/build/release/hub-plugin.txt`. Sprint 33 covers community beta.
+- Manual testing left to human: clean RuneLite install, 6-boss smoke,
+  changelog walkthrough.
+- Git tag **`v1.0.0`** created after this commit (acceptance criterion).
+
+---
+
 ## Sprint 31 — Documentation (2026-09-22)
 
 **Objective:** Complete documentation: pack author guide, plugin user guide,

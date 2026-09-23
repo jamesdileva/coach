@@ -30,6 +30,7 @@ packs**. The plugin **never simulates input**; every callout is advisory.
 
 | Doc | Audience |
 |-----|----------|
+| [`CHANGELOG.md`](CHANGELOG.md) | Release notes (v1.0.0) |
 | [`docs/USER_GUIDE.md`](docs/USER_GUIDE.md) | Players — install, settings, troubleshooting |
 | [`docs/examples/ENCODING.md`](docs/examples/ENCODING.md) | Pack authors — JSON schema, triggers, audio |
 | [`docs/DEVELOPER_SETUP.md`](docs/DEVELOPER_SETUP.md) | Developers — build, test, conventions |
@@ -59,6 +60,14 @@ $env:JAVA_HOME = "$env:USERPROFILE\tools\jdk\jdk-11.0.32+9"
 
 JAR output: `plugin/build/libs/coach-<version>.jar`.
 
+Release package (ProGuard + size gate):
+
+```powershell
+# From plugin/ — or: powershell -File release\run.ps1
+.\gradlew.bat --no-daemon buildRelease
+# → plugin/build/release/coach-1.0.0.jar (+ hub stubs)
+```
+
 Details: [`docs/DEVELOPER_SETUP.md`](docs/DEVELOPER_SETUP.md).
 
 ## Project rules (constitution)
@@ -75,6 +84,8 @@ Full list: [`AGENTS.md`](AGENTS.md).
 
 ## License / status
 
-Sprint-driven build (see roadmap). Release packaging is Sprint 32.
+**v1.0.0** — see [`CHANGELOG.md`](CHANGELOG.md) and git tag `v1.0.0`.
+Hub submission is prepared via `plugin/build/release/hub-plugin.txt`
+(manual PR to [runelite/plugin-hub](https://github.com/runelite/plugin-hub)).
 Contributions: follow the sprint workflow in `AGENTS.md` and log work in
 `docs/worklog.md`.
