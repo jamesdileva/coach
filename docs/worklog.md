@@ -4,6 +4,61 @@ Running log of sprints: what was done, key decisions, deviations from the docs.
 
 ---
 
+## Sprint 31 — Documentation (2026-09-22)
+
+**Objective:** Complete documentation: pack author guide, plugin user guide,
+API reference, and developer setup guide.
+
+### Done
+
+- **`docs/examples/ENCODING.md` rewritten** as the pack author guide —
+  pack layout, encounter.json field tables, all trigger types + condition
+  types, validation rules (audio-ref rejection, tick offset range, id
+  uniqueness), TTS `.ogg` generation pattern, live playback caveat
+  (only `.wav` currently plays; no Ogg decoder yet), testing checklist,
+  versioning. Explicitly corrected schema drift from older doc sketches
+  (no top-level shared `mechanics` map, no nested `visual.position`,
+  `callouts`/`exitTriggers` optional, `custom` trigger not yet registered).
+- **`docs/USER_GUIDE.md`** — install steps, pack directory layout, full
+  settings tables (General / Callout categories / Overlay / Accessibility /
+  Profiles & debug) sourced from `CoachConfig`, fight walkthrough,
+  troubleshooting matrix (REJECTED/CONFLICT/mute/mode/pack-dir issues).
+- **`docs/DEVELOPER_SETUP.md`** — JDK 11 + Gradle wrapper prerequisites,
+  clone/build/check commands, task table (test / check / JaCoCo gate),
+  test conventions (JUnit5+Mockito, final-class real constructors, sim
+  fixtures), repo layout, code conventions, sprint workflow.
+- **`docs/API_REFERENCE.md`** — package map + class-by-class reference for
+  all 9 public packages (~94 top-level types): entry point, encounter +
+  model POJOs, triggers, events, coaching, config, audio, overlay,
+  accessibility, debug/logging/performance/model — with explicit stability
+  note for internal-leaning types.
+- **Root `README.md`** — project pitch, feature list, repo layout,
+  documentation index, quick starts (player + developer), constitution
+  pointer.
+
+### Verified
+
+- Relative markdown link check across all five docs: **LINK_CHECK_OK**.
+- Spot-checked cross-linked files exist (`knowledge-pipeline/README.md`,
+  pack READMEs, schema JSON, `encounter-packs/generate_nex_audio.py`,
+  architecture/roadmap/implementation-guide/worklog).
+- **`gradlew --no-daemon check` green** (269/269 tests, JaCoCo LINE
+  2325/2898 = 0.8023 ≥ 0.80 — unchanged from Sprint 30; docs-only sprint).
+
+### Decisions / deviations
+
+- Roadmap lists ENCODING.md under **Files Created** but the file already
+  existed (empty/stub state) — treated as rewrite rather than a no-op.
+- README quick-start notes local-JAR install until hub release (Sprint 32);
+  hub badge/link deferred.
+- API_REFERENCE marks `performance.*`, `logging.*`, `debug.*`,
+  `CoachPlugin` handlers etc. as internal-leaning rather than stable
+  product API — pack JSON + `CoachConfig` are the primary contracts.
+- Manual walkthroughs (new pack author / new user / new dev) are flagged to
+  the human — not automatable headlessly.
+
+---
+
 ## Sprint 30 — Comprehensive Testing (2026-09-22)
 
 **Objective:** Full test suites: unit + integration + boss simulations +

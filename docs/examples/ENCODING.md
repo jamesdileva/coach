@@ -3,7 +3,10 @@
 How to write, package, test, and publish a Project Coach encounter pack.
 
 **Start from the template:** `encounter-packs/template.pack/` — it contains a
-working example of every trigger type and this guide's companion README.
+working skeleton of every trigger type and this guide's companion README.
+
+**Authoritative field list:** `plugin/src/main/resources/schemas/encounter_schema_v1.json`
+(what the loader actually enforces). This guide summarizes that contract.
 
 ---
 
@@ -14,44 +17,89 @@ A pack is a `.zip` containing:
 ```
 myboss_1.0.0.zip
 ├── encounter.json      # required, exactly this name
-└── audio/              # optional; callout .ogg/.wav files live here
-    └── pray_melee.ogg
+└── audio/              # optional; callout .wav (playable) / .ogg (validate-only) files
+    └── pray_melee.wav
 ```
 
-Drop the zip into `<runelite>/coach/encounters/`. The plugin scans that
-directory on startup and on every config change to the pack-directory setting.
-Invalid packs are logged and skipped — they never break the plugin.
+Drop the zip into `<RuneLite dir>/coach/encounters/`
+(default **Encounter Pack Directory** / `packDirectory`). The plugin scans
+that directory on startup and on
+every config change to that setting.
+
+Invalid packs are **logged and skipped — never fatal**. Duplicate `packId`
+or conflicting `bossId` → later file is `CONFLICT` (alphabetical order,
+first pack wins). All validation errors for a pack are collected into one
+log line. Statuses appear in the debug overlay as
+`file.zip -> packId@version [LOADED|REJECTED|CONFLICT]`.
 
 ## 2. encounter.json at a glance
 
 | Section | Required | Purpose |
 |---------|----------|---------|
 | `schemaVersion` | yes | Must be `"1.0"` (older known versions auto-migrate) |
-| `metadata` | yes | `packId` (unique), `name`, `version`, `gameVersion`, optional `dependencies` (list of packIds), `description`, `author` |
+| `metadata` | yes | `packId`, `name`, `version` (semver), `gameVersion`; optional `description`, `author`, `dependencies[]` |
 | `bosses[]` | ≥1 | Each: `bossId`, `name`, `npcId`, `phases[]` (≥1), optional shared `mechanics[]`, `recovery` |
-| phase | per boss | `phaseId`, `name`, `entryTrigger`, optional `exitTriggers[]`, `mechanics[]` |
-| mechanic | | `mechanicId`, `name`, `triggers[]` (≥1), `callouts[]`, optional `conditions[]`, `cooldown` |
-| callout | | `calloutId`, `text`, `category`, optional `audioFile`, `priority`, `audioOffset`, `visualOffset`, `visual{}` |
-| trigger | | `type` + type-specific fields |
+| phase | per boss | `phaseId`, `name`, `entryTrigger`; optional `exitTriggers[]`, `mechanics[]` |
+| mechanic | | `mechanicId`, `name`, `triggers[]` (≥1), optional `callouts[]`, `conditions[]`, `cooldown` |
+| callout | | `calloutId`, `text`, `category`; optional `audioFile`, `priority`, `audioOffset`, `visualOffset`, `visual{}` |
+| trigger | | `type` + type-specific fields (see §3) |
+| condition | | `type` + type-specific fields (see §3) |
 
-Full field documentation with descriptions:
-`plugin/src/main/resources/schemas/encounter_schema_v1.json`
+### Notes the schema actually enforces
 
-## 3. Validation rules you'll hit
+- `exitTriggers` and `callouts` on a mechanic are **optional** in the
+  validator (last phase of a boss needs no exit; a mechanic may be
+  trigger-only).
+- There is **no** top-level shared `mechanics`/`triggers` map and **no**
+  nested `visual.position` — those older doc sketches are not parsed.
+- `visual` supports `type`, `color` (`#RRGGBB`), `opacity` (0–1),
+  `durationTicks` (≥1).
 
-- Unique ids: packId (per raid dir), bossId, phaseId (per boss),
-  mechanicId (per phase / shared list), calloutId (per mechanic)
+## 3. Trigger types
+
+Enum (unknown types rejected at load):
+
+| `type` | Key fields |
+|--------|------------|
+| `animation` | `npcId?`, `animationId` |
+| `projectile` | `projectId`, `srcNpcId?` |
+| `graphic` | `graphicId`, `npcId?` |
+| `npc_spawn` | `npcId` or `npcIds[]` |
+| `npc_despawn` | `npcId` or `npcIds[]` |
+| `hp` | `npcId` or `npcIds[]`, `hpThreshold`, `hpDirection` (`below`\|`above`, edge-detected) |
+| `tick_timer` | `tickMod` (≥1), `tickOffset?` |
+| `player_state` | `animationId` **or** `hpThreshold` (+ optional `hpDirection`) |
+| `location` | `minX`/`maxX`/`minY`/`maxY` (inclusive) |
+| `shout` | `containsText`, `senderName?` (case-insensitive substring) |
+| `wave_cleared` | `npcIds[]` (all spawned NPCs must die; re-arms) |
+| `composite` | `logic` (`AND`\|`OR`) + non-empty `children[]` |
+| `custom` | reserved (ConditionEvaluator / Sprint 7) — **not registered yet** |
+
+### Condition types
+
+Schema enum: `npc_hp_below`, `npc_hp_above`, `player_hp_below`,
+`player_hp_above`, `tick_mod`, `player_in_region`, `prayer_active`,
+`prayer_inactive`, `inventory_contains`, `custom`.
+
+**Runtime reality:** only `npc_hp_below/above`, `player_hp_below/above`, and
+`tick_mod` are implemented. Others validate but evaluate **false with a
+warning** (`ConditionEvaluator` default branch) — do not ship packs that
+depend on the rest until implemented.
+
+## 4. Validation rules you'll hit
+
+- Unique ids: `packId` (per directory), `bossId`, `phaseId` (per boss),
+  `mechanicId` (per list scope), `calloutId` (per mechanic)
 - Tick offsets (`audioOffset`/`visualOffset`) must be −5…+10
 - Callout categories: `critical | warning | info | transition`
 - Priority 1–100; cooldown ≥ 0
-- Every referenced `audioFile` must exist under `audio/` in the zip
+- Every referenced `audioFile` must exist under `audio/` in the zip —
+  missing files **reject the whole pack** at load
 - Unknown trigger/condition types are rejected at load time
 
-Error messages collect *all* violations per pack in one log line.
+## 5. Audio (rule 11: pre-recorded TTS, generated offline)
 
-## 4. Audio (rule 11: pre-recorded TTS, generated offline)
-
-Callout text is your TTS source. The repo's standard pipeline:
+Callout `text` is your TTS source. The repo's standard pipeline:
 
 ```python
 # pattern from encounter-packs/generate_nex_audio.py
@@ -61,10 +109,12 @@ subprocess.run(["ffmpeg", "-i", "x.mp3", "-acodec", "libvorbis",
                 "-ar", "44100", "-ac", "1", "x.ogg"])
 ```
 
-Note: until Sprint 27's decoder integration the plugin plays `.wav` only;
-`.ogg` files load and validate fine but playback is a graceful no-op.
+**Playback note:** the plugin validates `.ogg` and `.wav` references at load,
+but Java has no built-in Ogg decoder — **only `.wav` currently plays**;
+`.ogg` caches and fails gracefully (visual callouts still fire). Prefer
+`.wav` packs for live use until decoder integration lands.
 
-## 5. Testing checklist before publishing
+## 6. Testing checklist before publishing
 
 1. Zip loads: debug overlay shows `yourfile.zip -> packId@version [LOADED]`
 2. Fight (or watch VODs of) the boss; verify every trigger fires
@@ -73,7 +123,15 @@ Note: until Sprint 27's decoder integration the plugin plays `.wav` only;
 5. Write a README verification checklist like the shipped packs'
 6. Only then share — rule 8: unverified content is not community content
 
-## 6. Versioning
+## 7. Versioning
 
 - Pack `metadata.version`: semver, independent of plugin version
 - Bump on any content change; changelog goes in your pack's README
+
+## 8. Related docs
+
+- Template: `encounter-packs/template.pack/`
+- Shipped examples: `encounter-packs/nex.pack/`, `inferno.pack/`, etc.
+- Knowledge pipeline (wiki → pack): `knowledge-pipeline/README.md`
+- Schema JSON: `plugin/src/main/resources/schemas/encounter_schema_v1.json`
+- User guide: [`docs/USER_GUIDE.md`](../USER_GUIDE.md)
