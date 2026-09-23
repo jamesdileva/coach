@@ -1,11 +1,11 @@
-"""Generate the Inferno encounter pack (69 waves + basic Zuk).
+﻿"""Generate the Inferno encounter pack (69 waves + basic Zuk).
 
 Produces encounter-packs/inferno.pack/encounter.json from the canonical
 wave table (OSRS Wiki) and per-archetype attack callouts.
 
 Data sources: osrs.runescape.wiki/w/Inferno (wave list), OpenOSRS/InfernoTrainer
 + boss-cooldown community data (NPC ids, attack animation ids).
-Animation IDs are best-known values — see inferno.pack/README.md checklist.
+Animation IDs are best-known values â€” see inferno.pack/README.md checklist.
 """
 import json
 from pathlib import Path
@@ -108,7 +108,7 @@ ATTACK_MECHANICS = {
         "mechanicId": "meleer_attack", "name": "Jal-ImKot attacking",
         "triggers": [{"triggerId": "meleer_anim", "type": "animation",
                       "npcIds": [NPC_IDS["meleer"]], "animationId": ANIMS["meleer_attack"][0]}],
-        "callouts": [callout("pray_melee_meleer", "Pray Melee!", "pray_melee.ogg",
+        "callouts": [callout("pray_melee_meleer", "Pray Melee!", "pray_melee.wav",
                              "critical", 90, "#FF0000")],
         "cooldown": 1,
     },
@@ -121,9 +121,9 @@ ATTACK_MECHANICS = {
              "npcIds": [NPC_IDS["ranger"]], "animationId": ANIMS["ranger_melee"][0]},
         ],
         "callouts": [
-            callout("pray_ranged_ranger", "Pray Ranged!", "pray_ranged.ogg",
+            callout("pray_ranged_ranger", "Pray Ranged!", "pray_ranged.wav",
                     "critical", 90, "#FF0000"),
-            callout("ranger_melee_warn", "Ranger melee!", "ranger_melee.ogg",
+            callout("ranger_melee_warn", "Ranger melee!", "ranger_melee.wav",
                     "warning", 60, "#FF9800"),
         ],
         "cooldown": 1,
@@ -137,9 +137,9 @@ ATTACK_MECHANICS = {
              "npcIds": [NPC_IDS["mager"]], "animationId": ANIMS["mager_melee"][0]},
         ],
         "callouts": [
-            callout("pray_magic_mager", "Pray Magic!", "pray_magic.ogg",
+            callout("pray_magic_mager", "Pray Magic!", "pray_magic.wav",
                     "critical", 90, "#FF0000"),
-            callout("mager_melee_warn", "Mager melee!", "mager_melee.ogg",
+            callout("mager_melee_warn", "Mager melee!", "mager_melee.wav",
                     "warning", 60, "#FF9800"),
         ],
         "cooldown": 1,
@@ -154,8 +154,8 @@ ATTACK_MECHANICS = {
             {"triggerId": "blob_c", "type": "animation",
              "npcIds": [NPC_IDS["blob"]], "animationId": ANIMS["blob_melee"][0]},
         ],
-        "callouts": [callout("blob_attacking", "Blob attacking — switch prayer!",
-                             "blob_attack.ogg", "warning", 65, "#FF9800")],
+        "callouts": [callout("blob_attacking", "Blob attacking â€” switch prayer!",
+                             "blob_attack.wav", "warning", 65, "#FF9800")],
         "cooldown": 1,
     },
     "JAD": {
@@ -169,9 +169,9 @@ ATTACK_MECHANICS = {
              "npcIds": [NPC_IDS["jad"]], "animationId": ANIMS["jad_melee"][0]},
         ],
         "callouts": [
-            callout("jad_pray_magic", "PRAY MAGIC!", "pray_magic.ogg", "critical", 99, "#FF0000"),
-            callout("jad_pray_ranged", "PRAY RANGED!", "pray_ranged.ogg", "critical", 99, "#FF0000"),
-            callout("jad_pray_melee", "PRAY MELEE!", "pray_melee.ogg", "critical", 99, "#FF0000"),
+            callout("jad_pray_magic", "PRAY MAGIC!", "pray_magic.wav", "critical", 99, "#FF0000"),
+            callout("jad_pray_ranged", "PRAY RANGED!", "pray_ranged.wav", "critical", 99, "#FF0000"),
+            callout("jad_pray_melee", "PRAY MELEE!", "pray_melee.wav", "critical", 99, "#FF0000"),
         ],
         "cooldown": 1,
     },
@@ -180,7 +180,7 @@ ATTACK_MECHANICS = {
         "triggers": [{"triggerId": "healer_spawn", "type": "npc_spawn",
                       "npcIds": [NPC_IDS["jad_healer"]]}],
         "callouts": [callout("healers_callout", "Healers! Tag them off the Jad",
-                             "healers.ogg", "warning", 75, "#FF9800", 4)],
+                             "healers.wav", "warning", 75, "#FF9800", 4)],
         "cooldown": 8,
     },
 }
@@ -236,8 +236,8 @@ def build_zuk_phase():
                 "mechanicId": "zuk_attack", "name": "Zuk attacking",
                 "triggers": [{"triggerId": "zuk_anim", "type": "animation",
                               "npcIds": [NPC_IDS["zuk"]], "animationId": ANIMS["zuk_attack"][0]}],
-                "callouts": [callout("zuk_attacking", "Zuk attacking — check shield spot!",
-                                     "zuk_attack.ogg", "warning", 80, "#FF5722", 3)],
+                "callouts": [callout("zuk_attacking", "Zuk attacking â€” check shield spot!",
+                                     "zuk_attack.wav", "warning", 80, "#FF5722", 3)],
                 "cooldown": 1,
             },
             {
@@ -245,7 +245,7 @@ def build_zuk_phase():
                 "triggers": [{"triggerId": "zuk_jad", "type": "npc_spawn",
                               "npcIds": [NPC_IDS["jad"]]}],
                 "callouts": [callout("zuk_jad_callout", "JAD spawned behind you!",
-                                     "jad_spawned.ogg", "critical", 97, "#FF0000", 4)],
+                                     "jad_spawned.wav", "critical", 97, "#FF0000", 4)],
                 "cooldown": 20,
             },
             {
@@ -253,7 +253,7 @@ def build_zuk_phase():
                 "triggers": [{"triggerId": "zuk_healers", "type": "npc_spawn",
                               "npcIds": [NPC_IDS["zuk_healer"]]}],
                 "callouts": [callout("zuk_healers_callout", "Zuk healers! Attack them fast",
-                                     "healers.ogg", "critical", 95, "#FF5722", 4)],
+                                     "healers.wav", "critical", 95, "#FF5722", 4)],
                 "cooldown": 20,
             },
         ],
@@ -276,7 +276,7 @@ def main():
                 "All 69 waves + basic TzKal-Zuk. Wave transitions detected via "
                 "wave_cleared triggers (all wave NPCs dead); prayer callouts via "
                 "attack animations. Animation/NPC ids are best-known community "
-                "values — see README verification checklist."
+                "values â€” see README verification checklist."
             ),
             "author": "Project Coach",
             "version": "1.0.0",

@@ -1,4 +1,4 @@
-# Community Pack Template — Pack Author Guide
+﻿# Community Pack Template â€” Pack Author Guide
 
 Copy `template.pack/` as a starting point, rename things, delete what you
 don't use. The full field-by-field reference lives in
@@ -7,7 +7,7 @@ is documented there). This guide is the workflow.
 
 ## Workflow
 
-1. Copy `template.pack/` → `myboss.pack/`, edit `encounter.json`.
+1. Copy `template.pack/` â†’ `myboss.pack/`, edit `encounter.json`.
 2. Replace every `TODO` value: real NPC ids, animation ids, shout texts.
 3. Generate audio for each callout that has an `audioFile`
    (see `generate_nex_audio.py` for the edge-tts + ffmpeg pattern).
@@ -19,7 +19,7 @@ is documented there). This guide is the workflow.
    ```
 
 5. Drop the zip into `.runelite/coach/encounters/`. Enable the plugin's
-   Debug Mode — the overlay shows `[LOADED]` / `[REJECTED: reason]` per pack.
+   Debug Mode â€” the overlay shows `[LOADED]` / `[REJECTED: reason]` per pack.
 6. Verify in-game, then tick off your README verification checklist before
    sharing (rule 8: AI-assisted and unverified content must not be published).
 
@@ -38,7 +38,7 @@ is documented there). This guide is the workflow.
 | `location` | Player ENTERS rectangular region | `minX/maxX/minY/maxY` |
 | `wave_cleared` | Every NPC of a set spawned then died | `npcIds` |
 | `composite` | AND/OR of children against the same event | `logic`, `children` |
-| `custom` | Reserved — not yet evaluated | — |
+| `custom` | Reserved â€” not yet evaluated | â€” |
 
 ## Mechanics
 
@@ -59,7 +59,7 @@ the session.
 
 ## Rules you're agreeing to
 
-1. No game logic in packs — data only (the runtime enforces what it can).
-2. Every callout should have visual AND audio (ship the `.ogg` or omit
+1. No game logic in packs â€” data only (the runtime enforces what it can).
+2. Every callout should have visual AND audio (ship the `.wav` or omit
    `audioFile`; missing referenced files are rejected at load time).
 3. Human-verify your ids/texts against the live client before publishing.

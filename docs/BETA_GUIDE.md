@@ -118,7 +118,8 @@ For each pack record:
 
 ### Known limitations (do not re-file unless worse)
 
-- `.ogg` callouts may not play (prefer `.wav`)
+- Ship **`.wav`** callouts (all bundled packs do). A third-party pack that
+  is `.ogg`-only will validate but **not play** (no Ogg decoder).
 - Some condition types validate but evaluate false (prayer/inventory/region/custom)
 - Pack NPC/animation ids may need live verification (rule 8)
 

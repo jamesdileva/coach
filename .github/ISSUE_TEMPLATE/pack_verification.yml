@@ -40,7 +40,7 @@ body:
       options:
         - label: Phase timeline advances on entry/exit
         - label: ≥3 mechanics fire on the correct tick
-        - label: Critical callouts have visual AND audio (or note .ogg gap)
+        - label: Critical callouts have visual AND audio (.wav; .ogg does not play)
         - label: Cooldown prevents spam
         - label: Death/despawn resets encounter
         - label: Disabled Bosses setting mutes only this boss

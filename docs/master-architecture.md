@@ -101,7 +101,7 @@ These are the "constitution" of Project Coach. They must be upheld in every deci
 8. **AI-generated content must be human-verified.** The AI Knowledge Pipeline produces drafts. An AI agent validator (like an autonomous coding assistant) validates schema conformance and logic. A human reviewer does the final check before publication.
 9. **The plugin loads packs from a user-writable directory.** No encounter JSON is bundled in the JAR (except the AI pipeline's test fixtures).
 10. **No network calls in the MVP plugin.** The plugin is fully offline. Audio assets, JSON packs, and configurations all live on the local filesystem.
-11. **All audio assets are pre-recorded TTS output.** We do not generate audio at runtime. Audio files are produced by running TTS (Kokoro or Edge TTS) on callout text during pack creation, then packaged as `.ogg` files in the pack.
+11. **All audio assets are pre-recorded TTS output.** We do not generate audio at runtime. Audio files are produced by running TTS (Kokoro or Edge TTS) on callout text during pack creation, then packaged as `.wav` (PCM) files in the pack (Java Sound has no Ogg decoder).
 
 ---
 
@@ -111,7 +111,7 @@ These are the "constitution" of Project Coach. They must be upheld in every deci
 
 - RuneLite plugin that loads community encounter packs from a local directory
 - Real-time tick-aligned visual overlays for boss mechanics (safe tiles, incoming attacks, prayer swaps)
-- Real-time audio callouts (pre-recorded TTS `.ogg` files) with tick-precise timing
+- Real-time audio callouts (pre-recorded TTS `.wav` files) with tick-precise timing
 - Support for at least 3 boss encounters (Nex, Inferno, and one Theater of Blood boss) with full trigger/mechanic coverage
 - An AI Knowledge Pipeline that reads the OSRS Wiki, generates draft encounter JSON, and validates it
 - Schema validation for encounter packs (reject invalid packs at load time)
@@ -165,7 +165,7 @@ The MVP is the minimal set of features that demonstrates the core value proposit
 | Encounter engine (JSON loader, phase machine, state management) | Core |
 | Coaching engine (priority scheduling, callout queueing, cooldowns) | Core |
 | Overlay system (visual callouts, debug overlay) | Core |
-| Audio engine (pre-recorded .ogg playback, priority queue) | Core |
+| Audio engine (pre-recorded .wav playback, priority queue) | Core |
 | Configuration system (RuneLite config items) | Core |
 | JSON schema for encounter definitions | Core |
 | Schema validation at load time | Core |
@@ -245,7 +245,7 @@ The MVP is complete when:
 │                            ▼                      ▼              │
 │                   ┌────────────────────┐  ┌────────────────────┐ │
 │                   │  Overlay System    │  │  Audio Engine      │ │
-│                   │  (visual callouts) │  │  (TTS .ogg files)  │ │
+│                   │  (visual callouts) │  │  (TTS .wav files)  │ │
 │                   └────────────────────┘  └────────────────────┘ │
 │                                                                 │
 │  ┌─────────────────────┐  ┌─────────────────────────────────┐   │
@@ -270,7 +270,7 @@ The MVP is complete when:
 2. **Detect**: Trigger Engine receives events, evaluates each loaded encounter's trigger conditions → fires matching triggers
 3. **Decide**: Encounter Engine updates phase/state based on triggered conditions → Coaching Engine receives "mechanic active" signals
 4. **Callout**: Coaching Engine prioritizes callouts by importance and timing, schedules visual + audio delivery
-5. **Deliver**: Overlay System renders visual callouts; Audio Engine plays pre-recorded `.ogg` callouts at the correct tick
+5. **Deliver**: Overlay System renders visual callouts; Audio Engine plays pre-recorded `.wav` callouts at the correct tick
 6. **Validate**: (Offline) AI Knowledge Pipeline reads OSRS Wiki, LLM generates encounter JSON, AI agent validator checks schema + logic, human reviewer approves
 
 ---
@@ -286,7 +286,7 @@ The MVP is complete when:
 - RuneLite event subscriptions (Tick, AnimationChanged, ProjectileSpawned, GraphicChanged, NpcSpawned, NpcDespawned, etc.)
 - Game state bridging (extract NPC IDs, player HP, prayer state, inventory, tile positions, animation IDs, projectile IDs, graphic IDs)
 - Overlay provider (`@Overlay` methods for visual callouts)
-- Audio provider (play .ogg files via RuneLite's audio API or `javax.sound.sampled`)
+- Audio provider (play .wav files via RuneLite's audio API or `javax.sound.sampled`)
 - Config item registration (toggle bosses, adjust volumes, set pack directory)
 
 **RuneLite Event Subscriptions**:
@@ -511,7 +511,7 @@ Encounter (boss definition)
 
 ### 8.6 Audio Engine
 
-**Purpose**: Plays audio callouts (pre-recorded TTS `.ogg` files) at tick-precise moments.
+**Purpose**: Plays audio callouts (pre-recorded TTS `.wav` files) at tick-precise moments.
 
 **Responsibilities**:
 - **Callout queue**: FIFO queue for audio callouts, with priority reordering
@@ -524,7 +524,7 @@ Encounter (boss definition)
 
 **Inputs**:
 - Audio callout requests from the Coaching Engine
-- Audio files from loaded encounter packs (`.ogg` files in the pack's `audio/` directory)
+- Audio files from loaded encounter packs (`.wav` files in the pack's `audio/` directory)
 
 **Outputs**:
 - Audio playback via `javax.sound.sampled` or RuneLite's audio API
@@ -536,12 +536,12 @@ Encounter (boss definition)
 | `AudioEngine` | Main entry point, manages callout queue and playback |
 | `AudioQueue` | FIFO queue with priority reordering |
 | `AudioPriorityResolver` | Assigns priority to audio callouts |
-| `AudioPlayer` | Low-level `.ogg` playback via `javax.sound.sampled` |
+| `AudioPlayer` | Low-level `.wav` playback via `javax.sound.sampled` |
 | `VolumeController` | Manages per-category volume + master volume |
 | `TimingAdjuster` | Applies tick-precision timing offsets |
 
 **Design Notes**:
-- Audio files are packaged in encounter packs as `.ogg` (Vorbis) format. They are generated offline by running TTS (Kokoro or Edge TTS) on callout text during pack creation.
+- Audio files are packaged in encounter packs as `.wav` (PCM) format. They are generated offline by running TTS (Kokoro or Edge TTS) on callout text during pack creation.
 - The audio engine never blocks the tick thread. Playback is initiated asynchronously.
 - Callouts have a `category` (critical, warning, informational, phase_transition). Each category has its own volume slider and cooldown.
 - The `TimingAdjuster` applies a configurable millisecond offset to align audio playback with tick boundaries (typically -50 to +50ms).
@@ -569,7 +569,7 @@ Encounter (boss definition)
 - TTS engine configuration (for generating audio files from callout text)
 
 **Outputs**:
-- Encounter pack `.zip` (JSON + audio `.ogg` files)
+- Encounter pack `.zip` (JSON + audio `.wav` files)
 - Validation report (issues found + confidence scores)
 - Changelog (diff from previous version, if updating)
 
@@ -584,7 +584,7 @@ Encounter (boss definition)
 | `SchemaValidator` | Validates JSON against the encounter schema |
 | `AIValidatorAgent` | Autonomous agent that checks logic + completeness (can make edits) |
 | `HumanReviewInterface` | Simple web page or CLI for human review + approval |
-| `AudioGenerator` | Runs TTS on all callout text, packages `.ogg` files |
+| `AudioGenerator` | Runs TTS on all callout text, packages `.wav` files |
 | `PackBuilder` | Assembles JSON + audio into `.zip` pack |
 | `PublishingPipeline` | Tags version, generates changelog, writes distribution metadata |
 
@@ -593,7 +593,7 @@ Encounter (boss definition)
 - The LLM is prompted with a detailed system prompt: "You are generating an encounter definition for a RuneLite coaching plugin. Extract all boss mechanics, phase transitions, special attacks, and timing. Output valid JSON matching schema X."
 - The AI Validator Agent (an autonomous coding assistant like opencode) performs static analysis on the JSON: checks that every referenced audio file exists, every trigger type is valid, every phase transition has entry conditions, etc. It can suggest fixes.
 - Human review is the final gate — the reviewer checks that mechanics are actually correct (e.g., "does Nex really use ranged after 3 special attacks?").
-- Audio generation runs after human approval — TTS processes all callout text and produces `.ogg` files at the correct naming convention.
+- Audio generation runs after human approval — TTS processes all callout text and produces `.wav` files at the correct naming convention.
 - Packs are versioned (semantic versioning). The pipeline can diff against a previous version and generate a changelog.
 
 ### 8.8 Configuration Manager
@@ -742,7 +742,7 @@ encounter_pack.json
 │   └── CalloutDefinition:
 │       ├── calloutId: string
 │       ├── text: string                               // visual text
-│       ├── audioFile: string                          // .ogg filename (optional)
+│       ├── audioFile: string                          // .wav filename (optional)
 │       ├── category: "critical" | "warning" | "info" | "transition"
 │       ├── visual: VisualDefinition                   // overlay config
 │       ├── audioOffset: int                           // tick offset for audio
@@ -882,7 +882,7 @@ coach/
 │               │   ├── encounter_schema_v1.json     # JSON schema for validation
 │               │   └── migration_v0_to_v1.json
 │               └── audio/
-│                   └── (default placeholder .ogg files)
+│                   └── (default placeholder .wav files)
 │
 ├── knowledge-pipeline/              # Separate tool (not in plugin)
 │   ├── pyproject.toml              # Python project
@@ -905,8 +905,8 @@ coach/
 │   ├── nex.pack/
 │   │   ├── encounter.json
 │   │   └── audio/
-│   │       ├── nex_pray_melee.ogg
-│   │       └── nex_phase_transition.ogg
+│   │       ├── nex_pray_melee.wav
+│   │       └── nex_phase_transition.wav
 │   ├── inferno.pack/
 │   │   ├── encounter.json
 │   │   └── audio/
@@ -942,7 +942,7 @@ The RuneLite plugin follows the standard RuneLite plugin structure:
 
 - **JSON schema**: `schemas/encounter_schema_v1.json` — the authoritative schema for encounter packs
 - **Migration files**: `schemas/migration_*.json` — JSON transformations for schema version upgrades
-- **Audio assets**: `.ogg` files are shipped with encounter packs, not with the plugin JAR
+- **Audio assets**: `.wav` files are shipped with encounter packs, not with the plugin JAR
 - **Default pack**: A minimal example pack ships with development builds for testing
 
 ### Knowledge Packs
@@ -961,9 +961,9 @@ Each pack contains:
 <nex-1.2.3.zip>
 ├── encounter.json       # main encounter definition
 └── audio/               # audio assets
-    ├── pray_melee.ogg
-    ├── pray_ranged.ogg
-    ├── phase_transition.ogg
+    ├── pray_melee.wav
+    ├── pray_ranged.wav
+    ├── phase_transition.wav
     └── ...
 ```
 
@@ -986,7 +986,7 @@ Each pack contains:
 ### Assets
 
 - Default color palette (colorblind-safe)
-- Placeholder audio (single `.ogg` file for "test callout")
+- Placeholder audio (single `.wav` file for "test callout")
 - Icon assets (plugin logo, overlay icons)
 
 ---
@@ -1031,7 +1031,7 @@ OSRS ticks are 600ms. The plugin must complete all event processing within each 
 ### Audio Latency
 
 - Target: audio playback starts within 50ms of the tick boundary
-- Achieved by pre-loading all `.ogg` files into memory at pack load
+- Achieved by pre-loading all `.wav` files into memory at pack load
 - Using `javax.sound.sampled.Clip` for low-latency playback
 - The `TimingAdjuster` applies a configurable offset (default: -100ms to fire audio slightly early, compensating for human reaction time)
 

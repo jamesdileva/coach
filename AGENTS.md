@@ -31,7 +31,7 @@ all callouts are advisory.
 8. AI-generated encounter content requires human verification before publication.
 9. Packs load from a user-writable directory, not bundled in the JAR.
 10. No network calls in the plugin.
-11. Audio = pre-recorded TTS `.ogg` files, generated offline during pack creation.
+11. Audio = pre-recorded TTS `.wav` files, generated offline during pack creation (`.ogg` may validate but does not play without a decoder).
 
 ## Repo layout
 

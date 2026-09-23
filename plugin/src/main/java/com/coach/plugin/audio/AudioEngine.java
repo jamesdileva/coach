@@ -31,9 +31,8 @@ import org.slf4j.LoggerFactory;
  * master × per-category, both configurable live.
  *
  * Format note: Java supports WAV/PCM out of the box but has no Ogg/Vorbis
- * decoder. The TTS pipeline (Sprint 27) ships .ogg; a decoder integration is
- * added there where real files can be tested. Until then non-WAV entries are
- * cached but fail gracefully with a log line.
+ * decoder. Shipped packs use .wav (PCM); .ogg entries are cached and fail
+ * gracefully with a log line if referenced.
  */
 public class AudioEngine
 {

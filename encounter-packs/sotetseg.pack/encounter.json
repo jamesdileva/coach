@@ -1,9 +1,9 @@
-{
+﻿{
   "schemaVersion": "1.0",
   "metadata": {
     "packId": "tob_sotetseg",
-    "name": "Theatre of Blood — Sotetseg",
-    "description": "Sotetseg v1: encounter start prayer guidance and shadow-realm maze warnings driven by HP thresholds (66.6% / 33.3%). Attack-animation and big-ball triggers require verified animation ids — see README checklist.",
+    "name": "Theatre of Blood â€” Sotetseg",
+    "description": "Sotetseg v1: encounter start prayer guidance and shadow-realm maze warnings driven by HP thresholds (66.6% / 33.3%). Attack-animation and big-ball triggers require verified animation ids â€” see README checklist.",
     "author": "Project Coach",
     "version": "1.0.0",
     "gameVersion": "230"
@@ -32,7 +32,7 @@
               "callouts": [{
                 "calloutId": "sote_start_callout",
                 "text": "Sotetseg! Pray Magic, spread out for the ball",
-                "audioFile": "sote_start.ogg",
+                "audioFile": "sote_start.wav",
                 "category": "critical", "priority": 85,
                 "audioOffset": -1, "visualOffset": 0,
                 "visual": { "type": "prayer_icon", "color": "#7B1FA2", "durationTicks": 6 }
@@ -46,7 +46,7 @@
               "callouts": [{
                 "calloutId": "maze_one_callout",
                 "text": "Maze incoming! Follow the red path!",
-                "audioFile": "maze.ogg",
+                "audioFile": "maze.wav",
                 "category": "critical", "priority": 95,
                 "audioOffset": -1, "visualOffset": 0,
                 "visual": { "type": "text", "color": "#FF0000", "durationTicks": 6 }
@@ -60,7 +60,7 @@
               "callouts": [{
                 "calloutId": "maze_two_callout",
                 "text": "Second maze incoming!",
-                "audioFile": "maze.ogg",
+                "audioFile": "maze.wav",
                 "category": "critical", "priority": 95,
                 "audioOffset": -1, "visualOffset": 0,
                 "visual": { "type": "text", "color": "#FF0000", "durationTicks": 6 }

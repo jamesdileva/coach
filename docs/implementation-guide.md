@@ -508,7 +508,7 @@ public class Mechanic {
 public class CalloutDefinition {
     private final String calloutId;
     private final String text;
-    private final String audioFile;      // .ogg filename in pack
+    private final String audioFile;      // .wav filename in pack
     private final CalloutCategory category;
     private final VisualDefinition visual;
     private final int audioOffsetTicks;   // tick offset for audio
@@ -972,7 +972,7 @@ PackManager.loadPacks(directory)
       → Extract encounter.json
       → Validate schema version
       → Parse JSON → Encounter objects
-      → Pre-load all .ogg files into AudioEngine cache
+      → Pre-load all .wav files into AudioEngine cache
       → Return EncounterPack
       → On error: log + quarantine (rename to .broken)
 ```
@@ -1200,9 +1200,9 @@ public class VolumeController {
 
 ### Pre-loading Strategy
 
-- All `.ogg` files in a pack are loaded into `ByteBuffer` at pack load time
+- All `.wav` files in a pack are loaded into `ByteBuffer` at pack load time
 - This ensures zero-latency playback during fights
-- Memory budget: each .ogg is ~200-500KB; a 10-callout pack = ~5MB max
+- Memory budget: each .wav is ~200-800KB; a 10-callout pack = ~5MB max
 - If memory is tight, least-recently-used files are evicted (but this is rare)
 
 ---
@@ -1359,7 +1359,7 @@ This section guides **pack authors** through creating a new encounter pack. Foll
                 {
                   "calloutId": "pray_ranged",
                   "text": "Pray Ranged!",
-                  "audioFile": "pray_ranged.ogg",
+                  "audioFile": "pray_ranged.wav",
                   "category": "critical",
                   "priority": 90,
                   "audioOffset": -2,
@@ -1383,17 +1383,17 @@ This section guides **pack authors** through creating a new encounter pack. Foll
 
 ### Step 3: Generate Audio Files
 
-Use the AI Knowledge Pipeline's `audio_generator.py` to create `.ogg` files:
+Use the AI Knowledge Pipeline's `audio_generator.py` to create `.wav` files:
 
 ```bash
-python audio_generator.py --callout-text "Pray Ranged!" --output audio/pray_ranged.ogg --voice "friendly_male"
+python audio_generator.py --callout-text "Pray Ranged!" --output audio/pray_ranged.wav --voice "friendly_male"
 ```
 
 Or manually: use Edge TTS or Kokoro to generate the audio:
 
 ```bash
 # Using edge-tts (Node.js)
-npx edge-tts --text "Pray Ranged!" --output-file audio/pray_ranged.ogg --voice en-US-GuyNeural
+npx edge-tts --text "Pray Ranged!" --output-file audio/pray_ranged.wav --voice en-US-GuyNeural
 ```
 
 ### Step 4: Package and Test
@@ -1451,7 +1451,7 @@ Human Review Interface (web UI)
 Approved JSON
         │
         ▼
-Audio Generator (TTS → .ogg)
+Audio Generator (TTS → .wav)
         │
         ▼
 Pack Builder (.zip with JSON + audio)
@@ -1606,11 +1606,12 @@ from pydub import AudioSegment
 class AudioGenerator:
     async def generate_callout(self, text: str, output_path: str, voice: str = "en-US-GuyNeural"):
         communicate = edge_tts.Communicate(text, voice)
-        await communicate.save(output_path)
-        # Convert to .ogg
-        sound = AudioSegment.from_wav(output_path + ".wav")
-        sound.export(output_path + ".ogg", format="ogg")
-        os.remove(output_path + ".wav")
+        await communicate.save(output_path)  # edge-tts writes .mp3
+        # Convert to mono 44.1kHz PCM .wav (Java Sound playable)
+        sound = AudioSegment.from_file(output_path)
+        sound = sound.set_channels(1).set_frame_rate(44100)
+        wav_path = output_path.rsplit(".", 1)[0] + ".wav"
+        sound.export(wav_path, format="wav", parameters=["-acodec", "pcm_s16le"])
 ```
 
 #### Pack Builder
@@ -1697,7 +1698,7 @@ class EndToEndTest {
         engine.onTick(100, events);
 
         // 4. Verify a callout was scheduled
-        verify(audioEngine).playAudio(eq("pray_ranged.ogg"), anyInt());
+        verify(audioEngine).playAudio(eq("pray_ranged.wav"), anyInt());
         verify(overlayManager).addPrayerIcon(any());
     }
 }

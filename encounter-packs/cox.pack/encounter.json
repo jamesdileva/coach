@@ -1,9 +1,9 @@
-{
+﻿{
   "schemaVersion": "1.0",
   "metadata": {
     "packId": "cox",
     "name": "Chambers of Xeric",
-    "description": "CoX v1: guidance-focused pack for key rooms (Vanguards, Tekton, Vasa Nistirio, Great Olm). NPC ids are best-known community values awaiting live verification — see README checklist. Deeper mechanic coverage (Olm attack styles, Vasa portals, Tekton anvil timing) needs verified animation data.",
+    "description": "CoX v1: guidance-focused pack for key rooms (Vanguards, Tekton, Vasa Nistirio, Great Olm). NPC ids are best-known community values awaiting live verification â€” see README checklist. Deeper mechanic coverage (Olm attack styles, Vasa portals, Tekton anvil timing) needs verified animation data.",
     "author": "Project Coach",
     "version": "1.0.0",
     "gameVersion": "230"
@@ -26,8 +26,8 @@
               "triggers": [{ "triggerId": "spawn", "type": "npc_spawn", "npcIds": [7526, 7527, 7528, 7529, 7530] }],
               "callouts": [{
                 "calloutId": "vanguard_start_callout",
-                "text": "Vanguards! Kill order melee ranged magic — don't let them stack",
-                "audioFile": "vanguard_start.ogg",
+                "text": "Vanguards! Kill order melee ranged magic â€” don't let them stack",
+                "audioFile": "vanguard_start.wav",
                 "category": "critical", "priority": 80,
                 "audioOffset": -1, "visualOffset": 0,
                 "visual": { "type": "text", "color": "#00695C", "durationTicks": 6 }
@@ -55,8 +55,8 @@
               "triggers": [{ "triggerId": "spawn", "type": "npc_spawn", "npcIds": [7540, 7541, 7542] }],
               "callouts": [{
                 "calloutId": "tekton_start_callout",
-                "text": "Tekton! Hard hitter — keep prayers flicking",
-                "audioFile": "tekton_start.ogg",
+                "text": "Tekton! Hard hitter â€” keep prayers flicking",
+                "audioFile": "tekton_start.wav",
                 "category": "critical", "priority": 80,
                 "audioOffset": -1, "visualOffset": 0,
                 "visual": { "type": "text", "color": "#BF360C", "durationTicks": 6 }
@@ -85,7 +85,7 @@
               "callouts": [{
                 "calloutId": "vasa_start_callout",
                 "text": "Vasa! Watch for boulders and the heal portals",
-                "audioFile": "vasa_start.ogg",
+                "audioFile": "vasa_start.wav",
                 "category": "critical", "priority": 80,
                 "audioOffset": -1, "visualOffset": 0,
                 "visual": { "type": "text", "color": "#5D4037", "durationTicks": 6 }
@@ -114,7 +114,7 @@
               "callouts": [{
                 "calloutId": "olm_start_callout",
                 "text": "Great Olm! Disable both hands, watch for specials",
-                "audioFile": "olm_start.ogg",
+                "audioFile": "olm_start.wav",
                 "category": "critical", "priority": 80,
                 "audioOffset": -1, "visualOffset": 0,
                 "visual": { "type": "text", "color": "#283593", "durationTicks": 6 }
@@ -127,8 +127,8 @@
               "triggers": [{ "triggerId": "hp25", "type": "hp", "npcIds": [7551], "hpThreshold": 25, "hpDirection": "below" }],
               "callouts": [{
                 "calloutId": "olm_final_callout",
-                "text": "Final phase! All powers live — disable hands fast!",
-                "audioFile": "olm_final.ogg",
+                "text": "Final phase! All powers live â€” disable hands fast!",
+                "audioFile": "olm_final.wav",
                 "category": "critical", "priority": 90,
                 "audioOffset": -1, "visualOffset": 0,
                 "visual": { "type": "text", "color": "#FF0000", "durationTicks": 5 }

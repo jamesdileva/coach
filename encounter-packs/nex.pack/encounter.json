@@ -1,8 +1,8 @@
-{
+﻿{
   "schemaVersion": "1.0",
   "metadata": {
     "packId": "nex",
-    "name": "Nex — Ancient Prison",
+    "name": "Nex â€” Ancient Prison",
     "description": "Full five-phase Nex encounter: Smoke, Shadow, Blood, Ice, Zaros. Special attacks are detected via boss shouts; phase transitions via Nex HP thresholds. Prayer callouts fire 2 ticks before impact where applicable. Human verification of shout strings against live client pending (see README).",
     "author": "Project Coach",
     "version": "1.0.0",
@@ -30,7 +30,7 @@
               "callouts": [{
                 "calloutId": "smoke_start_pray",
                 "text": "Smoke phase! Melee distance, flick Protect Melee and Magic",
-                "audioFile": "smoke_start.ogg",
+                "audioFile": "smoke_start.wav",
                 "category": "transition", "priority": 60,
                 "audioOffset": 0, "visualOffset": 0,
                 "visual": { "type": "text", "color": "#9E9E9E", "durationTicks": 6 }
@@ -44,7 +44,7 @@
               "callouts": [{
                 "calloutId": "choke_callout",
                 "text": "Choke! Spread out, choke tank step away",
-                "audioFile": "choke.ogg",
+                "audioFile": "choke.wav",
                 "category": "warning", "priority": 70,
                 "audioOffset": 0, "visualOffset": 0,
                 "visual": { "type": "text", "color": "#2E7D32", "durationTicks": 4 }
@@ -58,7 +58,7 @@
               "callouts": [{
                 "calloutId": "dash_callout",
                 "text": "Smoke dash! Move off the bridge path!",
-                "audioFile": "smoke_dash.ogg",
+                "audioFile": "smoke_dash.wav",
                 "category": "critical", "priority": 90,
                 "audioOffset": -1, "visualOffset": 0,
                 "visual": { "type": "text", "color": "#FF0000", "durationTicks": 4 }
@@ -82,7 +82,7 @@
               "callouts": [{
                 "calloutId": "shadow_start_pray",
                 "text": "Shadow phase! Pray Missiles now",
-                "audioFile": "shadow_start.ogg",
+                "audioFile": "shadow_start.wav",
                 "category": "critical", "priority": 85,
                 "audioOffset": -2, "visualOffset": 0,
                 "visual": { "type": "prayer_icon", "color": "#3F51B5", "durationTicks": 6 }
@@ -96,7 +96,7 @@
               "callouts": [{
                 "calloutId": "smash_callout",
                 "text": "Shadow smash! Move within 3 ticks!",
-                "audioFile": "shadow_smash.ogg",
+                "audioFile": "shadow_smash.wav",
                 "category": "critical", "priority": 92,
                 "audioOffset": 0, "visualOffset": 0,
                 "visual": { "type": "text", "color": "#FF0000", "durationTicks": 4 }
@@ -110,7 +110,7 @@
               "callouts": [{
                 "calloutId": "darkness_callout",
                 "text": "Darkness! Run away from Nex NOW!",
-                "audioFile": "darkness.ogg",
+                "audioFile": "darkness.wav",
                 "category": "critical", "priority": 95,
                 "audioOffset": -1, "visualOffset": 0,
                 "visual": { "type": "text", "color": "#FF0000", "durationTicks": 5 }
@@ -134,7 +134,7 @@
               "callouts": [{
                 "calloutId": "blood_start_pray",
                 "text": "Blood phase! Pray Magic, spread out",
-                "audioFile": "blood_start.ogg",
+                "audioFile": "blood_start.wav",
                 "category": "critical", "priority": 85,
                 "audioOffset": -2, "visualOffset": 0,
                 "visual": { "type": "prayer_icon", "color": "#B71C1C", "durationTicks": 6 }
@@ -147,8 +147,8 @@
               "triggers": [{ "triggerId": "shout_siphon", "type": "shout", "containsText": "A siphon will solve this" }],
               "callouts": [{
                 "calloutId": "siphon_callout",
-                "text": "Siphon! STOP attacking — kill reavers",
-                "audioFile": "siphon.ogg",
+                "text": "Siphon! STOP attacking â€” kill reavers",
+                "audioFile": "siphon.wav",
                 "category": "critical", "priority": 93,
                 "audioOffset": -1, "visualOffset": 0,
                 "visual": { "type": "text", "color": "#B71C1C", "durationTicks": 6 }
@@ -162,7 +162,7 @@
               "callouts": [{
                 "calloutId": "sacrifice_callout",
                 "text": "Sacrifice marked! Run 7+ tiles from Nex!",
-                "audioFile": "sacrifice.ogg",
+                "audioFile": "sacrifice.wav",
                 "category": "critical", "priority": 96,
                 "audioOffset": -1, "visualOffset": 0,
                 "visual": { "type": "text", "color": "#FF0000", "durationTicks": 5 }
@@ -186,7 +186,7 @@
               "callouts": [{
                 "calloutId": "ice_start_pray",
                 "text": "Ice phase! Pray Magic to avoid freeze",
-                "audioFile": "ice_start.ogg",
+                "audioFile": "ice_start.wav",
                 "category": "critical", "priority": 85,
                 "audioOffset": -2, "visualOffset": 0,
                 "visual": { "type": "prayer_icon", "color": "#4FC3F7", "durationTicks": 6 }
@@ -200,7 +200,7 @@
               "callouts": [{
                 "calloutId": "contain_callout",
                 "text": "Containment! Move out of the 5x5!",
-                "audioFile": "containment.ogg",
+                "audioFile": "containment.wav",
                 "category": "critical", "priority": 94,
                 "audioOffset": -1, "visualOffset": 0,
                 "visual": { "type": "safe_tile", "color": "#4FC3F7", "durationTicks": 4 }
@@ -214,7 +214,7 @@
               "callouts": [{
                 "calloutId": "prison_callout",
                 "text": "Ice prison! Break a stalagmite fast!",
-                "audioFile": "ice_prison.ogg",
+                "audioFile": "ice_prison.wav",
                 "category": "critical", "priority": 93,
                 "audioOffset": -1, "visualOffset": 0,
                 "visual": { "type": "text", "color": "#4FC3F7", "durationTicks": 5 }
@@ -236,7 +236,7 @@
               "callouts": [{
                 "calloutId": "zaros_start_pray",
                 "text": "Zaros phase! Pray Magic, watch her overheads",
-                "audioFile": "zaros_start.ogg",
+                "audioFile": "zaros_start.wav",
                 "category": "critical", "priority": 85,
                 "audioOffset": -2, "visualOffset": 0,
                 "visual": { "type": "prayer_icon", "color": "#4A148C", "durationTicks": 6 }
@@ -250,7 +250,7 @@
               "callouts": [{
                 "calloutId": "wrath_callout",
                 "text": "WRATH! Run 5 tiles from the body NOW!",
-                "audioFile": "wrath.ogg",
+                "audioFile": "wrath.wav",
                 "category": "critical", "priority": 99,
                 "audioOffset": 0, "visualOffset": 0,
                 "visual": { "type": "safe_tile", "color": "#4A148C", "durationTicks": 5 }

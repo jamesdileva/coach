@@ -130,7 +130,7 @@
       "properties": {
         "calloutId": { "type": "string", "description": "Unique within mechanic; cooldown-suppression key." },
         "text": { "type": "string", "description": "Visual overlay text AND the TTS source text (rule 11)." },
-        "audioFile": { "type": "string", "description": ".ogg/.wav filename under audio/ in the pack zip; must exist (checked at load)." },
+        "audioFile": { "type": "string", "description": ".wav filename under audio/ in the pack zip; must exist (checked at load). .ogg validates but does not play (no Ogg decoder)." },
         "category": { "enum": ["critical", "warning", "info", "transition"], "description": "Priority default + colour mapping." },
         "priority": { "type": "integer", "minimum": 1, "maximum": 100, "description": "Explicit delivery order override." },
         "audioOffset": { "type": "integer", "minimum": -5, "maximum": 10, "description": "Ticks relative to activation; negative = before." },

@@ -501,7 +501,7 @@ Each sprint follows this template:
 
 **Plugin Changes:**
 - `PredictionEngine`: looks ahead in the encounter timeline, predicts next mechanic for "next callout" display
-- `AudioEngine`: receives audio callout requests, plays `.ogg` files with timing offsets
+- `AudioEngine`: receives audio callout requests, plays `.wav` files with timing offsets
 - `OverlayManager`: coordinates which overlays to render on the screen
 - `CoachOverlay`: main RuneLite `Overlay` implementation that delegates to OverlayManager
 
@@ -654,7 +654,7 @@ Each sprint follows this template:
 
 **Files Created:**
 - `encounter-packs/nex.pack/encounter.json`
-- `encounter-packs/nex.pack/audio/*.ogg` (7 callouts)
+- `encounter-packs/nex.pack/audio/*.wav` (7 callouts)
 
 **Files Modified:** None (pure data pack).
 
@@ -701,7 +701,7 @@ Each sprint follows this template:
 
 **Files Created:**
 - `encounter-packs/inferno.pack/encounter.json`
-- `encounter-packs/inferno.pack/audio/*.ogg` (12 callouts)
+- `encounter-packs/inferno.pack/audio/*.wav` (12 callouts)
 
 **Files Modified:** None.
 
@@ -747,7 +747,7 @@ Each sprint follows this template:
 
 **Files Created:**
 - `encounter-packs/tob_soteboss.pack/encounter.json`
-- `encounter-packs/tob_soteboss.pack/audio/*.ogg` (8 callouts)
+- `encounter-packs/tob_soteboss.pack/audio/*.wav` (8 callouts)
 
 **Files Modified:** None.
 
@@ -792,7 +792,7 @@ Each sprint follows this template:
 
 **Files Created:**
 - `encounter-packs/toa.pack/encounter.json`
-- `encounter-packs/toa.pack/audio/*.ogg` (10+ callouts)
+- `encounter-packs/toa.pack/audio/*.wav` (10+ callouts)
 
 **Files Modified:** None.
 
@@ -832,7 +832,7 @@ Each sprint follows this template:
 
 **Files Created:**
 - `encounter-packs/cox.pack/encounter.json`
-- `encounter-packs/cox.pack/audio/*.ogg`
+- `encounter-packs/cox.pack/audio/*.wav`
 - `encounter-packs/template.pack/encounter.json` (template)
 - `docs/examples/ENCODING.md` (pack author guide)
 
@@ -1390,7 +1390,7 @@ Each sprint follows this template:
 
 ### Sprint 27 — Audio Generation + Pack Builder
 
-**Objective:** Run TTS (Kokoro/Edge) on approved callout text, generate `.ogg` files, and assemble the final encounter pack ZIP.
+**Objective:** Run TTS (Kokoro/Edge) on approved callout text, generate `.wav` files, and assemble the final encounter pack ZIP.
 
 **Inputs:**
 - Approved JSON from Sprint 26
@@ -1398,7 +1398,7 @@ Each sprint follows this template:
 - Callout text from approved JSON
 
 **Outputs:**
-- `audio_generator.py`: generates `.ogg` files from callout text
+- `audio_generator.py`: generates `.wav` files from callout text
 - `pack_builder.py`: assembles JSON + audio into `.zip` pack
 - Final distributable pack (`nex_1.0.0.zip`)
 
@@ -1415,7 +1415,7 @@ Each sprint follows this template:
 
 **Acceptance Criteria:**
 - TTS generates audio for each callout's text
-- Audio files are `.ogg` format, < 500KB each
+- Audio files are `.wav` format, < 500KB each
 - Pack builder assembles JSON + audio into ZIP with correct structure
 - Pack loads in RuneLite plugin without errors
 - Audio files play correctly through the plugin's AudioEngine

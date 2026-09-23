@@ -50,7 +50,8 @@ knowledge pipeline, docs, and release tooling.
   status (HP %), safe-tile helper; debug overlay tabs
   (`EVENTS` / `TRIGGERS` / `STATE` / `TIMELINE` / `PROFILING`).
 - **Audio** — category volumes, interrupt priority, mute, never-blocks
-  visual path; offline TTS pipeline (`.wav` plays; `.ogg` validates).
+  visual path; offline TTS pipeline (shipped packs **`.wav` PCM**; `.ogg`
+  validates but does not play).
 - **Accessibility** — `BOTH` / `AUDIO_ONLY` / `VISUAL_ONLY`, essential-only,
   high-contrast palette, text scale 50–200%.
 - **Profiles** — Learning / Practice / Performance defaults; import/export
@@ -81,8 +82,16 @@ user-writable zips into `<RuneLite>/coach/encounters/`.
 ### Added — knowledge pipeline (`knowledge-pipeline/`)
 
 - Wiki fetch → parse → draft → structural + logic validation → AI
-  validator agent → human review UI (Flask) → TTS `.ogg` → pack zip +
+  validator agent → human review UI (Flask) → TTS → pack zip +
   changelog. End-to-end CLI; 53 Python tests.
+
+### Fixed — pack audio (beta)
+
+- **All 40 callout clips converted `.ogg` → `.wav` (PCM s16le mono 44.1 kHz)**
+  and pack `encounter.json` `audioFile` refs updated; pack zips rebuilt.
+- `encounter-packs/generate_*_audio.py` emit `.wav` (was Vorbis `.ogg`).
+- Rationale: JDK Sound SPIs are WAVE/AIFF/AU only; no vorbis/jorbis on the
+  RuneLite client classpath — `.ogg` playback was a known no-op.
 
 ### Added — documentation (Sprint 31)
 
@@ -109,9 +118,10 @@ user-writable zips into `<RuneLite>/coach/encounters/`.
 
 ### Known issues / limitations
 
-- **`.ogg` callouts do not play in-game** (no Ogg decoder on the Java
-  classpath) — visual callouts still fire; prefer `.wav` packs until a
-  decoder ships.
+- **Callout audio must be `.wav`** (PCM). Java Sound has no Ogg decoder, so
+  `.ogg` refs validate at pack load but fail at playback (visuals still
+  fire). **All shipped packs converted to `.wav`** for the beta (option 1:
+  no new dependency; generators emit PCM).
 - Several condition types validate but evaluate **false with a warning**:
   `prayer_active` / `prayer_inactive` / `inventory_contains` /
   `player_in_region` / `custom` (ConditionEvaluator default branch);

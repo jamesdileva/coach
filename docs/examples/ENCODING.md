@@ -17,7 +17,7 @@ A pack is a `.zip` containing:
 ```
 myboss_1.0.0.zip
 ├── encounter.json      # required, exactly this name
-└── audio/              # optional; callout .wav (playable) / .ogg (validate-only) files
+└── audio/              # optional; callout .wav (required for playback) files
     └── pray_melee.wav
 ```
 
@@ -105,14 +105,14 @@ Callout `text` is your TTS source. The repo's standard pipeline:
 # pattern from encounter-packs/generate_nex_audio.py
 import edge_tts, subprocess
 await edge_tts.Communicate(text, "en-US-GuyNeural", rate="+15%").save("x.mp3")
-subprocess.run(["ffmpeg", "-i", "x.mp3", "-acodec", "libvorbis",
-                "-ar", "44100", "-ac", "1", "x.ogg"])
+subprocess.run(["ffmpeg", "-i", "x.mp3", "-acodec", "pcm_s16le",
+                "-ar", "44100", "-ac", "1", "x.wav"])
 ```
 
-**Playback note:** the plugin validates `.ogg` and `.wav` references at load,
-but Java has no built-in Ogg decoder — **only `.wav` currently plays**;
-`.ogg` caches and fails gracefully (visual callouts still fire). Prefer
-`.wav` packs for live use until decoder integration lands.
+**Playback note:** ship **`.wav`** (PCM) callouts. Java Sound (and therefore
+the plugin) has no Ogg decoder — `.ogg` references still validate at pack
+load but **fail at playback** (visual callouts still fire). Shipped packs
+are all `.wav` as of the beta audio fix.
 
 ## 6. Testing checklist before publishing
 

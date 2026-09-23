@@ -4,6 +4,53 @@ Running log of sprints: what was done, key decisions, deviations from the docs.
 
 ---
 
+## Sprint 33 follow-up — Beta audio fix (`.ogg` → `.wav`) (2026-09-22)
+
+**Objective:** Make callout audio actually play during the user's solo 6-boss
+beta run. Empirically confirmed Java Sound (JDK + RuneLite client CP) has no
+Ogg/Vorbis decoder — `.ogg` was a no-op.
+
+### Done
+
+- **All 40 callout clips converted** `.ogg` → `.wav` (PCM s16le mono 44.1 kHz
+  via ffmpeg); every `.ogg` deleted; pack `encounter.json` `audioFile` refs
+  updated (nex / inferno / toa / cox / sotetseg / template).
+- **Pack zips rebuilt** with forward-slash entries: `nex_1.0.0.zip`,
+  `inferno_1.0.0.zip`, `toa_1.0.0.zip`, `cox_1.0.0.zip`,
+  `tob_sotetseg_1.0.0.zip` (all ogg=0, backslash=0).
+- **Generators** `encounter-packs/generate_*_audio.py` now emit `pcm_s16le`
+  `.wav` (was Vorbis `.ogg`); `mp3_to_ogg` → `mp3_to_wav` / `wav_path`.
+  `generate_inferno_pack.py` callout refs → `.wav`.
+- **Schema description** (`encounter_schema_v1.json` `audioFile`) documents
+  `.wav` preferred; `.ogg` validates but does not play.
+- **Docs updated:** `AGENTS.md` rule 11, `master-architecture.md` §8 audio,
+  `implementation-guide.md` audio engine + generator examples,
+  `ENCODING.md` §5, `DEVELOPER_SETUP.md` ffmpeg row, `sprint-roadmap.md`
+  audio mentions, `BETA_GUIDE.md` / `USER_GUIDE.md` troubleshooting,
+  `CHANGELOG.md` Fixed — pack audio (beta) + known issues, pack READMEs,
+  issue template checkbox.
+- **Reinstalled for user:** 5 pack zips → `%USERPROFILE%\.runelite\coach\encounters\`;
+  rebuilt `coach-1.0.0.jar` → `%USERPROFILE%\.runelite\sideloaded-plugins\`
+  (SHA256 `299CB98BF26C6CB5D69D0A213DD7C2CCAFE4239C2604117F04D493A84F60C6A4`).
+
+### Verified
+
+- Relative markdown link check: **LINK_CHECK_OK**.
+- **`gradlew --no-daemon check jar` green** (all unit/integration/simulation
+  tests; JaCoCo coverage gate passed). Corrupted mid-edit `ENCODING.md`
+  restored from git then re-edited carefully (`c`→`a` corruption scan clean).
+
+### Decisions / deviations
+
+- **Option 1 (user): convert packs to `.wav`** — no new dependency;
+  `AudioEngine` already plays `.wav`. Third-party `.ogg`-only packs still
+  validate at load but fail at playback (documented in BETA_GUIDE known
+  limitations).
+- Sprint 34 remains **on hold** until the user returns with solo beta
+  feedback (`docs/beta/feedback/TEMPLATE.md` → e.g. `2026-09-22_solo.md`).
+
+---
+
 ## Sprint 33 — Community Beta (2026-09-22)
 
 **Objective:** Beta to community testers — guide, issue intake, hub submit

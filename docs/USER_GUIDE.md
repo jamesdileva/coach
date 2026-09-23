@@ -135,7 +135,7 @@ Disabling Debug Mode exports a debug bundle to
 | No callouts at all | Plugin or category off | Enable **Enabled**; check category toggles; clear **Essential Only** / **Disabled Bosses** |
 | Pack line `REJECTED` | Schema/audio validation failed | Open client log; fix pack per `ENCODING.md` (all errors listed in one line) |
 | Pack line `CONFLICT` | Duplicate packId/bossId | Remove or rename the losing zip (alphabetical first wins) |
-| Visuals but no audio | Mute All, `VISUAL_ONLY`, missing/bad file, or `.ogg` only | Check Mute All + mode; prefer `.wav`; confirm file exists in pack `audio/` |
+| Visuals but no audio | Mute All, `VISUAL_ONLY`, missing/bad file, or `.ogg`-only pack | Check Mute All + mode; shipped packs use `.wav`; confirm file exists in pack `audio/` |
 | Audio file missing at load | Referenced `audioFile` not in zip | Whole pack rejects — add the file or remove the reference |
 | Wrong timing | Offsets or pack content | Adjust pack offsets in ticks; re-verify in fight (rule 6) |
 | Overlay missing | Overlay registration failed or mode hides visuals | Check client log for overlay warning; ensure mode is not `AUDIO_ONLY` |

@@ -1,4 +1,4 @@
-{
+﻿{
   "schemaVersion": "1.0",
   "metadata": {
     "packId": "template",
@@ -31,7 +31,7 @@
               "callouts": [{
                 "calloutId": "anim_callout",
                 "text": "TODO: overlay text (also the TTS source)",
-                "audioFile": "todo_replace.ogg",
+                "audioFile": "todo_replace.wav",
                 "category": "critical", "priority": 90,
                 "audioOffset": -2, "visualOffset": 0,
                 "visual": { "type": "prayer_icon", "color": "#FF0000", "durationTicks": 4 }
@@ -57,7 +57,7 @@
               "triggers": [{ "triggerId": "gfx", "type": "graphic", "graphicId": 1000 }],
               "callouts": [{
                 "calloutId": "gfx_callout",
-                "text": "AoE graphic detected — move!",
+                "text": "AoE graphic detected â€” move!",
                 "category": "critical", "priority": 85,
                 "audioOffset": -1, "visualOffset": 0,
                 "visual": { "type": "safe_tile", "color": "#4FC3F7", "durationTicks": 3 }
@@ -145,7 +145,7 @@
         },
         {
           "phaseId": "phase_2",
-          "name": "Phase 2 — wave-style exit example",
+          "name": "Phase 2 â€” wave-style exit example",
           "entryTrigger": { "triggerId": "p2_entry", "type": "npc_spawn", "npcIds": [1001, 1002] },
           "exitTriggers": [
             { "triggerId": "p2_clear", "type": "wave_cleared", "npcIds": [1001, 1002] }

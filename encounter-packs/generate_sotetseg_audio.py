@@ -20,11 +20,11 @@ async def tts_to_mp3(text: str, mp3_path: Path) -> None:
     await communicate.save(str(mp3_path))
 
 
-def mp3_to_ogg(mp3_path: Path, ogg_path: Path) -> None:
+def mp3_to_wav(mp3_path: Path, wav_path: Path) -> None:
     subprocess.run(
         ["ffmpeg", "-y", "-loglevel", "error", "-i", str(mp3_path),
-         "-acodec", "libvorbis", "-ar", "44100", "-ac", "1", "-qscale:a", "4",
-         str(ogg_path)],
+         "-acodec", "pcm_s16le", "-ar", "44100", "-ac", "1",
+         str(wav_path)],
         check=True,
     )
 
@@ -37,11 +37,11 @@ async def main() -> int:
     failures = []
     for callout_id, text in CALLOUTS.items():
         mp3 = tmp_dir / f"{callout_id}.mp3"
-        ogg = PACK_AUDIO_DIR / f"{callout_id}.ogg"
+        wav = PACK_AUDIO_DIR / f"{callout_id}.wav"
         try:
             await tts_to_mp3(text, mp3)
-            mp3_to_ogg(mp3, ogg)
-            print(f"[tts] {callout_id} -> {ogg.name} ({ogg.stat().st_size} bytes)")
+            mp3_to_wav(mp3, wav)
+            print(f"[tts] {callout_id} -> {wav.name} ({wav.stat().st_size} bytes)")
         except Exception as exc:  # noqa: BLE001
             failures.append((callout_id, str(exc)))
             print(f"FAILED {callout_id}: {exc}", file=sys.stderr)

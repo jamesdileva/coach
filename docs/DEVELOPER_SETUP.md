@@ -13,7 +13,7 @@ from a clean clone.
 | Gradle | Use the **wrapper** only (`plugin/gradlew.bat`, Gradle 7.6.4). Local install also at `%USERPROFILE%\tools\gradle\gradle-7.6.4` |
 | Git | Any recent git |
 | Python (pipeline only) | 3.10+ recommended; see `knowledge-pipeline/README.md` |
-| ffmpeg (audio) | On `PATH` for `.ogg` generation |
+| ffmpeg (audio) | On `PATH` for `.wav` TTS conversion |
 | RuneLite (in-game) | For manual overlay/audio checks — **not** required for headless CI |
 
 No network calls exist in the plugin itself (rule 10). Gradle resolves
