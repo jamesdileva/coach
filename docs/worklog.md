@@ -4,6 +4,56 @@ Running log of sprints: what was done, key decisions, deviations from the docs.
 
 ---
 
+## Sprint 33 — Community Beta (2026-09-22)
+
+**Objective:** Beta to community testers — guide, issue intake, hub submit
+prep, feedback structure. Scope approved with defaults (hub prep only;
+human publishes/recruits/fights).
+
+### Done
+
+- **`docs/BETA_GUIDE.md`** — install (hub / local JAR / packs), settings
+  smoke, pack verification checklist (≥3 live fights), issue filing
+  (critical definition), known limitations, link to feedback folder.
+- **GitHub issue templates** — `.github/ISSUE_TEMPLATE/`:
+  `bug_report.yml`, `pack_verification.yml`, `config.yml` (blank issues off;
+  link to BETA_GUIDE).
+- **Feedback scaffold** — `docs/beta/feedback/README.md` + `TEMPLATE.md`
+  (categories: critical/pack/ux/perf/docs/feature; pack matrix).
+- **`release/hub/README.md`** — maintainer hub PR walkthrough
+  (`plugins/coach` = `repository=` + `commit=`, fork/PR/CI, optional
+  `v1.0.0-beta` GitHub pre-release for local jar testers, PR blurb).
+- **`CHANGELOG.md`** — `[Unreleased] — beta` section (docs/tooling only;
+  code baseline remains tag `v1.0.0`).
+- **README + USER_GUIDE** — beta status, links to BETA_GUIDE and hub README;
+  install wording updated (hub when live, else local JAR).
+
+### Verified
+
+- Relative markdown link check on new/updated docs: **LINK_CHECK_OK**.
+- **`gradlew --no-daemon check` green** (269/269, JaCoCo LINE ≥ 0.80) —
+  docs-only sprint; no Java changes.
+
+### Decisions / deviations
+
+- **No RuneLite “beta channel”** — hub is one list; beta = maintainer PR +
+  optional GitHub **pre-release** `v1.0.0-beta`. Roadmap “beta channel”
+  interpreted as that packaging, not a separate hub track.
+- **Roadmap path** `tests/resources/beta_feedback_summaries/` →
+  **`docs/beta/feedback/`** (repo has no root `tests/`; summaries are human
+  docs, not fixtures).
+- **Sprint split (user):** this sprint + Sprint 34 are mostly **human**
+  test/polish/fork/hub-PR/6-pack bugfixes; AI ships intake + docs now.
+- **No speculative bugfixes** — no real beta issues yet; criticals fixed
+  when filed (feeds Sprint 34).
+- Acceptance **10+ testers / 3 packs live / hub merge / criticals fixed**
+  = **blocked on human** after this commit; DoD for the agent loop is
+  scaffolding + docs + green check + push.
+- Hub stub refreshed via `buildRelease` when the maintainer pins a final
+  `commit=` (see `release/hub/README.md`).
+
+---
+
 ## Sprint 32 — Release Preparation (2026-09-22)
 
 **Objective:** First release build: version bump, changelog, JAR

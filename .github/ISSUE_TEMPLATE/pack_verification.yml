@@ -1,0 +1,60 @@
+name: Pack verification
+description: Live-fight check that an encounter pack loads and callouts fire correctly
+title: "[pack] "
+labels: ["pack", "beta"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use one issue per pack (or per major regression). Checklists mirror
+        [BETA_GUIDE §3](https://github.com/jamesdileva/coach/blob/main/docs/BETA_GUIDE.md).
+  - type: input
+    id: pack
+    attributes:
+      label: Pack id @ version
+      placeholder: inferno@1.0.0
+    validations:
+      required: true
+  - type: input
+    id: boss
+    attributes:
+      label: Boss / content
+      placeholder: Inferno
+    validations:
+      required: true
+  - type: dropdown
+    id: load
+    attributes:
+      label: Pack status in debug overlay
+      options:
+        - LOADED
+        - REJECTED
+        - CONFLICT
+        - Not scanned / missing directory
+    validations:
+      required: true
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Live verification checklist
+      options:
+        - label: Phase timeline advances on entry/exit
+        - label: ≥3 mechanics fire on the correct tick
+        - label: Critical callouts have visual AND audio (or note .ogg gap)
+        - label: Cooldown prevents spam
+        - label: Death/despawn resets encounter
+        - label: Disabled Bosses setting mutes only this boss
+  - type: textarea
+    id: results
+    attributes:
+      label: Per-mechanic results
+      description: mechanicId, expected tick/text, actual, ✓/✗
+      placeholder: |
+        smoke_start_pray — expected tick N, got N ✓
+        dash_callout — late by 1 tick ✗
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: NPC/animation id drift or other notes

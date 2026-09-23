@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Beta guide
+    url: https://github.com/jamesdileva/coach/blob/main/docs/BETA_GUIDE.md
+    about: Install, test checklists, and what to include in reports
+  - name: Discord / discussion
+    url: https://github.com/jamesdileva/coach/issues
+    about: Open an issue for beta feedback (preferred over chat-only)

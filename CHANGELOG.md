@@ -4,6 +4,30 @@ All notable changes to **Project Coach** (RuneLite plugin).
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).  
 Versions follow [Semantic Versioning](https://semver.org/).
 
+## [Unreleased] — beta
+
+Community beta window (Sprint 33). Code baseline is tag **`v1.0.0`**;
+this section records beta-only docs/tooling until critical fixes land.
+
+### Added
+
+- **`docs/BETA_GUIDE.md`** — install paths, settings smoke, pack verification
+  checklist (≥3 live fights), what to file in issues, known limitations.
+- **GitHub issue templates** — Bug report + Pack verification
+  (`.github/ISSUE_TEMPLATE/`), labels `bug` / `pack` / `beta`.
+- **Feedback scaffold** — `docs/beta/feedback/` (README + TEMPLATE) for
+  categorized summaries after the beta window.
+- **Hub PR walkthrough** — `release/hub/README.md` (maintainer fork/PR to
+  `runelite/plugin-hub`; hub builds from `repository=` + `commit=`).
+
+### Notes
+
+- No RuneLite “beta channel”: hub is a single list; optional GitHub
+  **pre-release** `v1.0.0-beta` supports local-jar testers.
+- Recruiting **10+ testers**, live pack verification, and hub merge are
+  maintainer tasks (see worklog Sprint 33).
+- Bugfixes from beta reports land here as they are triaged (target Sprint 34).
+
 ## [1.0.0] — 2026-09-22
 
 First stable release: tick-accurate boss coaching, six encounter packs,

@@ -30,7 +30,8 @@ packs**. The plugin **never simulates input**; every callout is advisory.
 
 | Doc | Audience |
 |-----|----------|
-| [`CHANGELOG.md`](CHANGELOG.md) | Release notes (v1.0.0) |
+| [`CHANGELOG.md`](CHANGELOG.md) | Release notes (v1.0.0 + beta) |
+| [`docs/BETA_GUIDE.md`](docs/BETA_GUIDE.md) | Beta testers — install, checklists, issue filing |
 | [`docs/USER_GUIDE.md`](docs/USER_GUIDE.md) | Players — install, settings, troubleshooting |
 | [`docs/examples/ENCODING.md`](docs/examples/ENCODING.md) | Pack authors — JSON schema, triggers, audio |
 | [`docs/DEVELOPER_SETUP.md`](docs/DEVELOPER_SETUP.md) | Developers — build, test, conventions |
@@ -40,13 +41,17 @@ packs**. The plugin **never simulates input**; every callout is advisory.
 | [`docs/implementation-guide.md`](docs/implementation-guide.md) | Technical reference |
 | [`docs/worklog.md`](docs/worklog.md) | Sprint history, decisions, deviations |
 | [`knowledge-pipeline/README.md`](knowledge-pipeline/README.md) | Pipeline CLI usage |
+| [`release/hub/README.md`](release/hub/README.md) | Maintainer — plugin-hub PR steps |
 
 ## Quick start (players)
 
-1. Enable **Coach** in RuneLite (local JAR until hub release — see user guide).  
+1. Enable **Coach** in RuneLite (hub when live, else local JAR — see user guide).  
 2. Put pack zips in `<RuneLite dir>/coach/encounters/`.  
 3. Configure volumes/categories under **Settings → Plugins → Coach**.  
 4. Fight the boss — overlays and callouts fire on tick.
+
+**Beta testers:** start with [`docs/BETA_GUIDE.md`](docs/BETA_GUIDE.md)
+(install, pack verification checklist, GitHub issue templates).
 
 Full steps: [`docs/USER_GUIDE.md`](docs/USER_GUIDE.md).
 
@@ -84,8 +89,8 @@ Full list: [`AGENTS.md`](AGENTS.md).
 
 ## License / status
 
-**v1.0.0** — see [`CHANGELOG.md`](CHANGELOG.md) and git tag `v1.0.0`.
-Hub submission is prepared via `plugin/build/release/hub-plugin.txt`
+**Beta / v1.0.0** — see [`CHANGELOG.md`](CHANGELOG.md) and git tag `v1.0.0`.
+Hub submission steps: [`release/hub/README.md`](release/hub/README.md)
 (manual PR to [runelite/plugin-hub](https://github.com/runelite/plugin-hub)).
 Contributions: follow the sprint workflow in `AGENTS.md` and log work in
 `docs/worklog.md`.

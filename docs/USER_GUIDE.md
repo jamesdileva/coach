@@ -10,10 +10,11 @@ Callouts are always advisory — the plugin never simulates input.
 
 1. Install [RuneLite](https://runelite.net/) (standard or stable).
 2. Open RuneLite → **Settings → Plugins**.
-3. Search for **Coach** and enable it  
-   *(until hub submission in Sprint 32, install from a local JAR:
-   build or obtain `coach-<version>.jar`, then use RuneLite's external-plugin
-   loader / developer tools as documented for local plugins).*
+3. Search for **Coach** and enable it when listed in the
+   [Plugin Hub](https://runelite.net/plugin-hub).
+   *Until the hub PR merges, install from a local JAR (`coach-<version>.jar`)
+   via RuneLite’s external-plugin loader / developer tools.*
+   Beta testers: prefer [`docs/BETA_GUIDE.md`](BETA_GUIDE.md) §2.
 4. Confirm the plugin appears and the Coach overlay registers (no red error
    in the client console).
 

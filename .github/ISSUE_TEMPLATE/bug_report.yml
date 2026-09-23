@@ -1,0 +1,80 @@
+name: Bug report
+description: Crash, wrong-tick callout, settings/audio/overlay failure
+title: "[bug] "
+labels: ["bug", "beta"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for beta testing. Wrong-tick callouts are bugs (1 tick = 600 ms).
+        See [BETA_GUIDE](https://github.com/jamesdileva/coach/blob/main/docs/BETA_GUIDE.md).
+  - type: input
+    id: version
+    attributes:
+      label: Plugin version
+      description: e.g. coach-1.0.0 or commit SHA
+      placeholder: coach-1.0.0
+    validations:
+      required: true
+  - type: input
+    id: runelite
+    attributes:
+      label: RuneLite version
+      placeholder: 1.12.x
+    validations:
+      required: true
+  - type: input
+    id: boss
+    attributes:
+      label: Boss / pack
+      description: bossId and packId@version if known
+      placeholder: nex / nex@1.0.0
+    validations:
+      required: true
+  - type: dropdown
+    id: failure
+    attributes:
+      label: What failed?
+      options:
+        - Wrong tick / timing
+        - Missing callout
+        - Audio only
+        - Visual / overlay only
+        - Crash or client error
+        - Pack will not load (REJECTED/CONFLICT)
+        - Settings / profiles
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: Phase, mechanic id, tick if known
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: Pack shows LOADED in debug overlay
+        - label: I can attach a debug bundle (coach/debug_logs/) or screenshot
+        - label: This is not a known limitation in BETA_GUIDE §4
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / debug bundle path / screenshots
+      description: Paste relevant lines or describe attachments
