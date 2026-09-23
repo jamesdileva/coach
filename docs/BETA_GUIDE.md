@@ -31,25 +31,53 @@ Recruitment channels (maintainer): RuneLite Discord, OSRS Discord, clan chats.
 Hub file lives in [runelite/plugin-hub](https://github.com/runelite/plugin-hub)
 as `plugins/coach` (maintainer PR).
 
-### B. Local JAR (any time)
+### B. Local JAR (sideload — works today)
 
-1. Build or obtain `coach-1.0.0.jar`
-   - From this repo: `powershell -File release\run.ps1` (or `release/run.sh`)
+RuneLite only loads local JARs from **`sideloaded-plugins`** when the client
+is started with **`--developer-mode`**. Without that flag the jar is ignored.
+
+1. **Build or obtain** `coach-1.0.0.jar`
+   - From this repo: `powershell -File release\run.ps1`  
+     (or from `plugin/`: `$env:JAVA_HOME = "$env:USERPROFILE\tools\jdk\jdk-11.0.32+9"; .\gradlew.bat --no-daemon jar` → `plugin\build\libs\coach-1.0.0.jar`)
    - Or download a release asset if the maintainer attaches one
-2. Load via RuneLite external-plugin / developer tools (see
-   [`docs/USER_GUIDE.md`](USER_GUIDE.md) §1)
+2. **Copy the JAR** (not a folder) into:
+
+   ```
+   %USERPROFILE%\.runelite\sideloaded-plugins\coach-1.0.0.jar
+   ```
+
+   Create `sideloaded-plugins` if it does not exist. Do **not** put it in
+   `.runelite\plugins\` (that folder is for Plugin Hub installs).
+3. **Enable developer mode** (persistent):
+   - Start Menu → **RuneLite (configure)**
+   - Under **Client arguments**, add one line: `--developer-mode`
+   - Optional but useful for beta: also add `--debug` and JVM arg `-ea`
+   - Save / close the configure window
+4. **Fully quit RuneLite** (client **and** launcher) and start it again —
+   plugins only load at startup; a running client will not pick up a new jar.
+5. **Settings → Plugins** → search **Coach** → enable it. Expect no red
+   error in the client console / `client.log`.
+
+**Verify sideload worked:** `client.log` should contain a line like
+`Side-loading plugin coach-1.0.0.jar`. If that line is missing, developer
+mode is off or the jar is in the wrong folder.
+
+Hub install (option A) does **not** need `--developer-mode`.
 
 ### C. Encounter packs (required for coaching)
 
 Packs are **not** inside the JAR. Copy zips into:
 
 ```
-<RuneLite dir>/coach/encounters/
+%USERPROFILE%\.runelite\coach\encounters\
 ```
+
+(i.e. `<RuneLite dir>\coach\encounters\` where `<RuneLite dir>` is usually
+`%USERPROFILE%\.runelite`.)
 
 Beta pack sources / zips in this repo under `encounter-packs/`
 (`nex_1.0.0.zip`, `inferno_1.0.0.zip`, `toa_1.0.0.zip`, `cox_1.0.0.zip`,
-`tob_sotetseg_1.0.0.zip`). Debug overlay should show
+`tob_sotetseg_1.0.0.zip`). After restart, debug overlay should show
 `… -> packId@version [LOADED]`.
 
 ---

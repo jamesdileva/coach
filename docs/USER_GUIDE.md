@@ -8,15 +8,27 @@ Callouts are always advisory — the plugin never simulates input.
 
 ## 1. Install
 
+### Hub (when live)
+
 1. Install [RuneLite](https://runelite.net/) (standard or stable).
-2. Open RuneLite → **Settings → Plugins**.
-3. Search for **Coach** and enable it when listed in the
-   [Plugin Hub](https://runelite.net/plugin-hub).
-   *Until the hub PR merges, install from a local JAR (`coach-<version>.jar`)
-   via RuneLite’s external-plugin loader / developer tools.*
-   Beta testers: prefer [`docs/BETA_GUIDE.md`](BETA_GUIDE.md) §2.
-4. Confirm the plugin appears and the Coach overlay registers (no red error
-   in the client console).
+2. Open RuneLite → **Settings → Plugins** → plug/hub icon → search **Coach**.
+3. Install → enable → confirm no client console errors.
+
+### Local JAR (before hub — sideload)
+
+RuneLite loads local plugin jars only from `sideloaded-plugins` **and** only
+when started with `--developer-mode`:
+
+1. Put `coach-<version>.jar` in `%USERPROFILE%\.runelite\sideloaded-plugins\`
+   (create the folder if needed). Not in `.runelite\plugins\`.
+2. Start Menu → **RuneLite (configure)** → **Client arguments** → add
+   `--developer-mode` → save.
+3. Fully quit RuneLite and start it again.
+4. **Settings → Plugins** → search **Coach** → enable.
+
+Full beta checklist: [`docs/BETA_GUIDE.md`](BETA_GUIDE.md) §2.
+Confirm the plugin appears and the Coach overlay registers (no red error
+in the client console).
 
 Plugin metadata (from `runelite-plugin.properties`):
 
@@ -31,8 +43,10 @@ Plugin metadata (from `runelite-plugin.properties`):
 Packs are `.zip` files dropped in:
 
 ```
-<RuneLite dir>/coach/encounters/
+%USERPROFILE%\.runelite\coach\encounters\
 ```
+
+(i.e. `<RuneLite dir>\coach\encounters\` — usually under your user profile.)
 
 Default **Encounter Pack Directory** config (`packDirectory`) is exactly that
 path (configurable). Each zip must
